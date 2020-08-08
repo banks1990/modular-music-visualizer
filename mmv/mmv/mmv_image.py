@@ -300,34 +300,3 @@ class MMVImage:
             image, x, y,
             paint = paint,
         )
-
-        return
-
-        """  
-        if angle == 0:
-
-            paint = skia.Paint(self.paint_dict)
-
-            blit_to_skia.canvas.drawImage(
-                image, x, y,
-                paint = paint,
-            )
-        else:
-            paint = skia.Paint(self.paint_dict)
-
-            blit_to_skia.canvas.translate(x/2, y/2)
-            blit_to_skia.canvas.rotate(angle)
-
-            blit_to_skia.canvas.drawImage(
-                image, x, y,
-                paint = paint,
-            )
-
-            blit_to_skia.canvas.rotate(-angle)
-            blit_to_skia.canvas.translate(- x/2, - y /2)
-        
-        """
-
-    def resolve_pending(self) -> None:
-        self.image.resolve_pending()
-
