@@ -232,7 +232,8 @@ class MMVImage:
                 vignetting.get_center()
                 next_vignetting = vignetting.get_value()
 
-                
+                # This is a somewhat fake vignetting, we just start a black point with full transparency
+                # at the center and make a radial gradient that is black with no transparency at the radius
                 skia_canvas.canvas.drawPaint({
                     'Shader': skia.GradientShader.MakeRadial(
                         center=(vignetting.center_x, vignetting.center_y),
@@ -251,6 +252,7 @@ class MMVImage:
                     "image_filters": self.image_filters
                 }
 
+                # Visualizer blits itself into the canvas automatically
                 visualizer.next(fftinfo, this_step, effects)
 
 
