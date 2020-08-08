@@ -85,59 +85,21 @@ There's also the example of calling pygradienter from a MMV script
 
 ## Windows
 
-#### TL;DR good luck and feel free to ask for help or write me a proper guide on doing this
-
-_Before starting, I wanted to point out that it might be possible for me to release a executable with all these dependencies but that kinda kills the modularity in the MMV name, and it would be preset-based until I find a better solution, feedback is really needed here as I don't have an easy Windows setup nor a license and I'm depending on some friends letting me control their pc remotely or asking instructions_
-
-Running MMV on Windows is a bit troublesome, one of the things is because both the vector graphics API I use to transform vector graphics (SVG) to a PNG (RGBA array) to make the music bars [those are cairo and / or wand, both should work but cairo is preferred] works better under a Unix-like environment and are not as easy to install on Windows (by the look of things).
-
-It's not much that following some instructions shouldn't do the trick, I'm just saying you would have a better time if running this under a Linux environment (you don't even have to install it to give a try, can be run off a USB stick!!)
-
-I even had to revert the [ray](https://github.com/ray-project/ray) multiprocessing library I was using for scalability because it wasn't working and still under alpha stages on the Windows OS, so I switched back to Python's default multiprocessing library (the core code became a bit of a battle royale because of that but nevertheless it's not unstable).
-
-I'm not completely sure but I think that cairosvg requires the Visual Studio Build Tools thingy, so [grab and install that](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
-
-The `wand` rasterizer depends on the ImageMagick libraries, luckily they have a page on [on installing ImageMagick under Windows](http://docs.wand-py.org/en/latest/guide/install.html#install-imagemagick-on-windows)
-
-Getting cairo to work can be painful as it seems, but I was able to find some resources on doing that. You don't install cairo directly but rather the GTK toolkit (a widget toolkit) as cairo directly depends on that.
-
-The GTK project does have an official [install guide on Windows](https://www.gtk.org/docs/installations/windows/) as well as the [cairo people](https://www.cairographics.org/download/), but the cairo guide looks a bit outdated..
-
-I've found this readthedocs page from the [weasyprint project](https://weasyprint.readthedocs.io/en/latest/install.html#windows) on installing GTK under Windows, it seems like the most complete guide out there.
-
-[This repository](https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer) might help you out as well (probably solve everything beforehand?) so godspeed for you running Python 64 bit version!!
-
-After all this trouble on installing two libraries that Linux users be like: _just_ `yay -S cairo imagemagick` _it!_, go ahead to [python.org](https://www.python.org/) and install Python 3.8 preferably the 64 bit version as GTK with 32 bit Windows seems outdated, be sure to check the box to add Python to the PATH variable on the installer otherwise you will not be able to quickly access Python through the command line!!
-
-Now open a shell (shift + right click empty spot on the Windows folder manager, open PowerShell), download the source code on the repo main page or clone the repo with `git clone https://github.com/Tremeschin/modular-music-visualizer` (have git installed beforehand)
-
-Preferably [Use a Python venv](https://github.com/Tremeschin/dandere2x-tremx/wiki/Python-venvs), not required but optimal
-
-run `pip install -r mmv/requirements.txt` to install MMV's Python dependencies
-
-#### I'd like some feedback if you could install everything fine and what you had to do to make it work :)
-
-You can run a example file under `mmv/example*.py` with `python.exe mmv/example*.py` (replacing "*" to the file name), or just change the shell directory to the `mmv` folder and run with `python.exe example*.py`
-
-I include a few free assets under the `mmv/assets/free_assets` folder, you can use them at your disposal, they were generated with my other project called [PyGradienter](https://github.com/Tremeschin/pygradienter) that I'm merging the two here in MMV :)
-
-There's also the example of calling pygradienter from a MMV script
+TODO, need testing
 
 # Goals, what is being developed
 
 #### High priority / now
 
-- [ ] (60%) Huge refactor of the code and moving a lot of stuff, simplifying interpolation and making Modifier classes individually
+- [x] (basically 90% done) Huge refactor of the code and moving a lot of stuff, simplifying interpolation and making Modifier classes individually
 
-- [x] (100%) (Need testing on Windows `mmv/example_pygradienter.py`) Transforming PyGradienter into a Python package, merging the two repositories into one, making PyGradienter run on Windows and only returning the image array rather than saving on the disk
+- [x] ~~(stuck) R&D alternative methods for converting SVG --> PNG under Python because Windows (or could someone write a small guide for installing cairo under Windows that works? I didn't put much effort until now on this)~~ `skia-python` solved all this
 
-- [ ] (stuck) R&D alternative methods for converting SVG --> PNG under Python because Windows (or could someone write a small guide for installing cairo under Windows that works? I didn't put much effort until now on this)
-
-- [ ] (half worked) R&D alternative methods for rendering the final frame (each branch is one way I tried _- and failed or wasn't really efficient_)
+- [x] ~~(half worked) R&D alternative methods for rendering the final frame (each branch is one way I tried _- and failed or wasn't really efficient_)~~ `skia-python` seems VERY promising, `pyvips` almost worked but skia was faster
 
 #### Medium priority
 
-- [ ] Profile the code, find bottlenecks, general optimization on most expensive functions
+- [x] ~~Profile the code, find bottlenecks, general optimization on most expensive functions~~ Video background is a bottleneck now because moving textures back and forth from the GPU, other than that the code is running fast
 
 - [ ] (boring) Update requirements.txt
 
