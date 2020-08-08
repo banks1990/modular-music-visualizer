@@ -20,6 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from wand.api import library
+from scour import scour
 from io import BytesIO
 from PIL import Image
 import numpy as np
@@ -27,7 +28,9 @@ import wand.image
 import wand.color
 import cairosvg
 import svgwrite
+import pyvips
 import sys
+import cv2
 import os
 
 
@@ -38,14 +41,6 @@ class SVG():
         self.rasterizer = rasterizer
         self.mode = mode
         self.SVG_ROUND = 4
-
-        if not self.rasterizer in ["cairo", "wand"]:
-            print("Rasterizer invalid: [%s]" % self.rasterizer)
-            sys.exit(-1)
-
-        if not self.mode in ["png", "jpg"]:
-            print("Mode invalid SVG --> [%s]" % self.mode)
-            sys.exit(-1)
             
     def new_drawing(self, centered=True):
         if centered:
@@ -62,33 +57,11 @@ class SVG():
         
         svg_string = self.dwg.tostring()
 
-        if self.rasterizer == "wand":
-            with wand.image.Image(blob=svg_string.encode(), format="svg") as image:
-                # if convert_to_png:
-                #     with wand.color.Color('transparent') as background_color:
-                #         library.MagickSetBackgroundColor(image.wand, background_color.resource) 
-                return Image.open(BytesIO(image.make_blob(self.mode)))
+        # scour_options = scour.sanitizeOptions(options=None) # get a clean scour options object
+        # scour_options.remove_metadata = True # change any option you like
+        # clean_svg = scour.scourString(svg_string)#, options = scour_options) # use scour
 
-        elif self.rasterizer == "cairo":
+        svg = pyvips.Image.svgload_buffer(svg_string.encode())
+        image = np.frombuffer(svg.write_to_memory(), dtype=np.uint8).reshape(self.width, self.height, 4) 
 
-            # Save the file to this temporary buffer
-            r, w = os.pipe()
-
-            # Save the svg to the temporary buffer
-            cairosvg.svg2png(bytestring=svg_string, write_to=open(w, "wb"))
-            # cairosvg.surface.PNGSurface.convert(svg_string, write_to=buffer)
-
-            # Open the image from the buffer, convert to png
-            image = Image.open(open(r, "rb"))
-
-            del r, w
-
-            if convert_to_png:
-                image = image.convert("RGBA")
-            else:
-                image = image.convert("RGB")
-
-            return image
-
-    def get_array(self):
-        return np.array(self.get_png())
+        return image

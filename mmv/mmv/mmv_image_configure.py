@@ -43,8 +43,10 @@ This will be documented properly in the future (I hope so)
 class MMVImageConfigure:
 
     # Get MMVImage object and set image index to zero
-    def __init__(self, mmvimage_object) -> None:
+    def __init__(self, mmvimage_object, context, skia_object) -> None:
         self.object = mmvimage_object
+        self.context = context
+        self.skia = skia_object
         self.animation_index = 0
     
     # Macros for initialializing this animation layer
@@ -110,6 +112,14 @@ class MMVImageConfigure:
     # How much steps in this animation
     def set_this_animation_steps(self, steps: float=math.inf) -> None:
         self.object.animation[self.animation_index]["animation"]["steps"] = steps
+
+    # Overlay
+
+    def set_overlay_mode_composite(self) -> None:
+        self.object.overlay_mode = "composite"
+    
+    def set_overlay_mode_copy(self) -> None:
+        self.object.overlay_mode = "copy"
 
     # # # [ Next Methods ] # # #
 
@@ -196,7 +206,8 @@ class MMVImageConfigure:
                                 "subdivide": subdivide,
                             }
                         }
-                    }
+                    },
+                    self.skia
                 )
             }
         })
@@ -242,6 +253,7 @@ class MMVImageConfigure:
         self.add_module({
             "vignetting": {
                 "object": MMVModifierVignetting(
+                    context = self.context,
                     minimum = minimum,
                     center_function_x = center_function_x,
                     center_function_y = center_function_y,

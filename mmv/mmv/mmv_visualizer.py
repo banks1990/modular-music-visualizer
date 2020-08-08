@@ -19,13 +19,15 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
+
+from mmv.mmv_visualizers.mmv_visualizer_circle import MMVVisualizerCircle
 from mmv.common.cmn_coordinates import PolarCoordinates
 from mmv.common.cmn_interpolation import Interpolation
 from mmv.common.cmn_functions import Functions
 from mmv.common.cmn_functions import FitIndex
+from mmv.common.cmn_skia import SkiaWrapper
 from mmv.common.cmn_frame import Frame
 from mmv.common.cmn_utils import Utils
-from mmv.common.cmn_svg import SVG
 from mmv.mmv_modifiers import *
 from resampy import resample
 import svgwrite
@@ -35,19 +37,14 @@ import os
 
 import numpy as np
 
-class MMVVisualizer():
-    def __init__(self, context, config):
+class MMVVisualizer:
+    def __init__(self, context, config: dict, skia_object) -> None:
         
         debug_prefix = "[MMVVisualizer.__init__]"
         
         self.context = context
         self.config = config
-        self.svg = SVG(
-            self.config["width"],
-            self.config["height"],
-            "cairo", #self.context.svg_rasterizer, # cairo is just faster here
-            "png"
-        )
+        self.skia = skia_object
 
         self.fit_transform_index = FitIndex()
         self.functions = Functions()
@@ -58,8 +55,6 @@ class MMVVisualizer():
         self.x = 0
         self.y = 0
         self.size = 1
-        self.current_animation = 0
-        self.current_step = 0
         self.is_deletable = False
         self.offset = [0, 0]
         self.polar = PolarCoordinates()
@@ -69,6 +64,9 @@ class MMVVisualizer():
         # Create Frame and load random particle
         self.image = Frame()
 
+        if self.config["type"] == "circle":
+            self.builder = MMVVisualizerCircle(self, self.skia)
+
     def smooth(self, array, smooth):
         if smooth > 0:
             box = np.ones(smooth)/smooth
@@ -77,10 +75,7 @@ class MMVVisualizer():
         return array
 
     # Next step of animation
-    def next(self, fftinfo, is_multiprocessing=False):
-
-        if not is_multiprocessing:
-            self.svg.new_drawing()
+    def next(self, fftinfo, this_step, effects, is_multiprocessing=False):
 
         fitfourier = self.config["fourier"]["fitfourier"]
 
@@ -107,6 +102,9 @@ class MMVVisualizer():
         # Start each channel point's empty
         for channel in channels:
             points[channel] = []
+
+        # Dictionary with all the data to make a visualization bar
+        fitted_ffts = {}
 
         # Loop on each channel
         for channel_index, channel in enumerate(channels):
@@ -156,91 +154,8 @@ class MMVVisualizer():
                     int(fitted_fft.shape[0]*cut[1])
                 ]
 
-                # The mode (linear, symetric)
-                mode = self.config["mode"]
+                fitted_ffts[channel] = np.copy(fitted_fft)
 
-                # If we'll be making a circle 
-                if self.config["type"] == "circle":
+        self.builder.build(fitted_ffts, this_step, self.config, effects)
 
-                    # For each item on the fitted FFT
-                    for i in range(len(fitted_fft) - 1):
-
-                        # Calculate our size of the bar
-                        size = fitted_fft[i]*8 #*(0.7 + i/80) #- i/len(fitted_fft))
-
-                        # Simple, linear
-                        if mode == "linear":
-                            # We only use the mid channel
-                            if channel == "m":
-                                self.polar.from_r_theta(
-                                    (self.config["minimum_bar_size"] + size)*self.size,
-                                    ((math.pi*2)/len(fitted_fft))*i # fitted_fft -> fft nice effect
-                                )
-                                coord = self.polar.get_rectangular_coordinates()
-                                points[channel].append(coord)
-
-                        # Symetric
-                        if mode == "symetric":
-
-                            angle = ( i/len(fitted_fft) ) * (math.pi)
-                            angle = self.fit_transform_index.polynomial(angle, math.pi, 0.4)
-
-                            bar_size = (self.config["minimum_bar_size"] + size)*self.size
-
-                            # The left channel starts at the top and goes clockwise
-                            if channel == "l":
-                                self.polar.from_r_theta(
-                                    bar_size,
-                                    (math.pi/2) - angle, # fitted_fft -> fft nice effect
-                                )
-                                coord = self.polar.get_rectangular_coordinates()
-                                points[channel].append(coord)
-
-                            elif channel == "r":
-                                self.polar.from_r_theta(
-                                    bar_size,
-                                    (math.pi/2) + angle # fitted_fft -> fft nice effect
-                                )
-                                coord = self.polar.get_rectangular_coordinates()
-                                points[channel].append(coord)
-
-        self.current_step += 1
-
-        if not is_multiprocessing:
-
-            drawpoints = []
-
-            if mode == "symetric":
-                for point in points["l"]:
-                    drawpoints.append(point)
-                for point in reversed(points["r"]):
-                    drawpoints.append(point)
-            
-            if mode == "linear":
-                for point in points["m"]:
-                    drawpoints.append(point)
-
-            drawpoints.append(drawpoints[0])
-            
-            self.svg.dwg.add(
-                self.svg.dwg.polyline(
-                    drawpoints,
-                    stroke=svgwrite.rgb(60, 60, 60, '%'),
-                    fill='white',
-                )
-            )
-
-            array = self.svg.get_array()
-
-            return array
-
-    # Blit this item on the canvas
-    def blit(self, canvas):
-
-        x = int(self.x + self.offset[1] + self.base_offset[1])
-        y = int(self.y + self.offset[0] + self.base_offset[0])
-
-        canvas.canvas.overlay_transparent(
-            self.image.array, y, x
-        )
-
+  
