@@ -16,7 +16,7 @@ _The DAW is Ardour 6.0_
 
 [Unlisted video of old version of MMV](https://youtu.be/BhpLwaR1Oj8)
 
-# Huge reorganization of core code is being worked on, expect instability
+# Huge reorganization of core code is being worked on and image rendering backend, expect instability
 
 # Idea
 
@@ -42,6 +42,8 @@ Then I just got into this opportunity on making a suckless (as in quality not mi
 Lot's of stuff are moving on the code and being rewritten, when things are more stable I'll write a proper guide.
 
 Use the example scripts located on the project root folder as for now for learning and / or read the code, it's pretty well commented
+
+You can open issues or DM me asking how the code works, where to start contributing, what is needed, anything.
 
 # Running
 
@@ -85,7 +87,7 @@ There's also the example of calling pygradienter from a MMV script
 
 ## Windows
 
-TODO, need testing
+TODO, need testing, instructions should be close enough on running on Linux, just have Python 3.8 installed and on PATH variable, you should be good to go..
 
 # Goals, what is being developed
 
