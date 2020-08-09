@@ -158,14 +158,6 @@ class MMVVisualizerCircle:
 
                 path = skia.Path()
 
-                self.polar.from_r_theta(coordinates[0][0] ** more, coordinates[0][1])
-                polar_offset = self.polar.get_rectangular_coordinates()
-
-                path.moveTo(
-                    (self.center_x + polar_offset[0]),
-                    (self.center_y + polar_offset[1]),
-                )
-
                 black_stroke = skia.Paint(
                     AntiAlias = True,
                     Color = skia.ColorWHITE,
@@ -199,10 +191,12 @@ class MMVVisualizerCircle:
 
                     self.polar.from_r_theta(self.config["minimum_bar_size"] + ( (avg_coord - self.config["minimum_bar_size"]) * more), coord[1])
                     polar_offset = self.polar.get_rectangular_coordinates()
-                    path.lineTo(
-                        (self.center_x + polar_offset[0]),
-                        (self.center_y + polar_offset[1]),
-                    )
+
+                    coords = [ (self.center_x + polar_offset[0]), (self.center_y + polar_offset[1]) ]
+
+                    if coord_index == 0:
+                        path.moveTo(*coords)
+                    path.lineTo(*coords)
                 
                 self.skia.canvas.drawPath(path, black_stroke)
 
