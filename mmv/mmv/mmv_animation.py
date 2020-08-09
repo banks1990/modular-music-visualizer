@@ -102,9 +102,7 @@ class MMVAnimation:
                 # Generate next step of animation
                 item.next(fftinfo, this_step)
 
-                # Blit itself on the canvas
-                if not self.context.multiprocessed:
-                    item.blit(self.skia)
+                item.blit(self.skia)
 
         # For each layer index we have items to delete
         for layer_index in items_to_delete.keys():

@@ -47,7 +47,7 @@ Use the example scripts located on the project root folder as for now for learni
 
 Please, if you are running this project from source, after installing the Python dependencies install [pillow-simd](https://github.com/uploadcare/pillow-simd) instead of vanilla Pillow, preferably with the AVX2 instructions explained in its repo if your CPU supports so.
 
-As you can see [here](https://python-pillow.org/pillow-perf/), `pillow-simd` is faster by a lot on imaging processing, it cut down render times with MMV from `2:34 minutes --> 1:89 minutes` and that was with `multiprocessed=False`, resize times went down from 34 seconds to only 13 not to mention faster GaussianBlurs.
+As you can see [here](https://python-pillow.org/pillow-perf/), `pillow-simd` is faster by a lot on imaging processing, although most stuff is done with skia, rotation is still done with PIL.
 
 #### IMPORTANT!!
 

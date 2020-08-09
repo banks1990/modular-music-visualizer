@@ -30,7 +30,6 @@ from mmv.common.cmn_frame import Frame
 from mmv.common.cmn_utils import Utils
 from mmv.mmv_modifiers import *
 from resampy import resample
-import svgwrite
 import random
 import math
 import os
@@ -75,7 +74,7 @@ class MMVVisualizer:
         return array
 
     # Next step of animation
-    def next(self, fftinfo, this_step, effects, is_multiprocessing=False):
+    def next(self, fftinfo, this_step, effects):
 
         fitfourier = self.config["fourier"]["fitfourier"]
 
@@ -130,31 +129,28 @@ class MMVVisualizer:
                 self.current_fft[channel][index] = interpolation.next()
 
 
-            # We calculate the points on a Worker process, main core loop stops at the ffts interpolation
-            if not is_multiprocessing:
-                
-                # Start a zero fitted fft list
-                fitted_fft = np.copy( self.current_fft[channel] )
+            # Start a zero fitted fft list
+            fitted_fft = np.copy( self.current_fft[channel] )
 
-                # Smooth the peaks
-                if fitfourier["pos_fft_smoothing"] > 0:
-                    fitted_fft = self.smooth(fitted_fft, fitfourier["pos_fft_smoothing"])
+            # Smooth the peaks
+            if fitfourier["pos_fft_smoothing"] > 0:
+                fitted_fft = self.smooth(fitted_fft, fitfourier["pos_fft_smoothing"])
 
-                # Apply "subdivision", break jagged edges into more smooth parts
-                if fitfourier["subdivide"] > 0:
-                    fitted_fft = resample(fitted_fft, fitted_fft.shape[0], fitted_fft.shape[0] * fitfourier["subdivide"])
+            # Apply "subdivision", break jagged edges into more smooth parts
+            if fitfourier["subdivide"] > 0:
+                fitted_fft = resample(fitted_fft, fitted_fft.shape[0], fitted_fft.shape[0] * fitfourier["subdivide"])
 
-                # Ignore the really low end of the FFT as well as the high end frequency spectrum
-                cut = [0, 0.95]
+            # Ignore the really low end of the FFT as well as the high end frequency spectrum
+            cut = [0, 0.95]
 
-                # Cut the fitted fft
-                fitted_fft = fitted_fft[
-                    int(fitted_fft.shape[0]*cut[0])
-                    :
-                    int(fitted_fft.shape[0]*cut[1])
-                ]
+            # Cut the fitted fft
+            fitted_fft = fitted_fft[
+                int(fitted_fft.shape[0]*cut[0])
+                :
+                int(fitted_fft.shape[0]*cut[1])
+            ]
 
-                fitted_ffts[channel] = np.copy(fitted_fft)
+            fitted_ffts[channel] = np.copy(fitted_fft)
 
         self.builder.build(fitted_ffts, this_step, self.config, effects)
 

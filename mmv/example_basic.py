@@ -39,13 +39,6 @@ processing = mmv.mmv(
     watch_processing_video_realtime=False
 )
 
-# Single thread render the video or multiprocessed with N workers?
-# Not setting the workers --> defaults to 4
-processing.performance(
-    multiprocessed=False,
-    workers=4
-)
-
 # Set the video quality
 processing.quality(
     width=1280,

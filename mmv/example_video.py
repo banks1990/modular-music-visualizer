@@ -39,13 +39,6 @@ processing = mmv.mmv(
     watch_processing_video_realtime=False
 )
 
-# Single thread render the video or multiprocessed with N workers?
-# Not setting the workers --> defaults to 4
-processing.performance(
-    multiprocessed=True,
-    workers=4
-)
-
 # Set the video quality
 processing.quality(
     width=1280,
@@ -75,7 +68,7 @@ processing.assets_dir("assets/free_assets")
 # # #
 
 # I/O options, input a audio, output a video
-processing.input_audio("assets/tremx_assets/video/audio.webm")
+processing.input_audio("assets/tremx_assets/video/rlc.mp3")
 processing.output_video("mmv-output.mkv")
 
 # # # Background
@@ -87,7 +80,7 @@ background = processing.image_object()
 background.configure.init_animation_layer()
 
 # We can load an video :)
-background.configure.load_video("assets/tremx_assets/video/video.mp4")
+background.configure.load_video("assets/tremx_assets/video/rlc.mkv")
 
 # On videos they are automatically resized to the output
 # resolution and find this shake value automatically

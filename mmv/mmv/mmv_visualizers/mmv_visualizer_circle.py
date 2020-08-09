@@ -20,6 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from mmv.common.cmn_coordinates import PolarCoordinates
+from mmv.common.cmn_functions import FitIndex
 import numpy as np
 import math
 import skia
@@ -31,6 +32,7 @@ class MMVVisualizerCircle:
         self.skia = skia_object
         self.config = self.visualizer.config
         self.polar = PolarCoordinates()
+        self.fitindex = FitIndex()
 
         self.center_x = self.visualizer.context.width / 2
         self.center_y = self.visualizer.context.height / 2
@@ -55,6 +57,7 @@ class MMVVisualizerCircle:
 
                     if channel == "l":
                         theta = (math.pi/2) - ((index/npts)*math.pi)
+
                     elif channel == "r":
                         theta = (math.pi/2) + ((index/npts)*math.pi)
 
@@ -78,7 +81,7 @@ class MMVVisualizerCircle:
                         AntiAlias = True,
                         Color = color,
                         Style = skia.Paint.kStroke_Style,
-                        StrokeWidth = 2,
+                        StrokeWidth = 2 + magnitude,
                     )
 
                     data[channel]["paints"].append(paint)
@@ -96,10 +99,12 @@ class MMVVisualizerCircle:
                     AntiAlias = True,
                     Color = skia.ColorWHITE,
                     Style = skia.Paint.kFill_Style,
-                    StrokeWidth = 2,
+                    StrokeWidth = 3,
+                    ImageFilter=skia.ImageFilters.DropShadow(3, 3, 5, 5, skia.ColorBLACK),
+                    MaskFilter=skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 1.0)
                 )
 
-                more = 1.1
+                more = 1.05
 
                 self.polar.from_r_theta(coordinates[0][0] * more, coordinates[0][1])
                 polar_offset = self.polar.get_rectangular_coordinates()
@@ -109,9 +114,36 @@ class MMVVisualizerCircle:
                     (self.center_y + polar_offset[1]),
                 )
 
-                for coord in coordinates:
-                    self.polar.from_r_theta(coord[0] * more, coord[1])
+                for coord_index, coord in enumerate(coordinates):
+
+                    # TODO: implement this function in DataUtils for not repeating myself
+                    get_nearby = 4
+
+                    size_coordinates = len(coordinates)
+                    real_state = coordinates*3
+
+                    nearby_coordinates = real_state[
+                        size_coordinates + (coord_index - get_nearby):
+                        size_coordinates + (coord_index + get_nearby)
+                    ]
+
+                    # [0, 1, 2, 3, 4] --> weights=
+                    #  3  4  5, 4, 3
+
+                    n = len(nearby_coordinates)
+
+                    weights = [n - abs( (n / 2) - x) for x in range(n)]
+
+                    s = 0
+                    for index, item in enumerate(nearby_coordinates):
+                        s += item[0] * weights[index]
+
+                    avg_coord = s / sum(weights)
+
+                    self.polar.from_r_theta(avg_coord * more, coord[1])
+
                     polar_offset = self.polar.get_rectangular_coordinates()
+
                     path.lineTo(
                         (self.center_x + polar_offset[0]),
                         (self.center_y + polar_offset[1]),
@@ -122,7 +154,7 @@ class MMVVisualizerCircle:
             # Countour, stroke
             if True: # self.config["draw_black_border"]
 
-                more = 1.05
+                more = 2
 
                 path = skia.Path()
 
@@ -138,11 +170,34 @@ class MMVVisualizerCircle:
                     AntiAlias = True,
                     Color = skia.ColorWHITE,
                     Style = skia.Paint.kStroke_Style,
-                    StrokeWidth = 3,
+                    StrokeWidth = 6,
+                    ImageFilter=skia.ImageFilters.DropShadow(3, 3, 5, 5, skia.ColorWHITE),
+                    MaskFilter=skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 1.0)
                 )
 
-                for coord in coordinates:
-                    self.polar.from_r_theta(coord[0] ** more, coord[1])
+                for coord_index, coord in enumerate(coordinates):
+
+                    get_nearby = 10
+
+                    size_coordinates = len(coordinates)
+                    real_state = coordinates*3
+
+                    nearby_coordinates = real_state[
+                        size_coordinates + (coord_index - get_nearby):
+                        size_coordinates + (coord_index + get_nearby)
+                    ]
+
+                    n = len(nearby_coordinates)
+
+                    weights = [n - abs( (n / 2) - x) for x in range(n)]
+
+                    s = 0
+                    for index, item in enumerate(nearby_coordinates):
+                        s += item[0] * weights[index]
+
+                    avg_coord = s / sum(weights)
+
+                    self.polar.from_r_theta(self.config["minimum_bar_size"] + ( (avg_coord - self.config["minimum_bar_size"]) * more), coord[1])
                     polar_offset = self.polar.get_rectangular_coordinates()
                     path.lineTo(
                         (self.center_x + polar_offset[0]),

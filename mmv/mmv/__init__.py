@@ -48,7 +48,6 @@ class mmv:
         self.main.setup(cli=False)
 
         # Default options of performance and quality, 720p60
-        self.performance()
         self.quality()
 
         # Configuring options
@@ -63,11 +62,6 @@ class mmv:
     def run(self) -> None:
         self.main.run()
 
-    # Performance settings, if we'll be running linearly or with N MMV Workers
-    def performance(self, multiprocessed: bool=False, workers: int=4) -> None:
-        self.main.context.multiprocessed = multiprocessed
-        self.main.context.multiprocessing_workers = workers
-    
     # Define output video width, height and frames per second
     def quality(self, width: int=1280, height: int=720, fps: int=60) -> None:
         self.main.context.width = width
@@ -211,11 +205,28 @@ class AudioProcessingPresets:
     # Get some bazz, som' mid freq
     # Good for heavy low frequencies music
     def preset_bass_mid(self) -> None:
+        # self.mmv.main.audio_processing.config = {
+        #     0: {
+        #         "sample_rate": 4000,
+        #         "get_frequencies": "range",
+        #         "start_freq": 60,
+        #         "end_freq": 2000,
+        #         "nbars": "original",
+        #     },
+        # }
+
         self.mmv.main.audio_processing.config = {
             0: {
-                "sample_rate": 4000,
+                "sample_rate": 2000,
                 "get_frequencies": "range",
                 "start_freq": 60,
+                "end_freq": 1000,
+                "nbars": "original",
+            },
+            1: {
+                "sample_rate": 4000,
+                "get_frequencies": "range",
+                "start_freq": 1000,
                 "end_freq": 2000,
                 "nbars": "original",
             },

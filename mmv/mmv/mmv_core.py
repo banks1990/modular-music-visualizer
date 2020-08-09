@@ -19,7 +19,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.mmv_worker import get_canvas_multiprocess_return
 from mmv.common.cmn_audio import AudioProcessing
 from mmv.common.cmn_video import FFmpegWrapper
 from mmv.common.cmn_skia import SkiaWrapper
@@ -31,7 +30,6 @@ from mmv.common.cmn_utils import Utils
 from mmv.mmv_context import Context
 from mmv.mmv_image import MMVImage
 from mmv.common.cmn_types import *
-import multiprocessing
 import setproctitle
 import numpy as np
 import threading
@@ -152,9 +150,6 @@ class Core:
             self.ffmpeg.write_to_pipe(global_frame_index, next_image)
 
             # [ FAILSAFE ] Reset the canvas (not needed if full background is present (recommended))
-            if not self.context.multiprocessed:
-                self.canvas.reset_canvas()
+            self.canvas.reset_canvas()
     
-        if not self.context.multiprocessed:
-            # We're out of animation steps, close the pipe to finish the video
-            self.ffmpeg.close_pipe()
+        self.ffmpeg.close_pipe()

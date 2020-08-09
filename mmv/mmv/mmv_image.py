@@ -166,7 +166,6 @@ class MMVImage:
                 height = self.context.height + (2*shake)
                 
                 self.image.load_from_array(frame)
-                self.image._override(True)
                 self.image.resize_to_resolution(
                     width, height,
                     override=True

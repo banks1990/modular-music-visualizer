@@ -45,8 +45,6 @@ linked again every time we process the image variable.
 class Frame:
 
     def __init__(self) -> None:
-        # Multiprocessing pending things to do, ordered
-        self.pending = {}
         self.size = 1
     
     # # Internal functions
