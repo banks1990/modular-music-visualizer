@@ -162,8 +162,8 @@ class MMVImage:
                     if self.utils.is_matching_type([modifier], [MMVModifierShake]):
                         shake = modifier.distance
 
-                width = self.context.width + (2*shake)
-                height = self.context.height + (2*shake)
+                width = self.context.width + (4*shake)
+                height = self.context.height + (4*shake)
                 
                 self.image.load_from_array(frame)
                 self.image.resize_to_resolution(

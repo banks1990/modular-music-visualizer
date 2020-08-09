@@ -31,10 +31,10 @@ pygradienter = processing.pygradienter(workers=12)
 processing.assets_dir("assets/user_assets")
 
 # Set the resolution we want to create the pygradienter images
-pygradienter.config.resolution(200, 200)
+pygradienter.config.resolution(800, 800)
 
 # How many images we'll be generating
-pygradienter.config.n_images(2)
+pygradienter.config.n_images(12)
 
 # The pygradienter profile we'll create
 profile = "simple_smooth"

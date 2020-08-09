@@ -27,8 +27,9 @@ import skia
 
 
 class MMVVisualizerCircle:
-    def __init__(self, MMVVisualizer, skia_object):
+    def __init__(self, MMVVisualizer, context, skia_object):
         self.visualizer = MMVVisualizer
+        self.context = context
         self.skia = skia_object
         self.config = self.visualizer.config
         self.polar = PolarCoordinates()
@@ -61,9 +62,11 @@ class MMVVisualizerCircle:
                     elif channel == "r":
                         theta = (math.pi/2) + ((index/npts)*math.pi)
 
+                    magnitude = (magnitude / 720) * self.context.height
+
                     # We send an r, theta just in case we want to do something with it later on
                     data[channel]["coordinates"].append([
-                        ( self.config["minimum_bar_size"] + magnitude * 9 ) * effects["size"],
+                        ( self.config["minimum_bar_size"] + magnitude * 13 ) * effects["size"],
                         theta,
                     ])
 

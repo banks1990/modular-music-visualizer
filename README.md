@@ -4,11 +4,11 @@ An attempt to make a free (as in freedom) and open source music visualization to
 
 ## Small showcase
 
-![Demo image of MMV](repo/demo-2.jpg)
+![Demo image of MMV](repo/demo.jpg)
 
-[Link to unlisted video of the full music in the image above](https://youtu.be/UXncwltx-pQ)
+This screenshot is from a track of mine I released using MMV!!
 
-(it's an work in progress track I'm producing)
+[Link on YouTube](https://www.youtube.com/watch?v=KRI9cKPsK1Q)
 
 _The DAW is Ardour 6.0_
 

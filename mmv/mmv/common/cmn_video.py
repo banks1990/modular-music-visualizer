@@ -46,7 +46,7 @@ class FFmpegWrapper():
             ffmpeg
             .input('pipe:', format='rawvideo', pix_fmt='rgba', r=self.context.fps, s='{}x{}'.format(self.context.width, self.context.height))
             .output(output, pix_fmt='yuv420p', vcodec='libx264', r=self.context.fps, crf=18, loglevel="quiet")
-            .global_args('-i', self.context.input_file)
+            .global_args('-i', self.context.input_file, "-c:a", "copy")
             .overwrite_output()
             .run_async(pipe_stdin=True)
         )

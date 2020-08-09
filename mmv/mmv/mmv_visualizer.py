@@ -64,7 +64,7 @@ class MMVVisualizer:
         self.image = Frame()
 
         if self.config["type"] == "circle":
-            self.builder = MMVVisualizerCircle(self, self.skia)
+            self.builder = MMVVisualizerCircle(self, self.context, self.skia)
 
     def smooth(self, array, smooth):
         if smooth > 0:

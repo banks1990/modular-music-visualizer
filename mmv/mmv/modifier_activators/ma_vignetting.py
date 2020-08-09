@@ -35,7 +35,8 @@ def ma_vignetting_ic_low(
         height: Number,
     ) -> None:
 
-    interpolation.target_value = ( (start_value - 600 * average_audio_value) / 720) * height
+    change = (600 / 720) * height
+    interpolation.target_value = start_value - (change * average_audio_value)
 
 # default
 def ma_vignetting_ic_medium(
@@ -46,7 +47,8 @@ def ma_vignetting_ic_medium(
         height: Number,
     ) -> None:
 
-    interpolation.target_value = ( (start_value - 800 * average_audio_value) / 720) * height
+    change = (800 / 720) * height
+    interpolation.target_value = start_value - (change * average_audio_value)
 
 def ma_vignetting_ic_high(
         start_value: Number,
@@ -56,7 +58,8 @@ def ma_vignetting_ic_high(
         height: Number,
     ) -> None:
 
-    interpolation.target_value = ( (start_value - 1200 * average_audio_value) / 720) * height
+    change = (1200 / 720) * height
+    interpolation.target_value = start_value - (change * average_audio_value)
 
 
 # "vc" - Value Changer functions, applied after interpolation
