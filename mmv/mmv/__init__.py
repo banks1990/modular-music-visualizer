@@ -217,18 +217,43 @@ class AudioProcessingPresets:
 
         self.mmv.main.audio_processing.config = {
             0: {
-                "sample_rate": 2000,
+                "sample_rate": 1000,
                 "get_frequencies": "range",
-                "start_freq": 60,
-                "end_freq": 1000,
+                "start_freq": 20,
+                "end_freq": 500,
                 "nbars": "original",
             },
             1: {
-                "sample_rate": 4000,
+                "sample_rate": 1000,
                 "get_frequencies": "range",
-                "start_freq": 1000,
-                "end_freq": 2000,
+                "start_freq": 20,
+                "end_freq": 500,
                 "nbars": "original",
             },
+           
         }
     
+    def preset_musical_notes(self) -> None:
+        self.mmv.main.audio_processing.config = {
+            # 0: {
+            #     "sample_rate": 40000,
+            #     "get_frequencies": "musical",
+            #     "start_freq": 20,
+            #     "end_freq": 10000,
+            #     "nbars": "original",
+            # }
+            0: {
+                "sample_rate": 8000,
+                "get_frequencies": "musical",
+                "start_freq": 20,
+                "end_freq": 1000,
+                "multiplier": 1600
+            },
+            1: {
+                "sample_rate": 40000,
+                "get_frequencies": "musical",
+                "start_freq": 1000,
+                "end_freq": 10000,
+                "nbars": "original",
+            }
+        }

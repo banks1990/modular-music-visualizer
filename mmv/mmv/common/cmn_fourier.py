@@ -21,6 +21,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from scipy.fftpack import fft
+import scipy.signal
 import numpy as np
 
 
@@ -43,6 +44,26 @@ class Fourier:
     # For more information, https://stackoverflow.com/questions/4364823
     def binned_fft(self, data: np.ndarray, sample_rate: int) -> dict:
 
+        # f_welch, S_xx_welch = scipy.signal.welch(
+        #     data,
+        #     fs = sample_rate,
+        #     scaling = "density", #"spectrum",
+        #     window = scipy.signal.exponential(len(data), tau=0.1)
+        # )
+
+        # f, t, Sxx = scipy.signal.spectrogram(
+        #     data,
+        #     sample_rate,
+        #     nperseg = 2048
+        # )
+
+        # print(f, t,  f.shape, t.shape, Sxx.shape)
+        # exit()
+
+        # print(f_welch, len(f_welch))
+        # return dict(zip(f, Sxx))
+        # # #
+        
         # The FFT length
         N = data.shape[0]
 

@@ -99,6 +99,10 @@ class AudioProcessing:
         else:
             return samplerate.resample(data, ratio, 'sinc_best')
 
+    # Get N semitones above / below A4 key, 440 Hz
+    def get_frequency_of_key(self, n):
+        return 440 * ( (2**(1/12)) ** n )
+
     def process(self,
             data: np.ndarray,
             original_sample_rate: int
@@ -112,10 +116,13 @@ class AudioProcessing:
 
             # Get info on config
             get_frequencies = value.get("get_frequencies")
+            multiplier = value.get("multiplier", 1)
             sample_rate = value.get("sample_rate")
             start_freq = value.get("start_freq")
             end_freq = value.get("end_freq")
             nbars = value.get("nbars")
+
+            N = len(data)
 
             # Resample audio to target sample rate
             resampled = self.resample(data, original_sample_rate, sample_rate)
@@ -123,32 +130,40 @@ class AudioProcessing:
             # Get freqs vs fft value dictionary
             binned_fft = self.fourier.binned_fft(resampled, sample_rate)
 
+            wanted_binned_fft = {}
+
             # Do we want every frequency of the binned_fft or a set of it
             if get_frequencies == "range":
                 wanted_binned_fft = self.datautils.dictionary_items_in_between(binned_fft, start_freq, end_freq)
+
             elif get_frequencies == "all":
                 wanted_binned_fft = binned_fft
-            
+
+            elif get_frequencies == "musical":
+                key_freqs = [self.get_frequency_of_key(x) for x in range(-1000, 1000)]
+                wanted_freqs = self.datautils.list_items_in_between(key_freqs, start_freq, end_freq)
+                
+                # https://stackoverflow.com/a/7934608/13477696
+                closest_freq = lambda a,l:min(l,key=lambda x:abs(x-a))
+                keylist = list( binned_fft.keys() )
+                already = []
+                
+                for freq in wanted_freqs:
+                    new_closest = closest_freq(freq, list(binned_fft.keys()))
+                    if new_closest in already:
+                        next_index = keylist.index(new_closest) + 1
+                        if next_index in keylist:
+                            new_closest = keylist[next_index]
+                    already.append(new_closest)
+                    wanted_binned_fft[freq] = binned_fft[new_closest]
+                
             # Send the raw frequency vs fft dict 
-            if nbars == "original":
-                processed[key] = wanted_binned_fft
-                continue
-
-            # CSV string with some alternative on adapting the nbars
-            csv = nbars.split(",")
-
-            # "fixed,100,max" -> type, number of bars, average method
-            if csv[0] == "fixed":
-                nbars = csv[1]
-                mode = csv[2]
-                processed[key] = self.datautils.equal_bars_average(wanted_binned_fft, int(nbars), mode)
-            else:
-                raise RuntimeError("Method of AudioProcessing.process on nbars config [%s] not implemented" % csv[0])
+            processed[key] = wanted_binned_fft
             
         linear_processed = []
 
         for key, item in processed.items():
             for frequency in item:
-                linear_processed.append(item[frequency])
+                linear_processed.append(item[frequency] * multiplier)
 
         return linear_processed

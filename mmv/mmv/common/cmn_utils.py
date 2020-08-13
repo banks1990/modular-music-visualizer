@@ -186,6 +186,10 @@ class DataUtils():
     def dictionary_items_in_between(self, data, start, end):
         return {k: v for k, v in data.items() if k > start and k < end}
     
+    # Get a "subdictionary" from the data dictionary where the keys range in between start and end
+    def list_items_in_between(self, data, start, end):
+        return [x for x in data if ((start < x) and (x < end))]
+
     # Slice an array in (tries to) n equal slices
     def equal_slices(self, array, n):
         size = len(array)

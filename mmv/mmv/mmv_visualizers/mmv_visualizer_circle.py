@@ -64,38 +64,54 @@ class MMVVisualizerCircle:
 
                     magnitude = (magnitude / 720) * self.context.height
 
+                    minimum_multiplier = 0.1
+                    maximum_multiplier = 3
+
+                    #  len(this_channel_fft) - max
+                    #  index                 - x
+                    #
+                    # x = (max*index) / len(this_channel_fft)
+
+                    size = (magnitude*6) * ( (( (maximum_multiplier - minimum_multiplier)*index) / len(this_channel_fft)) + minimum_multiplier )
+
                     # We send an r, theta just in case we want to do something with it later on
                     data[channel]["coordinates"].append([
-                        ( self.config["minimum_bar_size"] + magnitude * 13 ) * effects["size"],
+                        # ( self.config["minimum_bar_size"] + magnitude*(2e6) ) * effects["size"],
+                        ( self.config["minimum_bar_size"] + size ) * effects["size"],
                         theta,
                     ])
 
-                    theta += this_step/100
+                    # Rotate the colors a bit on each step
+                    theta += this_step / 100
 
+                    # Define the color of the bars
                     colors = [
                         abs( math.sin((theta/2)) ),
                         abs( math.sin((theta + ((1/3)*2*math.pi)) / 2) ),
                         abs( math.sin((theta + ((2/3)*2*math.pi)) / 2) ),
-                    ] + [1]
+                    ] + [0.7] # Add full opacity
 
+                    # Make a skia color with the colors list as argument
                     color = skia.Color4f(*colors)
 
+                    # Make the skia Paint and
                     paint = skia.Paint(
                         AntiAlias = True,
                         Color = color,
                         Style = skia.Paint.kStroke_Style,
-                        StrokeWidth = 2 + magnitude,
+                        StrokeWidth = 8 # + (magnitude/4),
                     )
 
+                    # Store it on a list do draw in the end
                     data[channel]["paints"].append(paint)
 
+            # Our list of coordinates and paints, invert the right channel for drawing the path in the right direction
+            # Not reversing it will yield "symetric" bars along the diagonal
             coordinates = data["l"]["coordinates"] + [x for x in reversed(data["r"]["coordinates"]) ]
             paints = data["l"]["paints"] + [x for x in reversed(data["r"]["paints"]) ]
         
-            
-
             # Filled background
-            if True: # self.config["draw_background"]
+            if False: # self.config["draw_background"]
 
                 path = skia.Path()
                 white_background = skia.Paint(
@@ -155,7 +171,7 @@ class MMVVisualizerCircle:
                 self.skia.canvas.drawPath(path, white_background)
 
             # Countour, stroke
-            if True: # self.config["draw_black_border"]
+            if False: # self.config["draw_black_border"]
 
                 more = 2
 
