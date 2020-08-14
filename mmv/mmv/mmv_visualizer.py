@@ -83,6 +83,7 @@ class MMVVisualizer:
 
         # Get info
         fitfourier = self.config["fourier"]["fitfourier"]
+        frequencies = fftinfo["frequencies"]
         ffts = fftinfo["fft"]
 
         # Abs of left and right channel
@@ -150,5 +151,5 @@ class MMVVisualizer:
             fitted_ffts[channel] = np.copy(fitted_fft)
 
         # Call our actual visualizer for drawing directly on the canvas
-        self.builder.build(fitted_ffts, this_step, self.config, effects)
+        self.builder.build(fitted_ffts, frequencies, this_step, self.config, effects)
   

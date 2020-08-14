@@ -129,14 +129,17 @@ class Core:
 
             # # # [ Calculate the FFTs ] # # #
 
+            process = [
+                # For each sliced channel data we have, process that into the FFTs list
+                self.audio_processing.process(channel_data, self.audio.sample_rate)
+                for channel_data in self.audio_processing.audio_slice
+            ]
+
             # The fftinfo, or call it "current time audio info", couldn't think a better var name
             fftinfo = {
                 "average_value": self.audio_processing.average_value,
-                "fft": [
-                    # For each sliced channel data we have, process that into the FFTs list
-                    self.audio_processing.process(channel_data, self.audio.sample_rate)
-                    for channel_data in self.audio_processing.audio_slice
-                ]
+                "fft": [x["fft"] for x in process],
+                "frequencies": [x["frequencies"] for x in process],
             }
 
             # # # [ Next steps ] # # #

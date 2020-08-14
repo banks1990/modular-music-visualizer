@@ -1,7 +1,7 @@
 """
 ===============================================================================
 
-Purpose: MMVVisualizer object
+Purpose: MMVProgressionBarRectangle object
 
 ===============================================================================
 
@@ -121,6 +121,4 @@ class MMVProgressionBarRectangle:
                 
                 # Draw the border
                 self.skia.canvas.drawRect(border, paint)
-
-
 

@@ -20,7 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from mmv.common.cmn_coordinates import PolarCoordinates
-from mmv.common.cmn_functions import FitIndex
+from mmv.common.cmn_functions import Functions
 import numpy as np
 import math
 import skia
@@ -33,12 +33,12 @@ class MMVVisualizerCircle:
         self.skia = skia_object
         self.config = self.vectorial.config
         self.polar = PolarCoordinates()
-        self.fitindex = FitIndex()
+        self.functions = Functions()
 
         self.center_x = self.vectorial.context.width / 2
         self.center_y = self.vectorial.context.height / 2
 
-    def build(self, fitted_ffts: dict, this_step, config, effects):
+    def build(self, fitted_ffts: dict, frequencies: list, this_step: int, config: dict, effects):
 
         resolution_ratio_multiplier = self.vectorial.context.resolution_ratio_multiplier
 
@@ -66,15 +66,17 @@ class MMVVisualizerCircle:
 
                     magnitude = (magnitude / 720) * self.context.height
 
-                    minimum_multiplier = 0.1
-                    maximum_multiplier = 3
+                    minimum_multiplier = 0.7
+                    maximum_multiplier = 4
 
-                    #  len(this_channel_fft) - max
-                    #  index                 - x
-                    #
-                    # x = (max*index) / len(this_channel_fft)
+                    size = (magnitude*4) * self.functions.ax_plus_b_two_points(
+                        x = frequencies[0][index],
+                        end_x = 20000,
+                        zero_value = minimum_multiplier,
+                        max_value = maximum_multiplier,
+                    )
 
-                    size = (magnitude*6) * ( (( (maximum_multiplier - minimum_multiplier)*index) / len(this_channel_fft)) + minimum_multiplier )
+                    # size = (magnitude*6) * ( (( (maximum_multiplier - minimum_multiplier)*index) / len(this_channel_fft)) + minimum_multiplier )
 
                     # We send an r, theta just in case we want to do something with it later on
                     data[channel]["coordinates"].append([

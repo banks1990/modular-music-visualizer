@@ -37,6 +37,7 @@ class MMVVectorial:
                 skia_object = self.skia,
             )
         
+        # Progression bar object
         if type_class == "progression_bar":
             self.next_object = MMVProgressionBar(
                 context = self.context,

@@ -39,6 +39,15 @@ class Functions:
         # c - x
         # x = b*c/a
         return b*c/a
+    
+    def ax_plus_b_two_points(self, x: Number, end_x: Number, zero_value: Number, max_value: Number):
+        # Fit a y = ax + b, where:
+        #
+        # f(end_x) = max_value
+        # f(0) = zero_value
+        #
+        return (((max_value - zero_value)/end_x) * x) + zero_value
+        
 
 
 """

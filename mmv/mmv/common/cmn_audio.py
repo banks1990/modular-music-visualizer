@@ -160,9 +160,11 @@ class AudioProcessing:
             processed[key] = wanted_binned_fft
             
         linear_processed = []
+        frequencies = []
 
         for key, item in processed.items():
             for frequency in item:
+                frequencies.append(frequency)
                 linear_processed.append(item[frequency] * multiplier)
 
-        return linear_processed
+        return {"fft": linear_processed, "frequencies": frequencies}
