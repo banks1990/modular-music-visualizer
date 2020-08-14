@@ -25,7 +25,6 @@ from scipy.io import wavfile
 import numpy as np
 import subprocess
 import samplerate
-import soundfile
 import librosa
 import os
 

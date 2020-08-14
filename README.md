@@ -103,7 +103,7 @@ TODO, need testing, instructions should be close enough on running on Linux, jus
 
 - [x] ~~Profile the code, find bottlenecks, general optimization on most expensive functions~~ Video background is a bottleneck now because moving textures back and forth from the GPU, other than that the code is running fast
 
-- [ ] (boring) Update requirements.txt
+- [x] ~~(boring) Update requirements.txt~~
 
 - [x] ~~Make a proper presentation / demo / gif about MMV and link on README~~ didn't work well
 

@@ -20,7 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from glitch_this import ImageGlitcher
+# from glitch_this import ImageGlitcher
 from mmv.common.cmn_types import *
 from PIL import Image
 import numpy as np
