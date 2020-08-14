@@ -69,7 +69,7 @@ class MMVProgressionBarRectangle:
                 AntiAlias = True,
                 Color = color,
                 Style = skia.Paint.kStroke_Style,
-                StrokeWidth = 13, # + (magnitude/4),
+                StrokeWidth = 10 * resolution_bias, # + (magnitude/4),
                 # ImageFilter=skia.ImageFilters.DropShadow(3, 3, 5, 5, skia.ColorWHITE),
             )
 
