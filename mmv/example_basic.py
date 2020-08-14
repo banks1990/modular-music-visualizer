@@ -51,7 +51,7 @@ processing.quality(
 
 # The way we process and get the frequencies from the audio, highly
 # influences the frequencies bars on the visualizer itself
-processing.audio_processing.preset_bass_mid()
+processing.audio_processing.preset_musical_notes()
 
 # # #
  
@@ -149,7 +149,7 @@ visualizer.configure.simple_add_visualizer_circle(
     responsiveness=0.6,
     pre_fft_smoothing=0,
     pos_fft_smoothing=0,
-    subdivide=6
+    subdivide=0
 )
 
 # Center the visualizer
@@ -179,6 +179,17 @@ generator.particle_generator()
 generator.generator.configure.preset_bottom_mid_top()
 
 processing.add(generator)
+
+# Add basic progression bar
+prog_bar = processing.image_object()
+prog_bar.configure.init_animation_layer()
+prog_bar.configure.simple_add_progression_bar(
+    bar_type = "rectangle",
+    bar_mode = "bordered",
+)
+
+processing.add(prog_bar, layer=4)
+
 
 # Add simple vignetting on default configs on the post processing
 # Those darken the edges of the screen when the average amplitude of the audio

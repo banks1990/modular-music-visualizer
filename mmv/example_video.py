@@ -51,7 +51,7 @@ processing.quality(
 
 # The way we process and get the frequencies from the audio, highly
 # influences the frequencies bars on the visualizer itself
-processing.audio_processing.preset_balanced()
+processing.audio_processing.preset_musical_notes()
 
 # # #
  
@@ -172,10 +172,21 @@ generator.generator.configure.preset_bottom_mid_top()
 
 processing.add(generator)
 
+# Add basic progression bar
+prog_bar = processing.image_object()
+prog_bar.configure.init_animation_layer()
+prog_bar.configure.simple_add_progression_bar(
+    bar_type = "rectangle",
+    bar_mode = "bordered",
+)
+
+processing.add(prog_bar, layer=4)
+
+
 # Add simple vignetting on default configs on the post processing
 # Those darken the edges of the screen when the average amplitude of the audio
 # goes up, mostly with the bass. Search for vignetting, you'll see what I mean
-# processing.post_processing.simple_add_vignetting()
+processing.post_processing.simple_add_vignetting()
 
 
 # Run and generate the final video

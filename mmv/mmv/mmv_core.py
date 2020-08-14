@@ -82,6 +82,7 @@ class Core:
         # How many steps is the audio duration times the frames per second
         self.total_steps = int(self.audio.duration * self.context.fps)
         self.controller.total_steps = self.total_steps
+        self.context.total_steps = self.total_steps
 
         print(debug_prefix, "Total steps:", self.total_steps)
 

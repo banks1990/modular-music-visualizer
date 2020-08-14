@@ -20,6 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
+from mmv.mmv_progression_bar import MMVProgressionBar
 from mmv.mmv_visualizer import MMVVisualizer
 
 class MMVVectorial:
@@ -27,10 +28,17 @@ class MMVVectorial:
         self.context = context
         self.config = config
         self.skia = skia_object
-        
+
         # Visualizer bars
         if type_class == "visualizer":
             self.next_object = MMVVisualizer(
+                context = self.context,
+                config = self.config,
+                skia_object = self.skia,
+            )
+        
+        if type_class == "progression_bar":
+            self.next_object = MMVProgressionBar(
                 context = self.context,
                 config = self.config,
                 skia_object = self.skia,

@@ -27,18 +27,18 @@ import skia
 
 
 class MMVVisualizerCircle:
-    def __init__(self, MMVVisualizer, context, skia_object):
-        self.visualizer = MMVVisualizer
+    def __init__(self, MMVVectorial, context, skia_object):
+        self.vectorial = MMVVectorial
         self.context = context
         self.skia = skia_object
-        self.config = self.visualizer.config
+        self.config = self.vectorial.config
         self.polar = PolarCoordinates()
         self.fitindex = FitIndex()
 
-        self.center_x = self.visualizer.context.width / 2
-        self.center_y = self.visualizer.context.height / 2
+        self.center_x = self.vectorial.context.width / 2
+        self.center_y = self.vectorial.context.height / 2
 
-    def build(self, fitted_ffts: dict, this_step, config, effects) -> np.ndarray:
+    def build(self, fitted_ffts: dict, this_step, config, effects):
 
         if self.config["mode"] == "symetric":
 

@@ -60,7 +60,6 @@ class MMVVisualizer:
 
         self.current_fft = {}
 
-        # Create Frame and load random particle
         self.image = Frame()
 
         if self.config["type"] == "circle":

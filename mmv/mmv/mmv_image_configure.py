@@ -175,7 +175,7 @@ class MMVImageConfigure:
         )
     
 
-    # # # # # [ VISUALIZER ] # # # # # 
+    # # # # # [ VECTORIAL ] # # # # # 
 
     # Is this even python?
     def add_module_visualizer(self, 
@@ -237,6 +237,37 @@ class MMVImageConfigure:
             pre_fft_smoothing = pre_fft_smoothing,
             pos_fft_smoothing = pos_fft_smoothing,
             subdivide = subdivide
+        )
+    
+
+    def add_module_progression_bar(self, 
+            bar_type: str,
+            bar_mode: str,
+        ) -> None:
+
+        self.add_module({
+            "vectorial": {
+                "object": MMVVectorial(
+                    self.object.context,
+                    {
+                        "type": bar_type,
+                        "mode": bar_mode,
+                    },
+                    self.skia,
+                    "progression_bar",
+                )
+            }
+        })
+    
+    # Add a visualizer module
+    def simple_add_progression_bar(self,
+            bar_type: str="rectangle",
+            bar_mode: str="bordered",
+        ) -> None:
+
+        self.add_module_progression_bar(
+            bar_type = bar_type,
+            bar_mode = bar_mode,
         )
 
 

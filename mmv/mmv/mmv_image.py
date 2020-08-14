@@ -248,7 +248,7 @@ class MMVImage:
                 effects = {
                     "size": self.size,
                     "rotate": self.rotate_value,
-                    "image_filters": self.image_filters
+                    "image_filters": self.image_filters,
                 }
 
                 # Visualizer blits itself into the canvas automatically
