@@ -40,6 +40,8 @@ class MMVVisualizerCircle:
 
     def build(self, fitted_ffts: dict, this_step, config, effects):
 
+        resolution_ratio_multiplier = self.vectorial.context.resolution_ratio_multiplier
+
         if self.config["mode"] == "symetric":
 
             data = {}
@@ -99,7 +101,7 @@ class MMVVisualizerCircle:
                         AntiAlias = True,
                         Color = color,
                         Style = skia.Paint.kStroke_Style,
-                        StrokeWidth = 8 # + (magnitude/4),
+                        StrokeWidth = 8 * resolution_ratio_multiplier # + (magnitude/4),
                     )
 
                     # Store it on a list do draw in the end
@@ -220,6 +222,7 @@ class MMVVisualizerCircle:
                 self.skia.canvas.drawPath(path, black_stroke)
 
 
+            # Draw the main bars
             for index, coord in enumerate(coordinates):
 
                 more = 1
