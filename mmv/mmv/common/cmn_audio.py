@@ -115,7 +115,6 @@ class AudioProcessing:
 
             # Get info on config
             get_frequencies = value.get("get_frequencies")
-            multiplier = value.get("multiplier", 1)
             sample_rate = value.get("sample_rate")
             start_freq = value.get("start_freq")
             end_freq = value.get("end_freq")
@@ -165,6 +164,6 @@ class AudioProcessing:
         for key, item in processed.items():
             for frequency in item:
                 frequencies.append(frequency)
-                linear_processed.append(item[frequency] * multiplier)
+                linear_processed.append(item[frequency])
 
         return {"fft": linear_processed, "frequencies": frequencies}

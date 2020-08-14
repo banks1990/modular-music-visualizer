@@ -243,17 +243,15 @@ class AudioProcessingPresets:
             #     "nbars": "original",
             # }
             0: {
-                "sample_rate": 8000,
+                "sample_rate": 1000,
                 "get_frequencies": "musical",
                 "start_freq": 20,
-                "end_freq": 1000,
-                "multiplier": 500
+                "end_freq": 500,
             },
             1: {
                 "sample_rate": 40000,
                 "get_frequencies": "musical",
-                "start_freq": 1000,
-                "end_freq": 10000,
-                "nbars": "original",
+                "start_freq": 500,
+                "end_freq": 20000,
             }
         }

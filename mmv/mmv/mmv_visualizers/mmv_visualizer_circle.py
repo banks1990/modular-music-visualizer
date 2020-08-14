@@ -66,10 +66,10 @@ class MMVVisualizerCircle:
 
                     magnitude = (magnitude / 720) * self.context.height
 
-                    minimum_multiplier = 1
-                    maximum_multiplier = 7
+                    minimum_multiplier = 0.4
+                    maximum_multiplier = 25
 
-                    size = (magnitude*7) * self.functions.ax_plus_b_two_points(
+                    size = (magnitude) * self.functions.ax_plus_b_two_points(
                         x = frequencies[0][index],
                         end_x = 20000,
                         zero_value = minimum_multiplier,

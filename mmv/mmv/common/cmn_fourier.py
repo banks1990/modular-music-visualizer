@@ -23,7 +23,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 from scipy.fftpack import fft
 import scipy.signal
 import numpy as np
-
+import math
 
 class Fourier:
 
@@ -42,7 +42,7 @@ class Fourier:
         return transform[cut[0]:cut[1]]
 
     # For more information, https://stackoverflow.com/questions/4364823
-    def binned_fft(self, data: np.ndarray, sample_rate: int) -> dict:
+    def binned_fft(self, data: np.ndarray, sample_rate: int, original_sample_rate: int=48000) -> dict:
 
         # f_welch, S_xx_welch = scipy.signal.welch(
         #     data,
@@ -77,7 +77,19 @@ class Fourier:
 
         # Assign freq vs fft on a dictionary
         for index in range(1, len(fft)):
+
+            # " The height is a reflection of power density, so if you double the sampling frequency,
+            # and hence half the width of each frequency bin, you'll double the amplitude of the FFT result.""
+            # >> https://wiki.analytica.com/FFT
+            #
+            # original_sample_rate * 2^n = sample_rate
+            # 2^n = original_sample_rate / sample_rate
+            # n log(2) = log(sample_rate / original_sample_rate)
+            # n = log(sample_rate / original_sample_rate) / log(2)
+
+            n = math.log10(original_sample_rate / sample_rate) / math.log10(2)
             frequency = round(get_bin(index), 2)
-            binned_fft_dict[frequency] = fft[index]
+            binned_fft_dict[frequency] = fft[index] * (2**n)
+
 
         return binned_fft_dict
