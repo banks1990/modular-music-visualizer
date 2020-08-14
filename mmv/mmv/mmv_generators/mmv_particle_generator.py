@@ -73,6 +73,8 @@ class MMVParticleGenerator():
     
     def preset_bottom_mid_top(self):
 
+        resolution_ratio_multiplier = self.context.resolution_ratio_multiplier
+
         particle = MMVImage(self.context, self.skia)
 
         particle.image.load_from_path(
@@ -81,7 +83,7 @@ class MMVParticleGenerator():
             )
         )
         
-        horizontal_randomness = 50
+        horizontal_randomness = int(50 * resolution_ratio_multiplier)
         vertical_randomness_min = self.context.height//1.7
         vertical_randomness_max = self.context.height//2.3
 
@@ -185,7 +187,7 @@ class MMVParticleGenerator():
         }
 
         particle.image.resize_by_ratio(
-            random.uniform(0.1, 0.3),
+            random.uniform(0.1 * resolution_ratio_multiplier, 0.3 * resolution_ratio_multiplier),
             override=True
         )
 
@@ -203,7 +205,7 @@ class MMVParticleGenerator():
             )
         )
         
-        horizontal_randomness = 50
+        horizontal_randomness = int(50 * resolution_ratio_multiplier)
         vertical_randomness_min = self.context.height//1.7
         vertical_randomness_max = self.context.height//2.3
 
@@ -302,7 +304,7 @@ class MMVParticleGenerator():
         
 
         particle.image.resize_by_ratio(
-            random.uniform(0.1, 0.3),
+            random.uniform(0.1  * resolution_ratio_multiplier, 0.3  * resolution_ratio_multiplier),
             override=True
         )
 
