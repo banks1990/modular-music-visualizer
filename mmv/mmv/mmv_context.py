@@ -59,4 +59,4 @@ class Context:
         self.watch_processing_video_realtime = False
 
     def update_biases(self):
-        self.resolution_bias = (1/720) * self.height
+        self.resolution_ratio_multiplier = (1/720) * self.height

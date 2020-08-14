@@ -49,11 +49,11 @@ class MMVProgressionBarRectangle:
 
         total_steps = self.vectorial.context.total_steps
         completion = self.functions.proportion(total_steps, 1, this_step)
-        resolution_bias = self.vectorial.context.resolution_bias
+        resolution_ratio_multiplier = self.vectorial.context.resolution_ratio_multiplier
 
         average_value = fftinfo["average_value"]
 
-        offset_by_amplitude = average_value * 14 * resolution_bias
+        offset_by_amplitude = average_value * 14 * resolution_ratio_multiplier
 
         if self.config["mode"] == "bordered":
 
@@ -69,7 +69,7 @@ class MMVProgressionBarRectangle:
                 AntiAlias = True,
                 Color = color,
                 Style = skia.Paint.kStroke_Style,
-                StrokeWidth = 10 * resolution_bias, # + (magnitude/4),
+                StrokeWidth = 10 * resolution_ratio_multiplier, # + (magnitude/4),
                 # ImageFilter=skia.ImageFilters.DropShadow(3, 3, 5, 5, skia.ColorWHITE),
             )
 
@@ -87,7 +87,7 @@ class MMVProgressionBarRectangle:
 
             # Borders around image
             if True:
-                distance = 9 * resolution_bias
+                distance = 9 * resolution_ratio_multiplier
 
                 colors = [
                     1, 1, 1
