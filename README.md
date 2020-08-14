@@ -93,6 +93,14 @@ TODO, need testing, instructions should be close enough on running on Linux, jus
 
 #### High priority / now
 
+- [ ] (30%) Progression bar (square, circle, pie graph?)
+
+- [ ] Implement text support
+
+- [ ] ..lyrics also?
+
+- [ ] Comment new code after this huge R&D, simplifications
+
 - [x] (basically 90% done) Huge refactor of the code and moving a lot of stuff, simplifying interpolation and making Modifier classes individually
 
 - [x] ~~(stuck) R&D alternative methods for converting SVG --> PNG under Python because Windows (or could someone write a small guide for installing cairo under Windows that works? I didn't put much effort until now on this)~~ `skia-python` solved all this
@@ -108,8 +116,6 @@ TODO, need testing, instructions should be close enough on running on Linux, jus
 - [x] ~~Make a proper presentation / demo / gif about MMV and link on README~~ didn't work well
 
 #### Ideas for the future or waiting to be executed
-
-- [ ] Progression bar (square, circle, pie graph?)
 
 - [ ] Rectangle bars visualizer (only circle + linear or symetric currently)
 

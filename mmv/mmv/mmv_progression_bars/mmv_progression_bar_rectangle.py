@@ -44,14 +44,16 @@ class MMVProgressionBarRectangle:
         self.end_x = self.vectorial.context.width - bleed_x
         self.end_y = start_end_y
 
+
     def build(self, fftinfo, this_step, config, effects):
 
         total_steps = self.vectorial.context.total_steps
         completion = self.functions.proportion(total_steps, 1, this_step)
+        resolution_bias = self.vectorial.context.resolution_bias
 
         average_value = fftinfo["average_value"]
 
-        offset_by_amplitude = average_value * 10
+        offset_by_amplitude = average_value * 14 * resolution_bias
 
         if self.config["mode"] == "bordered":
 
@@ -85,7 +87,7 @@ class MMVProgressionBarRectangle:
 
             # Borders around image
             if True:
-                distance = 13
+                distance = 9 * resolution_bias
 
                 colors = [
                     1, 1, 1

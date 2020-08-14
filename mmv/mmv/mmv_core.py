@@ -89,6 +89,9 @@ class Core:
         # Init skia
         self.skia.init()
 
+        # Update info that might have been changed by the user
+        self.context.update_biases()
+
         # Next animation
         for this_step in range(0, self.total_steps):
 
