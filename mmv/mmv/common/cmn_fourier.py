@@ -75,19 +75,19 @@ class Fourier:
 
         binned_fft_dict = {}
 
+        # " The height is a reflection of power density, so if you double the sampling frequency,
+        # and hence half the width of each frequency bin, you'll double the amplitude of the FFT result.""
+        # >> https://wiki.analytica.com/FFT
+        #
+        # sample_rate * 2^n = original_sample_rate
+        # 2^n = original_sample_rate / sample_rate
+        # n log(2) = log(sample_rate / original_sample_rate)
+        # n = log(sample_rate / original_sample_rate) / log(2)
+
+        n = math.log10(original_sample_rate / sample_rate) / math.log10(2)
+
         # Assign freq vs fft on a dictionary
         for index in range(1, len(fft)):
-
-            # " The height is a reflection of power density, so if you double the sampling frequency,
-            # and hence half the width of each frequency bin, you'll double the amplitude of the FFT result.""
-            # >> https://wiki.analytica.com/FFT
-            #
-            # original_sample_rate * 2^n = sample_rate
-            # 2^n = original_sample_rate / sample_rate
-            # n log(2) = log(sample_rate / original_sample_rate)
-            # n = log(sample_rate / original_sample_rate) / log(2)
-
-            n = math.log10(original_sample_rate / sample_rate) / math.log10(2)
             frequency = round(get_bin(index), 2)
             binned_fft_dict[frequency] = fft[index] * (2**n)
 

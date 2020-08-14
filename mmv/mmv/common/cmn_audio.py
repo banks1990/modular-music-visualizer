@@ -165,5 +165,5 @@ class AudioProcessing:
             for frequency in item:
                 frequencies.append(frequency)
                 linear_processed.append(item[frequency])
-
+        
         return {"fft": linear_processed, "frequencies": frequencies}
