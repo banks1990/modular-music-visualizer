@@ -247,7 +247,7 @@ class AudioProcessingPresets:
                 "get_frequencies": "musical",
                 "start_freq": 20,
                 "end_freq": 1000,
-                "multiplier": 1600
+                "multiplier": 500
             },
             1: {
                 "sample_rate": 40000,
