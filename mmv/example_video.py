@@ -177,7 +177,7 @@ prog_bar = processing.image_object()
 prog_bar.configure.init_animation_layer()
 prog_bar.configure.simple_add_progression_bar(
     bar_type = "rectangle",
-    bar_mode = "bordered",
+    bar_mode = "simple",
 )
 
 processing.add(prog_bar, layer=4)

@@ -1,7 +1,7 @@
 """
 ===============================================================================
 
-Purpose: MMVVisualizer object
+Purpose: MMVVisualizer object for music bars
 
 ===============================================================================
 
@@ -19,7 +19,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-
 from mmv.mmv_visualizers.mmv_visualizer_circle import MMVVisualizerCircle
 from mmv.common.cmn_coordinates import PolarCoordinates
 from mmv.common.cmn_interpolation import Interpolation
@@ -30,11 +29,11 @@ from mmv.common.cmn_frame import Frame
 from mmv.common.cmn_utils import Utils
 from mmv.mmv_modifiers import *
 from resampy import resample
+import numpy as np
 import random
 import math
 import os
 
-import numpy as np
 
 class MMVVisualizer:
     def __init__(self, context, config: dict, skia_object) -> None:
@@ -62,9 +61,13 @@ class MMVVisualizer:
 
         self.image = Frame()
 
+        # We use separate file and classes for each type of visualizer
+
+        # Circle, radial visualizer
         if self.config["type"] == "circle":
             self.builder = MMVVisualizerCircle(self, self.context, self.skia)
 
+    # Smooth an array
     def smooth(self, array, smooth):
         if smooth > 0:
             box = np.ones(smooth)/smooth
@@ -75,8 +78,11 @@ class MMVVisualizer:
     # Next step of animation
     def next(self, fftinfo, this_step, effects):
 
-        fitfourier = self.config["fourier"]["fitfourier"]
+        # # # We start with a bunch of routines for interpolating our fft on the three channels
+        # # # according to the last value
 
+        # Get info
+        fitfourier = self.config["fourier"]["fitfourier"]
         ffts = fftinfo["fft"]
 
         # Abs of left and right channel
@@ -127,9 +133,10 @@ class MMVVisualizer:
 
                 self.current_fft[channel][index] = interpolation.next()
 
-
             # Start a zero fitted fft list
             fitted_fft = np.copy( self.current_fft[channel] )
+
+            # # Smoothing can look weird, "musical notes" preset fixes almost everything
 
             # Smooth the peaks
             if fitfourier["pos_fft_smoothing"] > 0:
@@ -139,18 +146,9 @@ class MMVVisualizer:
             if fitfourier["subdivide"] > 0:
                 fitted_fft = resample(fitted_fft, fitted_fft.shape[0], fitted_fft.shape[0] * fitfourier["subdivide"])
 
-            # Ignore the really low end of the FFT as well as the high end frequency spectrum
-            cut = [0, 0.95]
-
-            # Cut the fitted fft
-            fitted_fft = fitted_fft[
-                int(fitted_fft.shape[0]*cut[0])
-                :
-                int(fitted_fft.shape[0]*cut[1])
-            ]
-
+            # Send the fitted fft to its list
             fitted_ffts[channel] = np.copy(fitted_fft)
 
+        # Call our actual visualizer for drawing directly on the canvas
         self.builder.build(fitted_ffts, this_step, self.config, effects)
-
   

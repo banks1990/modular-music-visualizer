@@ -42,6 +42,7 @@ class MMVGenerator:
     def next(self, fftinfo: dict, this_step: int) -> dict:
         return self.generator.next(fftinfo, this_step)
 
+    # Set a particle generator object
     def particle_generator(self) -> None:
         self.generator = MMVParticleGenerator(self.context, self.skia)
         

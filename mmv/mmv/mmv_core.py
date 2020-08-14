@@ -156,4 +156,5 @@ class Core:
             # [ FAILSAFE ] Reset the canvas (not needed if full background is present (recommended))
             self.canvas.reset_canvas()
     
+        # End pipe
         self.ffmpeg.close_pipe()

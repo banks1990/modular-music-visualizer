@@ -281,9 +281,11 @@ class MMVImage:
     # Blit this item on the canvas
     def blit(self, blit_to_skia) -> None:
 
+        # Vectorial objects blit themselves on a .next() function
         if self.is_vectorial:
             return
 
+        # Invert x and y because top left is (0, 0), y first
         y = int(self.x + self.offset[1])
         x = int(self.y + self.offset[0])
 
@@ -293,11 +295,11 @@ class MMVImage:
         if self.image_filters:
             self.paint_dict["ImageFilter"] = skia.ImageFilters.Merge(self.image_filters)
 
-        image = self.image.image
-        
+        # Get a paint with the options, image filters (if any) for skia to draw
         paint = skia.Paint(self.paint_dict)
 
+        # Blit this image
         blit_to_skia.canvas.drawImage(
-            image, x, y,
+            self.image.image, x, y,
             paint = paint,
         )

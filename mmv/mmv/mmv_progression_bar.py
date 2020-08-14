@@ -34,7 +34,6 @@ import random
 import math
 import os
 
-import numpy as np
 
 class MMVProgressionBar:
     def __init__(self, context, config: dict, skia_object) -> None:
@@ -58,10 +57,13 @@ class MMVProgressionBar:
 
         self.image = Frame()
 
+        # We have different files with different classes of ProgressionBars
+
+        # Simple, rectangle bar
         if self.config["type"] == "rectangle":
             self.builder = MMVProgressionBarRectangle(self, self.context, self.skia)
 
-    # Next step of animation
+    # Call builder for drawing directly on the canvas
     def next(self, fftinfo, this_step, effects):
         self.builder.build(fftinfo, this_step, self.config, effects)
 

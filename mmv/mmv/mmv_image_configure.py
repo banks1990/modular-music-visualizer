@@ -262,7 +262,7 @@ class MMVImageConfigure:
     # Add a visualizer module
     def simple_add_progression_bar(self,
             bar_type: str="rectangle",
-            bar_mode: str="bordered",
+            bar_mode: str="simple",
         ) -> None:
 
         self.add_module_progression_bar(

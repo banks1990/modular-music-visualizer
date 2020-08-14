@@ -49,7 +49,7 @@ class Context:
         self.height = 720
         self.fps = 60
 
-        # # Batchs, responsiveness
+        # # Batchs
         self.batch_size = 2048 #(48000 // self.fps) # 512
 
         # Offset the audio slice by this much of steps
@@ -59,4 +59,15 @@ class Context:
         self.watch_processing_video_realtime = False
 
     def update_biases(self):
+
+        # This is a scalar value that says what percentage of a 720p resolution
+        # this video will be rendered with, for fixing incorrect sizing and
+        # "adapting" the coordiantes acording to the resolution.
+        # 
+        # For a 720p ->  (1/720) * 720 = 1
+        # For a 1080p ->  (1/720) * 1080 = 1.5
+        #
+        # That means a 1080p values need to be multiplied by 1.5 to match the values
+        # on a 720p video as that's the default reference
+        #
         self.resolution_ratio_multiplier = (1/720) * self.height
