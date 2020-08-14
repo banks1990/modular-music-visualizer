@@ -26,6 +26,7 @@ from mmv.modifier_activators.ma_vignetting import *
 
 from mmv.mmv_interpolation import MMVInterpolation
 from mmv.mmv_visualizer import MMVVisualizer
+from mmv.mmv_vectorial import MMVVectorial
 from mmv.common.cmn_types import *
 from mmv.mmv_modifiers import *
 import os
@@ -189,8 +190,8 @@ class MMVImageConfigure:
         ) -> None:
 
         self.add_module({
-            "visualizer": {
-                "object": MMVVisualizer(
+            "vectorial": {
+                "object": MMVVectorial(
                     self.object.context,
                     {
                         "type": vis_type,
@@ -207,7 +208,8 @@ class MMVImageConfigure:
                             }
                         }
                     },
-                    self.skia
+                    self.skia,
+                    "visualizer",
                 )
             }
         })

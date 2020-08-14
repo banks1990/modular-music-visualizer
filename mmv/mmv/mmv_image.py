@@ -61,7 +61,7 @@ class MMVImage:
         self.current_animation = 0
         self.current_step = -1
         self.is_deletable = False
-        self.is_visualizer = False
+        self.is_vectorial = False
         self.type = "mmvimage"
         self.overlay_mode = "composite"  # composite and copy
 
@@ -136,7 +136,7 @@ class MMVImage:
             
             modules = this_animation["modules"]
 
-            self.is_visualizer = "visualizer" in modules
+            self.is_vectorial = "vectorial" in modules
 
             # The video module must be before everything as it gets the new frame                
             if "video" in modules:
@@ -178,7 +178,7 @@ class MMVImage:
                 amount = rotate.next()
                 amount = round(amount, self.ROUND)
                 
-                if not self.is_visualizer:
+                if not self.is_vectorial:
                     self.image.rotate(amount, from_current_frame=True)
                 else:
                     self.rotate_value = amount
@@ -191,7 +191,7 @@ class MMVImage:
                 resize.next(fftinfo["average_value"])
                 self.size = resize.get_value()
 
-                if not self.is_visualizer:
+                if not self.is_vectorial:
                     
                     # If we're going to rotate, resize the rotated frame which is not the original image 
                     offset = self.image.resize_by_ratio( self.size, from_current_frame = True )
@@ -241,9 +241,9 @@ class MMVImage:
                     )
                 })
             
-            if "visualizer" in modules:
-                this_module = modules["visualizer"]
-                visualizer = this_module["object"]
+            if "vectorial" in modules:
+                this_module = modules["vectorial"]
+                vectorial = this_module["object"]
 
                 effects = {
                     "size": self.size,
@@ -252,7 +252,7 @@ class MMVImage:
                 }
 
                 # Visualizer blits itself into the canvas automatically
-                visualizer.next(fftinfo, this_step, effects)
+                vectorial.next(fftinfo, this_step, effects)
 
 
         # Iterate through every position module
@@ -281,7 +281,7 @@ class MMVImage:
     # Blit this item on the canvas
     def blit(self, blit_to_skia) -> None:
 
-        if self.is_visualizer:
+        if self.is_vectorial:
             return
 
         y = int(self.x + self.offset[1])
