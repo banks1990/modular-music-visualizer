@@ -10,6 +10,7 @@ mmv/trivia*
 !repo
 modular-music-visualizer-venv
 .vscode
+mmv/untracked
 
 # Yeah this is my identity, you should use yours here :)
 mmv/assets/tremx_assets
