@@ -97,7 +97,7 @@ I can provide additional info and help you doing so!!
 
 #### High priority / now
 
-I'll be attempting to rewrite this project as things whilst not spaghetti code yet are becoming a bit hard and convoluted.
+I might attempt to rewrite this project in the future as things currently are becoming a bit convolutet, though not spaghetti code yet.
 
 - [ ] (30%) Progression bar (square, circle, pie graph?)
 
