@@ -63,10 +63,11 @@ class mmv:
         self.main.run()
 
     # Define output video width, height and frames per second
-    def quality(self, width: int=1280, height: int=720, fps: int=60) -> None:
+    def quality(self, width: int=1280, height: int=720, fps: int=60, batch_size=2048) -> None:
         self.main.context.width = width
         self.main.context.height = height
         self.main.context.fps = fps
+        self.main.context.batch_size = batch_size
         self.width = width
         self.height = height
         self.resolution = [width, height]
@@ -252,6 +253,6 @@ class AudioProcessingPresets:
                 "sample_rate": 40000,
                 "get_frequencies": "musical",
                 "start_freq": 500,
-                "end_freq": 20000,
+                "end_freq": 18000,
             }
         }

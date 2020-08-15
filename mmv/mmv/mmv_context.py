@@ -49,7 +49,8 @@ class Context:
         self.height = 720
         self.fps = 60
 
-        # # Batchs
+        # # Overhaul "resolution" of the FFT, 512 lowpoly, 2048 balanced, 4096 + accurate
+        # # Performance decreases with higher values
         self.batch_size = 2048 #(48000 // self.fps) # 512
 
         # Offset the audio slice by this much of steps

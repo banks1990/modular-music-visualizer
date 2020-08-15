@@ -1,6 +1,8 @@
 # Modular Music Visualizer
 
-An attempt to make a free (as in freedom) and open source music visualization tool for the music production community
+An attempt to make a free (as in freedom) and open source music visualization tool for the music production community.
+
+Currently I only officially support the Linux OS / environment, though potentially it can be run on Windows without much issue apart from installing a few dependencies, more info below.
 
 ## Small showcase
 
@@ -87,11 +89,15 @@ There's also the example of calling pygradienter from a MMV script
 
 ## Windows
 
-TODO, need testing, instructions should be close enough on running on Linux, just have Python 3.8 installed and on PATH variable, you should be good to go..
+If you can install the package `skia-python` with pip or from source, I guess MMV will have one or another minor issue left to be run on Windows.
+
+I can provide additional info and help you doing so!!
 
 # Goals, what is being developed
 
 #### High priority / now
+
+I'll be attempting to rewrite this project as things whilst not spaghetti code yet are becoming a bit hard and convoluted.
 
 - [ ] (30%) Progression bar (square, circle, pie graph?)
 
