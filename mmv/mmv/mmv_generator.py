@@ -19,7 +19,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.mmv_generators.mmv_particle_generator import MMVParticleGenerator
+from mmv.generators.mmv_particle_generator import MMVParticleGenerator
 from mmv.common.cmn_interpolation import Interpolation
 from mmv.mmv_music_bar import MMVMusicBars
 from mmv.common.cmn_utils import Utils

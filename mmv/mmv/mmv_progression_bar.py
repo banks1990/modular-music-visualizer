@@ -20,7 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 
-from mmv.mmv_progression_bars.mmv_progression_bar_rectangle import MMVProgressionBarRectangle
+from mmv.progression_bars.mmv_progression_bar_rectangle import MMVProgressionBarRectangle
 from mmv.common.cmn_coordinates import PolarCoordinates
 from mmv.common.cmn_interpolation import Interpolation
 from mmv.common.cmn_functions import Functions

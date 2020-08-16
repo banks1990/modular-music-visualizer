@@ -19,7 +19,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.mmv_music_bars.mmv_music_bar_circle import MMVMusicBarsCircle
+from mmv.music_bars.mmv_music_bar_circle import MMVMusicBarsCircle
 from mmv.common.cmn_coordinates import PolarCoordinates
 from mmv.common.cmn_interpolation import Interpolation
 from mmv.common.cmn_functions import Functions
