@@ -23,7 +23,7 @@ from mmv.modifier_activators.ma_fade import *
 
 from mmv.common.cmn_interpolation import Interpolation
 from mmv.mmv_interpolation import MMVInterpolation
-from mmv.mmv_visualizer import MMVVisualizer
+from mmv.mmv_music_bar import MMVMusicBars
 from mmv.common.cmn_utils import Utils
 from mmv.mmv_image import MMVImage
 from mmv.mmv_modifiers import *

@@ -1,7 +1,7 @@
 """
 ===============================================================================
 
-Purpose: MMVVisualizer object
+Purpose: MMVMusicBars object
 
 ===============================================================================
 
@@ -26,7 +26,7 @@ import math
 import skia
 
 
-class MMVVisualizerCircle:
+class MMVMusicBarsCircle:
     def __init__(self, MMVVectorial, context, skia_object):
         self.vectorial = MMVVectorial
         self.context = context

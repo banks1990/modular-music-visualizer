@@ -21,7 +21,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from mmv.mmv_progression_bar import MMVProgressionBar
-from mmv.mmv_visualizer import MMVVisualizer
+from mmv.mmv_music_bar import MMVMusicBars
 
 class MMVVectorial:
     def __init__(self, context, config: dict, skia_object, type_class) -> None:
@@ -31,7 +31,7 @@ class MMVVectorial:
 
         # Visualizer bars
         if type_class == "visualizer":
-            self.next_object = MMVVisualizer(
+            self.next_object = MMVMusicBars(
                 context = self.context,
                 config = self.config,
                 skia_object = self.skia,

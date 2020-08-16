@@ -277,7 +277,7 @@
                 #     "activation": "20*X",
                 # },
                 "visualizer": {
-                    "object": MMVVisualizer(
+                    "object": MMVMusicBars(
                         self.context,
                         {
                             "type": "circle",

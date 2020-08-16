@@ -19,7 +19,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.mmv_visualizer import MMVVisualizer
+from mmv.mmv_music_bar import MMVMusicBars
 from mmv.common.cmn_skia import SkiaWrapper
 from mmv.common.cmn_audio import AudioFile
 from mmv.mmv_controller import Controller

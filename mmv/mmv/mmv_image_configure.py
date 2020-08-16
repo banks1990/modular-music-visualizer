@@ -25,7 +25,7 @@ from mmv.modifier_activators.ma_gaussian_blur import *
 from mmv.modifier_activators.ma_vignetting import *
 
 from mmv.mmv_interpolation import MMVInterpolation
-from mmv.mmv_visualizer import MMVVisualizer
+from mmv.mmv_music_bar import MMVMusicBars
 from mmv.mmv_vectorial import MMVVectorial
 from mmv.common.cmn_types import *
 from mmv.mmv_modifiers import *

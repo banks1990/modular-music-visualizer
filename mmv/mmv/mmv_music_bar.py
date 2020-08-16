@@ -1,7 +1,7 @@
 """
 ===============================================================================
 
-Purpose: MMVVisualizer object for music bars
+Purpose: MMVMusicBars object for music bars
 
 ===============================================================================
 
@@ -19,7 +19,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.mmv_visualizers.mmv_visualizer_circle import MMVVisualizerCircle
+from mmv.mmv_music_bars.mmv_music_bar_circle import MMVMusicBarsCircle
 from mmv.common.cmn_coordinates import PolarCoordinates
 from mmv.common.cmn_interpolation import Interpolation
 from mmv.common.cmn_functions import Functions
@@ -35,10 +35,10 @@ import math
 import os
 
 
-class MMVVisualizer:
+class MMVMusicBars:
     def __init__(self, context, config: dict, skia_object) -> None:
         
-        debug_prefix = "[MMVVisualizer.__init__]"
+        debug_prefix = "[MMVMusicBars.__init__]"
         
         self.context = context
         self.config = config
@@ -65,7 +65,7 @@ class MMVVisualizer:
 
         # Circle, radial visualizer
         if self.config["type"] == "circle":
-            self.builder = MMVVisualizerCircle(self, self.context, self.skia)
+            self.builder = MMVMusicBarsCircle(self, self.context, self.skia)
 
     # Smooth an array
     def smooth(self, array, smooth):

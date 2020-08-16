@@ -99,6 +99,8 @@ I can provide additional info and help you doing so!!
 
 I might attempt to rewrite this project in the future as things currently are becoming a bit convolutet, though not spaghetti code yet.
 
+- [ ] Implement MIDI visualization (that'd be fun)
+
 - [ ] (30%) Progression bar (square, circle, pie graph?)
 
 - [ ] Implement text support

@@ -22,7 +22,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 from mmv.mmv_image_configure import MMVImageConfigure
 from mmv.mmv_interpolation import MMVInterpolation
 from mmv.common.cmn_functions import Functions
-from mmv.mmv_visualizer import MMVVisualizer
+from mmv.mmv_music_bar import MMVMusicBars
 from mmv.common.cmn_frame import Frame
 from mmv.common.cmn_utils import Utils
 from mmv.mmv_context import Context

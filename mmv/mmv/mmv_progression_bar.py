@@ -1,7 +1,7 @@
 """
 ===============================================================================
 
-Purpose: MMVVisualizer object
+Purpose: MMVMusicBars object
 
 ===============================================================================
 
@@ -38,7 +38,7 @@ import os
 class MMVProgressionBar:
     def __init__(self, context, config: dict, skia_object) -> None:
         
-        debug_prefix = "[MMVVisualizer.__init__]"
+        debug_prefix = "[MMVMusicBars.__init__]"
         
         self.context = context
         self.config = config

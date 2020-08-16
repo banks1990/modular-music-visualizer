@@ -20,7 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from mmv.mmv_generator import MMVParticleGenerator
-from mmv.mmv_visualizer import MMVVisualizer
+from mmv.mmv_music_bar import MMVMusicBars
 from mmv.mmv_generator import MMVGenerator
 from mmv.pygradienter import pygradienter
 from mmv.common.cmn_utils import Utils
