@@ -38,10 +38,9 @@ import sys
 import os
 
 
-class Miscellaneous():
-
+class Miscellaneous:
     def __init__(self) -> None:
-        self.version = "2.0-dev"
+        self.version = "2.1-dev"
         self.greeter_message()
 
     def greeter_message(self) -> None:
@@ -66,7 +65,6 @@ class Miscellaneous():
 
 
 class MMVMain:
-
     def __init__(self, quiet: bool=False) -> None:
         if not quiet:
             Miscellaneous()
@@ -120,11 +118,11 @@ class MMVMain:
         self.ffmpeg.pipe_one_time(self.context.output_video)
 
         try:
-            import cProfile
-            p = cProfile.Profile()
-            p.enable()
+            # import cProfile
+            # p = cProfile.Profile()
+            # p.enable()
             self.core.run()
-            p.disable()
-            p.dump_stats("res.prof")
+            # p.disable()
+            # p.dump_stats("res.prof")
         except KeyboardInterrupt:
             sys.exit(-1)

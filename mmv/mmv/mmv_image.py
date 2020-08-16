@@ -90,6 +90,8 @@ class MMVImage:
         self.reset_canvas()
         self.configure.add_path_point(0, 0)
     
+    # Create empty zeros canvas IMAGE, not CONTENTS.
+    # If we ever wanna mirror the contents and apply post processing
     def reset_canvas(self) -> None:
         self.image.new(self.context.width, self.context.height)
 

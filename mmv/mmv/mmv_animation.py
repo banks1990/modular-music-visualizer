@@ -19,7 +19,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.mmv_music_bar import MMVMusicBars
 from mmv.common.cmn_skia import SkiaWrapper
 from mmv.common.cmn_audio import AudioFile
 from mmv.mmv_context import Context
@@ -110,4 +109,3 @@ class MMVAnimation:
 
         # Post process this final frame as we added all the items
         self.canvas.next(fftinfo, this_step, self.skia)
-        # self.canvas.blit(self.skia)

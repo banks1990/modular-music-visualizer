@@ -23,6 +23,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 from mmv.mmv_progression_bar import MMVProgressionBar
 from mmv.mmv_music_bar import MMVMusicBars
 
+
 class MMVVectorial:
     def __init__(self, context, config: dict, skia_object, type_class) -> None:
         self.context = context

@@ -106,7 +106,6 @@ class Frame:
                 print(debug_prefix, "Can't load [%s], looped [%s] times" % (path, tries))
             try:
                 # Our untouched original image
-                # self.original_image = cv2.imread(path, cv2.IMREAD_UNCHANGED)
                 self.original_image = skia.Image.open(path)
                 break # the while loop
             except Exception as e:
