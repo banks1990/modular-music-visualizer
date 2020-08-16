@@ -1,6 +1,6 @@
 # Modular Music Visualizer
 
-An attempt to make a free (as in freedom) and open source music visualization tool for the music production community.
+An attempt to make a free (as in freedom) and open source music visualization After Effects-like tool for the music production community.
 
 Currently I only officially support the Linux OS / environment, though potentially it can be run on Windows without much issue apart from installing a few dependencies, more info below.
 

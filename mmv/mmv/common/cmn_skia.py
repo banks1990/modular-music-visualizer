@@ -46,6 +46,7 @@ class SkiaWrapper:
         self.surface = skia.Surface.MakeRenderTarget(self.gl_context, skia.Budgeted.kNo, self.info)
         assert self.surface is not None
 
+        # Use CPU for rasterizing, faster transportation of images but slow rendering
         # self.surface = skia.Surface.MakeRasterN32Premul(self.context.width, self.context.height)
 
         with self.surface as canvas:
