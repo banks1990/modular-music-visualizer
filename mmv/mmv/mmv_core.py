@@ -25,7 +25,6 @@ from mmv.common.cmn_skia import SkiaWrapper
 from mmv.common.cmn_fourier import Fourier
 from mmv.common.cmn_audio import AudioFile
 from mmv.mmv_animation import MMVAnimation
-from mmv.mmv_controller import Controller
 from mmv.common.cmn_utils import Utils
 from mmv.mmv_context import Context
 from mmv.mmv_image import MMVImage
@@ -43,7 +42,6 @@ import gc
 class Core:
     def __init__(self, 
             context: Context,
-            controller: Controller,
             canvas: MMVImage,
             skia: SkiaWrapper,
             fourier: Fourier,
@@ -55,7 +53,6 @@ class Core:
 
         # Get every class
         self.context = context
-        self.controller = controller
         self.canvas = canvas
         self.skia = skia
         self.fourier = fourier
@@ -81,7 +78,6 @@ class Core:
         
         # How many steps is the audio duration times the frames per second
         self.total_steps = int(self.audio.duration * self.context.fps)
-        self.controller.total_steps = self.total_steps
         self.context.total_steps = self.total_steps
 
         print(debug_prefix, "Total steps:", self.total_steps)

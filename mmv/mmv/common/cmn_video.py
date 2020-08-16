@@ -32,9 +32,8 @@ import cv2
 
 
 class FFmpegWrapper():
-    def __init__(self, context, controller):
+    def __init__(self, context):
         self.context = context
-        self.controller = controller
         self.functions = Functions()
 
     # Create a FFmpeg writable pipe for generating a video
@@ -97,7 +96,7 @@ class FFmpegWrapper():
                 self.lock_writing = False
 
                 # Are we finished on the expected total number of images?
-                if self.count == self.controller.total_steps - 1:
+                if self.count == self.context.total_steps - 1:
                     self.close_pipe()
                 
                 self.count += 1
@@ -110,7 +109,7 @@ class FFmpegWrapper():
                 took = now - start  # Total time took in this runtime
                 eta = round(self.functions.proportion(current_time, took, remaining) / 60, 2)
                 
-                print("Frame count=[%s] proc=[%.2f sec / %.2f sec] took=[%.2f min] eta=[%.2f min] sum=[%.2f min] fullpower=[%s]" % (self.count, current_time, duration, round(took/60, 2), eta, round((took/60 + eta), 2), not self.controller.core_waiting))
+                print("Frame count=[%s] proc=[%.2f sec / %.2f sec] took=[%.2f min] eta=[%.2f min] sum=[%.2f min]" % (self.count, current_time, duration, round(took/60, 2), eta, round((took/60 + eta), 2) ))
             else:
                 time.sleep(0.1)
 

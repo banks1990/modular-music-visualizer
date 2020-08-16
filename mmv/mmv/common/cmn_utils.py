@@ -142,7 +142,7 @@ class Utils():
         with open(path, "r") as f:
             return yaml.load(f, Loader=yaml.FullLoader)
 
-    # Waits until file exist or controller stop var is True
+    # Waits until file exist
     def until_exist(self, path):
 
         debug_prefix = "[Utils.until_exist]"

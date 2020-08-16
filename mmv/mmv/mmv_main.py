@@ -25,7 +25,6 @@ from mmv.common.cmn_skia import SkiaWrapper
 from mmv.mmv_animation import MMVAnimation
 from mmv.common.cmn_audio import AudioFile
 from mmv.common.cmn_fourier import Fourier
-from mmv.mmv_controller import Controller
 from mmv.mmv_context import Context
 from mmv.mmv_image import MMVImage
 from mmv.mmv_core import Core
@@ -80,9 +79,6 @@ class MMVMain:
         print(debug_prefix, "Creating Context()")
         self.context = Context(args)
 
-        print(debug_prefix, "Creating Controller()")
-        self.controller = Controller(self.context)
-
         print(debug_prefix, "Creating SkiaWrapper()")
         self.skia = SkiaWrapper(self.context)
 
@@ -93,7 +89,7 @@ class MMVMain:
         self.fourier = Fourier()
 
         print(debug_prefix, "Creating FFmpegWrapper()")
-        self.ffmpeg = FFmpegWrapper(self.context, self.controller)
+        self.ffmpeg = FFmpegWrapper(self.context)
 
         print(debug_prefix, "Creating AudioFile()")
         self.audio = AudioFile()
@@ -102,12 +98,11 @@ class MMVMain:
         self.audio_processing = AudioProcessing()
 
         print(debug_prefix, "Creating MMVAnimation()")
-        self.mmvanimation = MMVAnimation(self.context, self.controller, self.audio, self.canvas, self.skia)
+        self.mmvanimation = MMVAnimation(self.context, self.audio, self.canvas, self.skia)
     
         print(debug_prefix, "Creating Core()")
         self.core = Core(
             self.context,
-            self.controller,
             self.canvas,
             self.skia,
             self.fourier,
