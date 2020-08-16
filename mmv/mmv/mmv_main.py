@@ -122,7 +122,9 @@ class MMVMain:
             # p = cProfile.Profile()
             # p.enable()
             self.core.run()
+            self.skia.terminate_glfw()
             # p.disable()
             # p.dump_stats("res.prof")
         except KeyboardInterrupt:
+            self.skia.terminate_glfw()
             sys.exit(-1)

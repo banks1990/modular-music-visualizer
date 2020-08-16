@@ -24,7 +24,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 from mmv.common.cmn_types import *
 from PIL import Image
 import numpy as np
-import numpy
 import skia
 import time
 import copy
@@ -35,12 +34,8 @@ import os
 cv2.setNumThreads(12)
 
 """
-This is (yet another) wrapper for images, but more focused on modularity
-There are three variables you are interested in, those are image, original_image and array.
-original_image is kept as a backup where you can just go back and revert all the processing you do
-image is the current latest processed image, array is that image's raw data, both should be
-linked again every time we process the image variable.
-
+original_image -> if we wanna "undo" all processing
+image -> current processed image
 """
 class Frame:
 
