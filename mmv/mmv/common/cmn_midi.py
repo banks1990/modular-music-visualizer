@@ -19,9 +19,87 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
+from cmn_types import InlineClass
 import mido
 
 
-class MidiFileProc:
+DEFAULT_TEMPO = 120
+
+
+class RangeNotes:
+    def __init__(self):
+        self.min = -1
+        self.max = -1
+    
+    def update(self, new_note):
+        if self.min == -1 and self.max == -1:
+            self.max = new_note
+            self.min = new_note
+            return
+        if self.max < new_note:
+            self.max = new_note
+        if new_note < self.min:
+            self.min = new_note
+
+
+class MidiFile:
     def load(self, path):
         self.midi = mido.MidiFile(path, clip=True)
+        self.time = 0
+        self.range_notes = RangeNotes()
+    
+    def process(self):
+        
+        self.timestamps = {}
+        ongoing = {}
+
+        for data in self.iter_messages():
+            self.range_notes.update(data.note)
+            
+            if data.note in ongoing.keys():
+                velocity = ongoing[data.note].velocity
+                start = ongoing[data.note].time
+                note = data.note
+                end = data.time
+                
+                if not start in self.timestamps:
+                    self.timestamps[start] = []
+
+                self.timestamps[start].append(InlineClass({
+                    "start": start,
+                    "end": end,
+                    "velocity": velocity,
+                    "note": note,
+                }))
+                
+                del ongoing[data.note]
+            else:
+                ongoing[data.note] = data
+        
+        print(self.timestamps)
+        print("Range:", self.range_notes.min, self.range_notes.max)
+
+    def iter_messages(self):
+
+        for msg in mido.merge_tracks(self.midi.tracks):
+            # Convert message time from absolute time
+            # in ticks to relative time in seconds.
+            if msg.time > 0:
+                delta = mido.tick2second(msg.time, 480, tempo)
+            else:
+                delta = 0
+            
+            if self.time > 2:
+                continue
+
+            self.time += delta
+
+            if msg.type in ["note_on", "note_off"]:
+                yield InlineClass({
+                    "note": msg.note,
+                    "velocity": msg.velocity,
+                    "time": self.time,
+                })
+
+            if msg.type == 'set_tempo':
+                tempo = msg.tempo
