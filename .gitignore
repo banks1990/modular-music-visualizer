@@ -11,6 +11,7 @@ mmv/trivia*
 modular-music-visualizer-venv
 .vscode
 mmv/untracked
+mmv/mmv/common/midis
 
 # Yeah this is my identity, you should use yours here :)
 mmv/assets/tremx_assets

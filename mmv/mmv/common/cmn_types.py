@@ -22,6 +22,6 @@ from typing import NewType, Union
 
 Number = Union[float, int]
 
-class InlineClass(object):
+class InlineDict:
     def __init__(self, dict):
         self.__dict__ = dict

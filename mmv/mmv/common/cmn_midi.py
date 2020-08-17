@@ -19,7 +19,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from cmn_types import InlineClass
+from cmn_types import InlineDict
 import mido
 
 
@@ -48,8 +48,16 @@ class MidiFile:
         self.time = 0
         self.range_notes = RangeNotes()
     
+    def note_to_name(self, n):
+        # 69 -> A4
+        # 60 -> C4
+        letters = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+        octave = str((n // 12) - 1)
+        letter = letters[(n + 60) % 12]
+        return letter + octave
+
     def process(self):
-        
+
         self.timestamps = {}
         ongoing = {}
 
@@ -65,13 +73,14 @@ class MidiFile:
                 if not start in self.timestamps:
                     self.timestamps[start] = []
 
-                self.timestamps[start].append(InlineClass({
+                self.timestamps[start].append(InlineDict({
                     "start": start,
                     "end": end,
                     "velocity": velocity,
                     "note": note,
+                    "name": self.note_to_name(note),
                 }))
-                
+
                 del ongoing[data.note]
             else:
                 ongoing[data.note] = data
@@ -95,7 +104,7 @@ class MidiFile:
             self.time += delta
 
             if msg.type in ["note_on", "note_off"]:
-                yield InlineClass({
+                yield InlineDict({
                     "note": msg.note,
                     "velocity": msg.velocity,
                     "time": self.time,
