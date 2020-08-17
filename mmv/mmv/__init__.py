@@ -77,6 +77,7 @@ class mmv:
         path = self.utils.get_abspath(path)
         if not os.path.exists(path):
             raise FileNotFoundError(f"Input {message} does not exist {path}")
+        return path
 
     # Set the input audio file, raise exception if it does not exist
     def input_audio(self, path: str) -> None:
