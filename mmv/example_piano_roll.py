@@ -50,6 +50,7 @@ processing.quality(
 processing.assets_dir("assets/free_assets")
 
 # I/O options, input a audio, output a video
+processing.audio_processing.preset_dummy()
 processing.input_audio("assets/free_assets/sound/banjo.ogg")
 processing.output_video("mmv-output.mkv")
 processing.input_midi("entertainer.mid")

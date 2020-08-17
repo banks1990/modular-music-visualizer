@@ -263,3 +263,6 @@ class AudioProcessingPresets:
                 "end_freq": 18000,
             }
         }
+
+    def preset_dummy(self) -> None:
+        self.mmv.main.audio_processing.config = {}
