@@ -73,12 +73,18 @@ class mmv:
         self.resolution = [width, height]
         self.main.canvas.create_canvas()
     
-    # Set the input audio file, raise exception if it does not exist
-    def input_audio(self, path: str) -> None:
+    def set_path(self, path, message="path"):
         path = self.utils.get_abspath(path)
         if not os.path.exists(path):
-            raise FileNotFoundError("Input audio path does not exist [%s]" % path)
-        self.main.context.input_file = path
+            raise FileNotFoundError(f"Input {message} does not exist {path}")
+
+    # Set the input audio file, raise exception if it does not exist
+    def input_audio(self, path: str) -> None:
+        self.main.context.input_file = self.set_path(path)
+    
+    # Set the input audio file, raise exception if it does not exist
+    def input_midi(self, path: str) -> None:
+        self.main.context.input_midi = self.set_path(path)
     
     # Output path where we'll be saving the final video
     def output_video(self, path: str) -> None:

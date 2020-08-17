@@ -42,6 +42,7 @@ class Context:
         # Files, info
         self.output_video = None
         self.input_file = None
+        self.input_midi = None
         self.duration = None
 
         # Video specs

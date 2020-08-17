@@ -1,7 +1,7 @@
 """
 ===============================================================================
 
-Purpose: MMVProgressionBar object
+Purpose: MMVPianoRoll object for MIDI visualization
 
 ===============================================================================
 
@@ -19,19 +19,10 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.progression_bars.mmv_progression_bar_rectangle import MMVProgressionBarRectangle
-from mmv.common.cmn_frame import Frame
-from mmv.common.cmn_utils import Utils
-from mmv.mmv_modifiers import *
-import random
-import math
-import os
-
-
-class MMVProgressionBar:
+class MMVPianoRoll:
     def __init__(self, context, config: dict, skia_object) -> None:
         
-        debug_prefix = "[MMVMusicBars.__init__]"
+        debug_prefix = "[MMVPianoRoll.__init__]"
         
         self.context = context
         self.config = config
@@ -39,17 +30,12 @@ class MMVProgressionBar:
 
         self.utils = Utils()
 
-        self.path = {}
-
-        self.x = 0
-        self.y = 0
-        self.size = 1
         self.is_deletable = False
         self.offset = [0, 0]
 
         self.image = Frame()
 
-        # We have different files with different classes of ProgressionBars
+        # We have different files with different classes of PianoRolls
 
         # Simple, rectangle bar
         if self.config["type"] == "rectangle":
