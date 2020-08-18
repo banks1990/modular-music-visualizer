@@ -1,8 +1,12 @@
 # Modular Music Visualizer
 
-An attempt to make a free (as in freedom) and open source music visualization After Effects-like tool for the music production community.
+An attempt to make a free (as in freedom) and open source music visualization After Effects-like tool for the music production community. 
 
-Currently I only officially support the Linux OS / environment, though potentially it can be run on Windows without much issue apart from installing a few dependencies, more info below.
+#### Audio + MMV configuration script = Final video
+
+I gently ask you to read about the [Free Software Definition / Philosophy](https://www.gnu.org/philosophy/free-sw.html) and join us!! :)
+
+This project wasn't extensively tested on Windows, feedback appreciated.
 
 ## Small showcase
 
@@ -71,13 +75,31 @@ Note: on Windows you might need to replace `python` with `python.exe` if using P
 
 Another point is that directories on Windows uses `\` instead of (what everything else uses) `/`, Python should convert those automatically but maybe not within the shell, like: `.\path\to\executable.exe` instead of `./path/to/executable.exe`, the second one might not run.
 
-### Install Python 64 bits (REQUIRED)
+### Install Python 64 bits (REQUIRED) and FFmpeg
 
-- Arch Linux / pacman based (Manjaro): `sudo pacman -Syu python`
+#### Linux:
 
-- Ubuntu / apt based: `sudo apt update && sudo apt install python`
+- Arch Linux / pacman based (Manjaro): `sudo pacman -Syu python ffmpeg`
 
-- Windows: Head over to [Python Releases for Windows](https://www.python.org/downloads/windows/), download a _"Windows x86-64 executable installer"_ (I currently use Python 3.8), install it (be sure to check _"ADD PYTHON TO PATH"_ option on the installer)
+- Ubuntu / apt based: `sudo apt update && sudo apt install python ffmpeg`
+
+#### Windows:
+
+Head over to [Python Releases for Windows](https://www.python.org/downloads/windows/), download a _"Windows x86-64 executable installer"_ (I currently use Python 3.8), install it (be sure to check _"ADD PYTHON TO PATH"_ option on the installer)
+
+Download a compiled FFmpeg [build](https://ffmpeg.zeranoe.com/builds/), the binary must be available within PATH environment for `ffmpeg-python` package to use, extract it to somewhere then go to:
+
+- Control Panel
+
+- System
+
+- Advanced system settings
+
+- Advanced tab, "Environment Variables.."
+
+- Click on PATH variable name, edit it
+
+- Add a new entry pointing to a folder where `ffmpeg.exe` is
 
 ### Getting the source code
 
