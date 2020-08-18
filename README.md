@@ -61,8 +61,6 @@ You can open issues or DM me asking how the code works, where to start contribut
 
 ### General recomendations
 
-You can also use [pillow-simd](https://github.com/uploadcare/pillow-simd) instead of vanilla Pillow, preferably with the AVX2 instructions explained in its repo if your CPU supports so, it's faster as you can see [here](https://python-pillow.org/pillow-perf/).
-
 If you're going to venture out on creating your own MMV scripts or hacking the code, making new presets, I highly recommend reading the basics of Python [here](https://learnxinyminutes.com/docs/python/), it doesn't take much to read and will avoid some beginner pitfals.
 
 Though you probably should be fine by just creating a copy of the example scripting I provide on the repo and reading through my comments and seeing the Python code working, it's pretty straightforward the top most abstracted methods as I tried to simplify the syntax and naming functions with a more _"concrete"_ meaning. 
@@ -81,7 +79,7 @@ Another point is that directories on Windows uses `\` instead of (what everythin
 
 - Arch Linux / pacman based (Manjaro): `sudo pacman -Syu python ffmpeg`
 
-- Ubuntu / apt based: `sudo apt update && sudo apt install python ffmpeg`
+- Ubuntu / apt based: `sudo apt update && sudo apt install python3 python3-venv python3-dev python3-setuptools ffmpeg`
 
 #### Windows:
 
@@ -100,6 +98,26 @@ Download a compiled FFmpeg [build](https://ffmpeg.zeranoe.com/builds/), the bina
 - Click on PATH variable name, edit it
 
 - Add a new entry pointing to a folder where `ffmpeg.exe` is
+
+### Installing Pillow-SIMD for faster performance
+
+While this package is not required and you can keep the default Pillow package, using [pillow-simd](https://github.com/uploadcare/pillow-simd) instead of the vanilla package, as you can see [here](https://python-pillow.org/pillow-perf/), is indeed faster, however Pillow isn't the biggest bottleneck in the code, so you'd get performances (guessing) at most 10% faster.
+
+Install the listed [prerequisites](https://pillow.readthedocs.io/en/stable/installation.html#building-from-source) according to your platform on their documentation, and as mentioned on the main repo README, install `pillow-simd` with:
+
+```bash
+$ pip uninstall pillow
+$ pip install pillow-simd
+```
+
+If you want you can use AVX2 enabled build installation with:
+
+```bash
+$ pip uninstall pillow
+$ CC="cc -mavx2" pip install -U --force-reinstall pillow-simd
+```
+
+You can safely skip this section and use regular Pillow, but with longer render times this few performance gains can stack a lot.
 
 ### Getting the source code
 

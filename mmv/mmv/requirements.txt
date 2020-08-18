@@ -17,7 +17,7 @@ numpy==1.19.1
 opencv-python==4.4.0.40
 opensimplex==0.3
 packaging==20.4
-Pillow-SIMD==7.0.0.post3
+Pillow==7.2.0
 pooch==1.1.1
 pybind11==2.5.0
 pycparser==2.20
