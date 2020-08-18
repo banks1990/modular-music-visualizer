@@ -21,6 +21,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from mmv.mmv_progression_bar import MMVProgressionBar
+from mmv.mmv_piano_roll import MMVPianoRoll
 from mmv.mmv_music_bar import MMVMusicBars
 
 
@@ -39,8 +40,16 @@ class MMVVectorial:
             )
         
         # Progression bar object
-        if type_class == "progression_bar":
+        if type_class == "progression-bar":
             self.next_object = MMVProgressionBar(
+                context = self.context,
+                config = self.config,
+                skia_object = self.skia,
+            )
+        
+        # Progression bar object
+        if type_class == "piano-roll":
+            self.next_object = MMVPianoRoll(
                 context = self.context,
                 config = self.config,
                 skia_object = self.skia,

@@ -239,6 +239,7 @@ class MMVImageConfigure:
             subdivide = subdivide
         )
     
+    # Progression bar
 
     def add_module_progression_bar(self, 
             bar_type: str,
@@ -254,7 +255,7 @@ class MMVImageConfigure:
                         "mode": bar_mode,
                     },
                     self.skia,
-                    "progression_bar",
+                    "progression-bar",
                 )
             }
         })
@@ -270,6 +271,33 @@ class MMVImageConfigure:
             bar_mode = bar_mode,
         )
 
+    # Piano roll
+
+    def add_module_piano_roll(self, 
+            piano_type: str,
+        ) -> None:
+
+        self.add_module({
+            "vectorial": {
+                "object": MMVVectorial(
+                    self.object.context,
+                    {
+                        "type": piano_type,
+                    },
+                    self.skia,
+                    "piano-roll",
+                )
+            }
+        })
+    
+    # Add a visualizer module
+    def simple_add_piano_roll(self,
+            piano_type: str="top-down",
+        ) -> None:
+
+        self.add_module_piano_roll(
+            piano_type = piano_type,
+        )
 
     # # # # # [ VIGNETTING ] # # # # #
 

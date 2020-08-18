@@ -19,11 +19,8 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from cmn_types import InlineDict
+from mmv.common.cmn_types import InlineDict
 import mido
-
-
-DEFAULT_TEMPO = 120
 
 
 class RangeNotes:
@@ -46,8 +43,10 @@ class MidiFile:
     def load(self, path):
         self.midi = mido.MidiFile(path, clip=True)
         self.time = 0
+        self.tempo = 120
         self.range_notes = RangeNotes()
     
+    # Midi note index (number) to name -> "C3", "A#4", F5, etc
     def note_to_name(self, n):
         # 69 -> A4
         # 60 -> C4
@@ -56,45 +55,21 @@ class MidiFile:
         letter = letters[(n + 60) % 12]
         return letter + octave
 
-    def process(self):
+    def create_empty_timestamp_list(self):
+        if not self.time in self.timestamps:
+            self.timestamps[self.time] = []
 
+    def process(self):
+        
         self.timestamps = {}
         ongoing = {}
 
-        for data in self.iter_messages():
-            self.range_notes.update(data.note)
-            
-            if data.note in ongoing.keys():
-                velocity = ongoing[data.note].velocity
-                start = ongoing[data.note].time
-                note = data.note
-                end = data.time
-                
-                if not start in self.timestamps:
-                    self.timestamps[start] = []
-
-                self.timestamps[start].append(InlineDict({
-                    "start": start,
-                    "end": end,
-                    "velocity": velocity,
-                    "note": note,
-                    "name": self.note_to_name(note),
-                }))
-
-                del ongoing[data.note]
-            else:
-                ongoing[data.note] = data
-        
-        print(self.timestamps)
-        print("Range:", self.range_notes.min, self.range_notes.max)
-
-    def iter_messages(self):
-
         for msg in mido.merge_tracks(self.midi.tracks):
+           
             # Convert message time from absolute time
             # in ticks to relative time in seconds.
             if msg.time > 0:
-                delta = mido.tick2second(msg.time, 480, tempo)
+                delta = mido.tick2second(msg.time, 480, self.tempo)
             else:
                 delta = 0
             
@@ -104,11 +79,48 @@ class MidiFile:
             self.time += delta
 
             if msg.type in ["note_on", "note_off"]:
-                yield InlineDict({
-                    "note": msg.note,
-                    "velocity": msg.velocity,
-                    "time": self.time,
-                })
+                
+                self.create_empty_timestamp_list()
+                velocity = msg.velocity
+                note = msg.note
+
+                self.range_notes.update(note)
+
+                if note in ongoing.keys():
+                    
+                    self.timestamps[self.time].append(InlineDict({
+                        "type": "note",
+                        "start": ongoing[note].start,
+                        "end": self.time,
+                        "velocity": velocity,
+                        "note": note,
+                        "name": self.note_to_name(note),
+                    }))
+
+                    del ongoing[note]
+                else:
+                    ongoing[note] = InlineDict({
+                        "start": self.time,
+                        "velocity": velocity,
+                        "note": note,
+                    })
+
+                # yield InlineDict({
+                #     "type": "note",
+                #     "note": msg.note,
+                #     "velocity": msg.velocity,
+                #     "time": self.time,
+                # })
 
             if msg.type == 'set_tempo':
+                self.create_empty_timestamp_list()
                 tempo = msg.tempo
+
+                self.timestamps[self.time].append(InlineDict({
+                    "type": "tempo",
+                    "value": tempo,
+                }))
+
+       
+        print(self.timestamps)
+        print("Range:", self.range_notes.min, self.range_notes.max)

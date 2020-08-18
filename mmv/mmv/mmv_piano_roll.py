@@ -19,6 +19,10 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
+from mmv.piano_rolls.mmv_piano_roll_top_down import MMVPianoRollTopDown
+from mmv.common.cmn_midi import MidiFile
+
+
 class MMVPianoRoll:
     def __init__(self, context, config: dict, skia_object) -> None:
         
@@ -34,15 +38,17 @@ class MMVPianoRoll:
         self.offset = [0, 0]
 
         self.image = Frame()
+        self.midi = MidiFile()
+        self.midi.load(self.context.input_midi)
 
         # We have different files with different classes of PianoRolls
 
         # Simple, rectangle bar
-        if self.config["type"] == "rectangle":
-            self.builder = MMVProgressionBarRectangle(self, self.context, self.skia)
+        if self.config["type"] == "top-down":
+            self.builder = MMVPianoRollTopDown(self, self.context, self.skia)
 
     # Call builder for drawing directly on the canvas
     def next(self, fftinfo, this_step, effects):
-        self.builder.build(fftinfo, this_step, self.config, effects)
+        self.builder.build(fftinfo, this_step, self.config, effects, self.midi)
 
   
