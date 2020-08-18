@@ -20,14 +20,13 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from PIL import Image
-import setproctitle
 import pickle
 
 
 def pyg_generate_from_profile(put_queue, get_queue, worker_id):
 
     # Set process name so we know who's what on a task manager
-    setproctitle.setproctitle(f"PyGradienter Worker {worker_id+1}")
+    # setproctitle.setproctitle(f"PyGradienter Worker {worker_id+1}")
 
     count = 0
 

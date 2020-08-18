@@ -49,49 +49,75 @@ You can open issues or DM me asking how the code works, where to start contribut
 
 # Running
 
-Please, if you are running this project from source, after installing the Python dependencies install [pillow-simd](https://github.com/uploadcare/pillow-simd) instead of vanilla Pillow, preferably with the AVX2 instructions explained in its repo if your CPU supports so.
+## IMPORTANT!!
 
-As you can see [here](https://python-pillow.org/pillow-perf/), `pillow-simd` is faster by a lot on imaging processing, although most stuff is done with skia, rotation is still done with PIL.
+### YOU MUST USE A 64 BIT PYTHON INSTALLATION
 
-#### IMPORTANT!!
+`skia-python` package only includes 64 bit wheels on PyPI as Skia 32 bits is not available for the public.
 
-If you're going to venture out on creating your own MMV scripts, I higly recommend reading the basics of Python [here](https://learnxinyminutes.com/docs/python/), it doesn't take much to read and will avoid some beginner pitfals.
+### General recomendations
 
-Though you probably should be fine by just creating a copy of the example scripting I provide on the repo and reading through my comments and seeing the Python code working, it's pretty straightforward as I tried to simplify the syntax and naming functions with a more _"concrete"_ meaning. 
+You can also use [pillow-simd](https://github.com/uploadcare/pillow-simd) instead of vanilla Pillow, preferably with the AVX2 instructions explained in its repo if your CPU supports so, it's faster as you can see [here](https://python-pillow.org/pillow-perf/).
 
-## Linux
+If you're going to venture out on creating your own MMV scripts or hacking the code, making new presets, I highly recommend reading the basics of Python [here](https://learnxinyminutes.com/docs/python/), it doesn't take much to read and will avoid some beginner pitfals.
 
-Install Python and git on your distribution
+Though you probably should be fine by just creating a copy of the example scripting I provide on the repo and reading through my comments and seeing the Python code working, it's pretty straightforward the top most abstracted methods as I tried to simplify the syntax and naming functions with a more _"concrete"_ meaning. 
 
-- Arch / Arch based (Manjaro): `sudo pacman -Syu python git`
+## Linux / Windows
 
-- Ubuntu / Debian based: `sudo apt install python git`
+I will be referring to where the source code folder of MVM is located at using the keyord `ROOT`, like the `LICENSE.md` file under `ROOT/LICENSE.md`.
 
-Open a shell on desired dir to clone the repo
+Note: on Windows you might need to replace `python` with `python.exe` if using PowerShell (recommended) or CMD (I'm not completely sure btw) 
+
+Another point is that directories on Windows uses `\` instead of (what everything else uses) `/`, Python should convert those automatically but maybe not within the shell, like: `.\path\to\executable.exe` instead of `./path/to/executable.exe`, the second one might not run.
+
+### Install Python 64 bits (REQUIRED)
+
+- Arch Linux / pacman based (Manjaro): `sudo pacman -Syu python`
+
+- Ubuntu / apt based: `sudo apt update && sudo apt install python`
+
+- Windows: Head over to [Python Releases for Windows](https://www.python.org/downloads/windows/), download a _"Windows x86-64 executable installer"_ (I currently use Python 3.8), install it (be sure to check _"ADD PYTHON TO PATH"_ option on the installer)
+
+### Getting the source code
+
+#### Using git CLI
+
+Install git from your Linux distro or for Windows the installer from [git downloads page](https://git-scm.com/downloads)
+
+Open a shell on desired dir to clone the repo (GIT shell on Windows)
 
 `git clone https://github.com/Tremeschin/modular-music-visualizer`
 
-`cd modular-music-visualizer`
+#### GitHub repository main page
 
-[Use a Python venv](https://github.com/Tremeschin/dandere2x-tremx/wiki/Python-venvs) (recommended):
+You might be already here, head to the top page and there is a green button _"⬇️ Code"_ and download as a ZIP.
+
+Use a archive manager (something like 7-zip or rar) to extract the contents into a folder you'll be running MMV.
+
+## Open a shell on MMV source code folder
+
+I recommend PowerShell on Windows or your preferred terminal emulator on Linux using bash
+
+## Installing Python dependencies
+
+It is not a bad idea to install MMV dependencies on a separate virtual environment of Python packages to keep things isolated.
+
+[Quick guide on using / creating Python venvs](https://github.com/Tremeschin/dandere2x-tremx/wiki/Python-venvs), TL;DR:
 
 - `python -m venv mmv-venv`
 
 - `source ./mmv-venv/bin/activate`
 
-`pip install -r mmv/requirements.txt`
+After that you can point Python's package installer (pip) the file located at `ROOT/mmv/mmv/requirements.txt`
 
-You can run a example file under `mmv/example*.py` with `python mmv/example*.py` (you should know how to do it right?)
+`pip install -r ./mmv/mmv/requirements.txt`, assuming your shell is under `ROOT` directory.
+
+You can run a example file under `ROOT/mmv/example*.py` with `python ROOT/mmv/example*.py`
 
 I include a few free assets under the `mmv/assets/free_assets` folder, you can use them at your disposal, they were generated with my other project called [PyGradienter](https://github.com/Tremeschin/pygradienter) that I'm merging the two here in MMV :)
 
-There's also the example of calling pygradienter from a MMV script
-
-## Windows
-
-If you can install the package `skia-python` with pip or from source, I guess MMV will have one or another minor issue left to be run on Windows.
-
-I can provide additional info and help you doing so!!
+There's also the example of calling pygradienter from a MMV script and a WIP Piano Roll.
 
 # Goals, what is being developed
 
@@ -101,7 +127,7 @@ I might attempt to rewrite this project in the future as things currently are be
 
 - [ ] Implement MIDI visualization (that'd be fun)
 
-- [ ] (30%) Progression bar (square, circle, pie graph?)
+- [x] *CAN BE EXPANDED* (30%) Progression bar (square, circle, pie graph?)
 
 - [ ] Implement text support
 
