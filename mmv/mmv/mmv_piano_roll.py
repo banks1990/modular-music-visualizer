@@ -40,6 +40,7 @@ class MMVPianoRoll:
         self.image = Frame()
         self.midi = MidiFile()
         self.midi.load(self.context.input_midi)
+        self.midi.get_timestamps()
 
         # We have different files with different classes of PianoRolls
 

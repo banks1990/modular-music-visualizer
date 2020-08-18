@@ -23,22 +23,29 @@ from mmv.common.cmn_types import InlineDict
 import mido
 
 
+# Store the range of notes for a (possible) piano roll visualization if user
+# choses only to show range of played keys, helps visualization on smaller screens
 class RangeNotes:
     def __init__(self):
         self.min = -1
         self.max = -1
     
+    # Update min and max variables based on a new note index
     def update(self, new_note):
+        # First call, set max and min to incoming note
         if self.min == -1 and self.max == -1:
             self.max = new_note
             self.min = new_note
             return
+        # Check if eiter is below or above, update corresponding variable
         if self.max < new_note:
             self.max = new_note
         if new_note < self.min:
             self.min = new_note
 
 
+
+# Wrapper and utilities for mido interface, processing MIDI files.
 class MidiFile:
     def load(self, path):
         self.midi = mido.MidiFile(path, clip=True)
@@ -55,15 +62,21 @@ class MidiFile:
         letter = letters[(n + 60) % 12]
         return letter + octave
 
+    # Create empty list on timestamp with current time
     def create_empty_timestamp_list(self):
         if not self.time in self.timestamps:
             self.timestamps[self.time] = []
 
-    def process(self):
-        
+    # Basically, MIDI information -> timestamps dictionary
+    # Really finicky because how MIDI works on the ticks and channels and whatnot
+    def get_timestamps(self):
+
+        # Timestamps dictionary and "ongoing" midi notes, not finished        
         self.timestamps = {}
         ongoing = {}
 
+        # Iterate through each message on ALL midi tracks together...
+        # Use synchronous mode if possible TODO: right loop for every mode
         for msg in mido.merge_tracks(self.midi.tracks):
            
             # Convert message time from absolute time
@@ -73,11 +86,14 @@ class MidiFile:
             else:
                 delta = 0
             
+            # NOTE: DEBUG, ONLY USE FIRST 2 SECS OF INFORMATION
             if self.time > 2:
                 continue
 
+            # Add to current time the delta based on tempo
             self.time += delta
 
+            # Message is a note we play or release (or weirdly play at zero velocity for releasing)
             if msg.type in ["note_on", "note_off"]:
                 
                 self.create_empty_timestamp_list()
@@ -105,12 +121,6 @@ class MidiFile:
                         "note": note,
                     })
 
-                # yield InlineDict({
-                #     "type": "note",
-                #     "note": msg.note,
-                #     "velocity": msg.velocity,
-                #     "time": self.time,
-                # })
 
             if msg.type == 'set_tempo':
                 self.create_empty_timestamp_list()
