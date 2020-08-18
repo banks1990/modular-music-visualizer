@@ -129,7 +129,9 @@ It is not a bad idea to install MMV dependencies on a separate virtual environme
 
 - `python -m venv mmv-venv`
 
-- `source ./mmv-venv/bin/activate`
+- Linux: `source ./mmv-venv/bin/activate`
+
+- Windows (not sure): `.\venv-path\Scripts\activate.bat`
 
 After that you can point Python's package installer (pip) the file located at `ROOT/mmv/mmv/requirements.txt`
 
