@@ -102,10 +102,12 @@ class Core:
             
             # The current time in seconds we're going to slice the audio based on its samplerate
             # If we offset to the opposite way, the starting point can be negative hence the max function.
-            time_in_seconds = max( (1/self.context.fps) * this_step, 0 )
+            current_time = max( (1/self.context.fps) * this_step, 0 )
+
+            self.context.current_time = current_time
 
             # The current time in sample count to slice the audio
-            this_time_in_samples = int(time_in_seconds * self.audio.sample_rate)
+            this_time_in_samples = int(current_time * self.audio.sample_rate)
 
             # The slice starts at the this_time_in_samples and end the cut here
             until = int(this_time_in_samples + self.context.batch_size)

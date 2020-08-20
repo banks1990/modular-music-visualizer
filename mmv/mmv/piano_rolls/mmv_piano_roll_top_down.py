@@ -26,6 +26,38 @@ import math
 import skia
 
 
+class PianoKey:
+    def __init__(self, midi):
+        self.midi = midi
+
+        # Key info
+        self.key_index = None
+        self.name = ""
+
+        # Position, states
+        self.center_x = None
+        self.width = None
+        self.height = None
+        self.active = False
+
+    # Configure PianoKey by midi key index
+    def by_key_index(self, key_index):
+        self.key_index = key_index
+        self.name = self.midi.note_to_name(key_index)
+        self.configure_color()
+    
+    # Configure pressed, idle colors based on key name
+    def configure_color(self):
+        # Note is a sharp key, black idle, gray on press
+        if "#" in self.name:
+            self.color_pressed = skia.Color4f(0.2, 0.2, 0.2, 1)
+            self.color_idle = skia.Color4f(0, 0, 0, 1)
+        else:
+            self.color_pressed = skia.Color4f(0.7, 0.7, 0.7, 1)
+            self.color_idle = skia.Color4f(1, 1, 1, 1)
+
+
+    
 class MMVPianoRollTopDown:
     def __init__(self, MMVVectorial, context, skia_object, midi):
         self.vectorial = MMVVectorial
@@ -34,6 +66,13 @@ class MMVPianoRollTopDown:
         self.midi = midi
         self.config = self.vectorial.config
         self.functions = Functions()
+        self.piano_keys = {}
+    
+    def generate_piano(self, min_note, max_note):
+        for key_index in range(min_note, max_note):
+            next_key = PianoKey()
+            next_key.by_key_index(key_index)
+            self.piano_keys[key_index] = next_key
     
     def draw_note(self, info):
         pass
@@ -42,9 +81,12 @@ class MMVPianoRollTopDown:
     def build(self, fftinfo, this_step, config, effects):
 
         # Get "needed" variables
-        total_steps = self.vectorial.context.total_steps
-        completion = self.functions.proportion(total_steps, 1, this_step)  # Completion from 0-1 means
+        current_time = self.vectorial.context.current_time
         resolution_ratio_multiplier = self.vectorial.context.resolution_ratio_multiplier
+
+        # TODO: set these variables in config
+        seconds_of_midi_content = 5
+
 
         # Average audio amplitude
         average_value = fftinfo["average_value"]
@@ -52,3 +94,4 @@ class MMVPianoRollTopDown:
         # Simple mode, only a line with set stroke width
         if self.config["mode"] == "simple":
             pass
+

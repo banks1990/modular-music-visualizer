@@ -48,8 +48,8 @@ class MMVPianoRoll:
         if self.config["type"] == "top-down":
             self.builder = MMVPianoRollTopDown(self, self.context, self.skia)
 
+        self.builder.generate_piano(self.midi.range_note.min, self.midi.range_note.max)
+
     # Call builder for drawing directly on the canvas
     def next(self, fftinfo, this_step, effects):
         self.builder.build(fftinfo, this_step, self.config, effects, self.midi)
-
-  

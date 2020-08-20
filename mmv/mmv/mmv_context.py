@@ -57,6 +57,9 @@ class Context:
         # Offset the audio slice by this much of steps
         self.offset_audio_before_in_many_steps = (60/self.fps) // 8
 
+        # Current processing time
+        self.current_time = 0
+
         # User
         self.watch_processing_video_realtime = False
 

@@ -73,6 +73,7 @@ class Fourier:
         # Get the fft
         fft = self.fft(data)
 
+        # A dictionary of frequency : magnitude
         binned_fft_dict = {}
 
         # " The height is a reflection of power density, so if you double the sampling frequency,
@@ -90,6 +91,5 @@ class Fourier:
         for index in range(1, len(fft)):
             frequency = round(get_bin(index), 2)
             binned_fft_dict[frequency] = fft[index] * (2**n)
-
 
         return binned_fft_dict
