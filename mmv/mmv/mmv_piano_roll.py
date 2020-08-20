@@ -21,6 +21,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 from mmv.piano_rolls.mmv_piano_roll_top_down import MMVPianoRollTopDown
 from mmv.common.cmn_midi import MidiFile
+from mmv.common.cmn_utils import Utils
 
 
 class MMVPianoRoll:
@@ -37,7 +38,6 @@ class MMVPianoRoll:
         self.is_deletable = False
         self.offset = [0, 0]
 
-        self.image = Frame()
         self.midi = MidiFile()
         self.midi.load(self.context.input_midi)
         self.midi.get_timestamps()
@@ -46,10 +46,11 @@ class MMVPianoRoll:
 
         # Simple, rectangle bar
         if self.config["type"] == "top-down":
-            self.builder = MMVPianoRollTopDown(self, self.context, self.skia)
+            self.builder = MMVPianoRollTopDown(self, self.context, self.skia, self.midi)
 
-        self.builder.generate_piano(self.midi.range_note.min, self.midi.range_note.max)
+        self.builder.generate_piano(self.midi.range_notes.min, self.midi.range_notes.max)
 
     # Call builder for drawing directly on the canvas
     def next(self, fftinfo, this_step, effects):
-        self.builder.build(fftinfo, this_step, self.config, effects, self.midi)
+        self.builder.build(fftinfo, this_step, self.config, effects)
+        print("build")

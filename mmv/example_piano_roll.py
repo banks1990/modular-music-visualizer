@@ -55,5 +55,11 @@ processing.input_audio("assets/free_assets/sound/banjo.ogg")
 processing.output_video("mmv-output.mkv")
 processing.input_midi("entertainer.mid")
 
+piano_roll = processing.image_object()
+piano_roll.configure.init_animation_layer()
+piano_roll.configure.simple_add_piano_roll()
+
+processing.add(piano_roll, layer=1)
+
 # Run and generate the final video
 processing.run()

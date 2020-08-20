@@ -68,9 +68,10 @@ class MMVPianoRollTopDown:
         self.functions = Functions()
         self.piano_keys = {}
     
-    def generate_piano(self, min_note, max_note):
-        for key_index in range(min_note, max_note):
-            next_key = PianoKey()
+    # Bleed is extra keys you put at the lower most and upper most ranged keys
+    def generate_piano(self, min_note, max_note, bleed=2):
+        for key_index in range(min_note - bleed, max_note + bleed):
+            next_key = PianoKey(self.midi)
             next_key.by_key_index(key_index)
             self.piano_keys[key_index] = next_key
     
@@ -87,11 +88,4 @@ class MMVPianoRollTopDown:
         # TODO: set these variables in config
         seconds_of_midi_content = 5
 
-
-        # Average audio amplitude
-        average_value = fftinfo["average_value"]
-
-        # Simple mode, only a line with set stroke width
-        if self.config["mode"] == "simple":
-            pass
 
