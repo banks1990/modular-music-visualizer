@@ -22,6 +22,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 from mmv.common.cmn_coordinates import PolarCoordinates
 from mmv.common.cmn_functions import Functions
 from mmv.common.cmn_utils import DataUtils
+from PIL import ImageColor
 import numpy as np
 import random
 import math
@@ -29,9 +30,10 @@ import skia
 
 
 class PianoKey:
-    def __init__(self, midi, skia_object):
+    def __init__(self, midi, skia_object, background_color):
         self.midi = midi
         self.skia = skia_object
+        self.background_color = background_color
 
         # Key info
         self.key_index = None
@@ -44,6 +46,8 @@ class PianoKey:
         self.resolution_height = None
         self.active = False
 
+        self.MARKER = True
+
     # Configure PianoKey by midi key index
     def by_key_index(self, key_index):
         self.note = key_index
@@ -53,6 +57,13 @@ class PianoKey:
     
     # Configure pressed, idle colors based on key name
     def configure_color(self):
+
+        c = min(self.background_color + (40/255), 1)
+        self.marker_color = skia.Color4f(c, c, c, 0.1)
+
+        c = min(self.background_color + (60/255), 1)
+        self.marker_color_subtle_brighter = skia.Color4f(c, c, c, 0.3)
+
         # Note is a sharp key, black idle, gray on press
         if "#" in self.name:
             self.color_active = skia.Color4f(0, 0, 0, 1)
@@ -67,6 +78,18 @@ class PianoKey:
 
     # Draw this key
     def draw(self, notes_playing):
+
+        if self.is_black:
+            away = (self.height * (0.33))
+        else:
+            away = 0
+
+        coords = [
+            self.center_x - (self.width / 2),
+            self.resolution_height - self.height,
+            self.center_x + (self.width / 2),
+            self.resolution_height - away,
+        ]
 
         self.active = self.note in notes_playing
 
@@ -90,23 +113,35 @@ class PianoKey:
             StrokeWidth = 2,
         )
 
-        if self.is_black:
-            away = (self.height * (0.33))
-        else:
-            away = 0
-
         # Rectangle border
-        rect = skia.Rect(
-            self.center_x - (self.width / 2),
-            self.resolution_height - self.height,
-            self.center_x + (self.width / 2),
-            self.resolution_height - away,
-        )
+        rect = skia.Rect(*coords)
         
         # Draw the border
         self.skia.canvas.drawRect(rect, paint)
         self.skia.canvas.drawRect(rect, border)
-        
+    
+    def draw_marker(self):
+        if self.MARKER and self.is_black:
+            if "G" in self.name:
+                color = self.marker_color_subtle_brighter
+            else:
+                color = self.marker_color
+
+            marker = skia.Paint(
+                AntiAlias = True,
+                Color = color,
+                Style = skia.Paint.kFill_Style,
+                # StrokeWidth = 2,
+            )
+
+            rect = skia.Rect(
+                max(self.center_x - (self.width / 10), 1),
+                0,
+                max(self.center_x + (self.width / 10), 1),
+                self.resolution_height - self.height
+            )
+            self.skia.canvas.drawRect(rect, marker)
+
     
 class MMVPianoRollTopDown:
     def __init__(self, MMVVectorial, context, skia_object, midi):
@@ -119,6 +154,8 @@ class MMVPianoRollTopDown:
         self.datautils = DataUtils()
         self.piano_keys = {}
         self.keys_centers = {}
+
+        self.background_color = 22/255
     
     # Bleed is extra keys you put at the lower most and upper most ranged keys
     def generate_piano(self, min_note, max_note, bleed=3):
@@ -131,7 +168,7 @@ class MMVPianoRollTopDown:
         self.seconds_of_midi_content = 3
 
         for key_index in range(min_note - bleed, max_note + bleed):
-            next_key = PianoKey(self.midi, self.skia)
+            next_key = PianoKey(self.midi, self.skia, self.background_color)
             next_key.by_key_index(key_index)
             self.piano_keys[key_index] = next_key
 
@@ -219,15 +256,50 @@ class MMVPianoRollTopDown:
         for key_index in self.piano_keys.keys():
             if self.piano_keys[key_index].is_black:
                 self.piano_keys[key_index].draw(self.notes_playing)
+            
+    def draw_markers(self):
+
+        c = 0.35
+        white_white_color = skia.Color4f(c, c, c, 1)
+
+        white_white_paint = skia.Paint(
+            AntiAlias = True,
+            Color = white_white_color,
+            Style = skia.Paint.kStroke_Style,
+            StrokeWidth = 1,
+        )
+
+        current_center = 0
+
+        for index, key_index in enumerate(self.piano_keys.keys()):
+            key = self.piano_keys[key_index]
+            if not index == 0:
+                prevkey = self.piano_keys[key_index - 1]
+                if (prevkey.is_white) and (key.is_white):
+                    current_center += self.tone_width
+                    rect = skia.Rect(
+                        current_center - self.semitone_width,
+                        0,
+                        current_center + 1 - self.semitone_width,
+                        self.vectorial.context.height
+                    )
+                    self.skia.canvas.drawRect(rect, white_white_paint)
+                else:
+                    current_center += self.semitone_width
+
+        for key_index in self.piano_keys.keys():
+            self.piano_keys[key_index].draw_marker()
 
     def draw_note(self, velocity, start, note, name, end):
         
         if "#" in name:
+            c = ImageColor.getcolor("#ff9d00", "RGB")
             width = self.semitone_width*0.9
-            color = skia.Color4f(0, 0, 0.4, 1)
+            color = skia.Color4f(c[0]/255, c[1]/255, c[2]/255, 1)
         else:
+            c = ImageColor.getcolor("#ffcc00", "RGB")
             width = self.tone_width*0.6
-            color = skia.Color4f(0, 0, 1, 1)
+            color = skia.Color4f(c[0]/255, c[1]/255, c[2]/255, 1)
 
         # Make the skia Paint and
         paint = skia.Paint(
@@ -240,13 +312,15 @@ class MMVPianoRollTopDown:
             StrokeWidth = 2,
         )
 
+        # c = ImageColor.getcolor("#d1ce1d", "RGB") 
+        c = (0, 0, 0)
         border = skia.Paint(
             AntiAlias = True,
-            Color = skia.Color4f(0, 0, 40/255, 1),
+            Color = skia.Color4f(c[0]/255, c[1]/255, c[2]/255, 1),
             Style = skia.Paint.kStroke_Style,
             # ImageFilter=skia.ImageFilters.DropShadow(3, 3, 5, 5, skia.ColorBLUE),
             # MaskFilter=skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 2.0),
-            StrokeWidth = 3,
+            StrokeWidth = max(self.vectorial.context.resolution_ratio_multiplier * 2, 1),
         )
         
         x = self.keys_centers[note]
@@ -281,9 +355,12 @@ class MMVPianoRollTopDown:
     # Build, draw the bar
     def build(self, fftinfo, this_step, config, effects):
 
-        c = 22/255
+        c = self.background_color
         self.skia.canvas.clear(skia.Color4f(c, c, c, 1))
+        self.seconds_of_midi_content = config["seconds-of-midi-content"]
         SECS_OFFSET = config["seconds-offset"]
+
+        self.draw_markers()
 
         # Get "needed" variables
         current_time = self.vectorial.context.current_time + SECS_OFFSET

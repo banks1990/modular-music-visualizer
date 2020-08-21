@@ -276,6 +276,7 @@ class MMVImageConfigure:
     def add_module_piano_roll(self, 
             piano_type: str,
             seconds_offset: float,
+            seconds_of_midi_content: float,
             bpm: float,
         ) -> None:
 
@@ -287,6 +288,7 @@ class MMVImageConfigure:
                         "type": piano_type,
                         "seconds-offset": seconds_offset,
                         "bpm": bpm,
+                        "seconds-of-midi-content": seconds_of_midi_content,
                     },
                     self.skia,
                     "piano-roll",
@@ -298,12 +300,14 @@ class MMVImageConfigure:
     def simple_add_piano_roll(self,
             piano_type: str="top-down",
             seconds_offset: float=0,
+            seconds_of_midi_content: float=3,
             bpm: float=120,
         ) -> None:
 
         self.add_module_piano_roll(
             piano_type = piano_type,
             seconds_offset = seconds_offset,
+            seconds_of_midi_content = seconds_of_midi_content,
             bpm = bpm,
         )
 
