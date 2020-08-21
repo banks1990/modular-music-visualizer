@@ -53,4 +53,3 @@ class MMVPianoRoll:
     # Call builder for drawing directly on the canvas
     def next(self, fftinfo, this_step, effects):
         self.builder.build(fftinfo, this_step, self.config, effects)
-        print("build")

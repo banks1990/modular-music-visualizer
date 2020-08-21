@@ -82,16 +82,14 @@ class MidiFile:
             # Convert message time from absolute time
             # in ticks to relative time in seconds.
             if msg.time > 0:
-                delta = mido.tick2second(msg.time, 480, self.tempo)
+                delta = mido.tick2second(msg.time, self.midi.ticks_per_beat, self.tempo)
             else:
                 delta = 0
             
-            # NOTE: DEBUG, ONLY USE FIRST 2 SECS OF INFORMATION
-            if self.time > 2:
-                continue
-
             # Add to current time the delta based on tempo
             self.time += delta
+
+            print("\n\n", self.time)
 
             # Message is a note we play or release (or weirdly play at zero velocity for releasing)
             if msg.type in ["note_on", "note_off"]:
@@ -103,7 +101,6 @@ class MidiFile:
                 self.range_notes.update(note)
 
                 if note in ongoing.keys():
-                    
                     self.timestamps[self.time].append(InlineDict({
                         "type": "note",
                         "start": ongoing[note].start,
@@ -112,6 +109,7 @@ class MidiFile:
                         "note": note,
                         "name": self.note_to_name(note),
                     }))
+                    print(ongoing[note].start, self.time)
 
                     del ongoing[note]
                 else:
@@ -120,17 +118,18 @@ class MidiFile:
                         "velocity": velocity,
                         "note": note,
                     })
-
+                
+                print(ongoing)
 
             if msg.type == 'set_tempo':
                 self.create_empty_timestamp_list()
-                tempo = msg.tempo
+                self.tempo = msg.tempo
 
                 self.timestamps[self.time].append(InlineDict({
                     "type": "tempo",
-                    "value": tempo,
+                    "value": self.tempo,
                 }))
 
        
-        print(self.timestamps)
+        # print(self.timestamps)
         print("Range:", self.range_notes.min, self.range_notes.max)

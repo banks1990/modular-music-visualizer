@@ -91,6 +91,9 @@ class mmv:
     def output_video(self, path: str) -> None:
         path = self.utils.get_abspath(path)
         self.main.context.output_video = path
+    
+    def offset_audio_steps(self, steps=0):
+        self.main.context.offset_audio_before_in_many_steps = steps
 
     # Set the assets dir
     def assets_dir(self, path: str) -> None:

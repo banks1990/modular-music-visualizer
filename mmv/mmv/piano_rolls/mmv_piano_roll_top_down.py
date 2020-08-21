@@ -21,6 +21,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 from mmv.common.cmn_coordinates import PolarCoordinates
 from mmv.common.cmn_functions import Functions
+from mmv.common.cmn_utils import DataUtils
 import numpy as np
 import random
 import math
@@ -45,8 +46,8 @@ class PianoKey:
 
     # Configure PianoKey by midi key index
     def by_key_index(self, key_index):
-        self.key_index = key_index
-        self.name = self.midi.note_to_name(key_index)
+        self.note = key_index
+        self.name = self.midi.note_to_name(self.note)
         self.configure_color()
     
     # Configure pressed, idle colors based on key name
@@ -64,13 +65,9 @@ class PianoKey:
             self.is_black = False
 
     # Draw this key
-    def draw(self):
+    def draw(self, notes_playing):
 
-        if self.active:
-            if random.randint(1, 10) == 5:
-                self.active = False
-        else:
-            self.active = random.choice([True] + [False]*30)
+        self.active = self.note in notes_playing
 
         if self.active:
             color = self.color_active
@@ -118,13 +115,19 @@ class MMVPianoRollTopDown:
         self.midi = midi
         self.config = self.vectorial.config
         self.functions = Functions()
+        self.datautils = DataUtils()
         self.piano_keys = {}
+        self.keys_centers = {}
     
     # Bleed is extra keys you put at the lower most and upper most ranged keys
-    def generate_piano(self, min_note, max_note, bleed=2):
+    def generate_piano(self, min_note, max_note, bleed=16):
 
         # NOTE: EDIT HERE STATIC VARIABLES  TODO: set them on config
-        piano_height = (3.5/19) * self.vectorial.context.height
+        self.piano_height = (3.5/19) * self.vectorial.context.height
+        self.viewport_height = self.vectorial.context.height - self.piano_height
+
+        # TODO: set these variables in config
+        self.seconds_of_midi_content = 3
 
         for key_index in range(min_note - bleed, max_note + bleed):
             next_key = PianoKey(self.midi, self.skia)
@@ -177,34 +180,101 @@ class MMVPianoRollTopDown:
                 this_note_width = (4/6) * self.tone_width
 
             self.piano_keys[key_index].width = this_note_width
-            self.piano_keys[key_index].height = piano_height
+            self.piano_keys[key_index].height = self.piano_height
             self.piano_keys[key_index].resolution_height = self.vectorial.context.height
             self.piano_keys[key_index].center_x = current_center
 
-    def draw_piano(self):
-        
-        c = 22/255
-        self.skia.canvas.clear(skia.Color4f(c, c, c, 1))
+            self.keys_centers[key_index] = current_center
 
+    def draw_piano(self):
         for key_index in self.piano_keys.keys():
             if self.piano_keys[key_index].is_white:
-                self.piano_keys[key_index].draw()
+                self.piano_keys[key_index].draw(self.notes_playing)
 
         for key_index in self.piano_keys.keys():
             if self.piano_keys[key_index].is_black:
-                self.piano_keys[key_index].draw()
+                self.piano_keys[key_index].draw(self.notes_playing)
 
-    def draw_note(self, info):
-        pass
+    def draw_note(self, velocity, start, note, name, end):
+        
+        if "#" in name:
+            width = self.semitone_width*0.9
+            color = skia.Color4f(0, 0, 0.4, 1)
+        else:
+            width = self.tone_width*0.6
+            color = skia.Color4f(0, 0, 1, 1)
+
+
+        # Make the skia Paint and
+        paint = skia.Paint(
+            AntiAlias = True,
+            Color = color,
+            Style = skia.Paint.kFill_Style,
+            StrokeWidth = 2,
+        )
+
+        border = skia.Paint(
+            AntiAlias = True,
+            Color = skia.Color4f(0, 0, 0, 1),
+            Style = skia.Paint.kStroke_Style,
+            StrokeWidth = 2,
+        )
+        
+        x = self.keys_centers[note]
+
+        # y = 
+        y = self.functions.proportion(self.seconds_of_midi_content, self.viewport_height, self.vectorial.context.current_time - start)
+        height = self.functions.proportion(self.seconds_of_midi_content, self.viewport_height, end - start) 
+
+        # print(height, start, end ,end - start)
+
+        coords = [
+            x - (width / 2),
+            y + height + self.viewport_height,
+            x + (width / 2),
+            y + self.viewport_height,
+        ]
+
+        # print(coords)
+
+        # Rectangle border
+        rect = skia.Rect(*coords)
+        
+        # Draw the border
+        self.skia.canvas.drawRect(rect, paint)
+        self.skia.canvas.drawRect(rect, border)
+        
 
     # Build, draw the bar
     def build(self, fftinfo, this_step, config, effects):
+
+        c = 22/255
+        self.skia.canvas.clear(skia.Color4f(c, c, c, 1))
 
         # Get "needed" variables
         current_time = self.vectorial.context.current_time
         resolution_ratio_multiplier = self.vectorial.context.resolution_ratio_multiplier
 
-        # TODO: set these variables in config
-        seconds_of_midi_content = 5
+        contents = self.datautils.dictionary_items_in_between(
+            self.midi.timestamps,
+            current_time - 2,
+            current_time + self.seconds_of_midi_content * 2
+        )
+
+        self.notes_playing = []
+
+        for timestamp in contents.keys():
+            for instruction in contents[timestamp]:
+                if instruction.type == "note":
+                    self.draw_note(
+                        velocity = instruction.velocity,
+                        start = instruction.start,
+                        note = instruction.note,
+                        name = instruction.name,
+                        end = instruction.end,
+                    )
+                    offset = 0.2
+                    if instruction.start < current_time + offset and current_time + offset < instruction.end:
+                        self.notes_playing.append(instruction.note)
 
         self.draw_piano()
