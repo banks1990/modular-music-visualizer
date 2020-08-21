@@ -180,7 +180,7 @@ class Utils():
 
 
 # Utilities in processing dictionaries, lists
-class DataUtils():
+class DataUtils:
     
     # Get a "subdictionary" from the data dictionary where the keys range in between start and end
     def dictionary_items_in_between(self, data, start, end):
@@ -194,6 +194,70 @@ class DataUtils():
     def equal_slices(self, array, n):
         size = len(array)
         return [ array[i: min(i+n, size) ] for i in range(0, size, n) ]
+        
+    """
+    Given a list of 2D, line intervals:
+
+    [[1, 3], [4, 6], [5, 8], [8, 15], [9, 18], [10, 12], [10, 12], [10, 14], [12, 21], [12, 19]]
+
+    There are a few overlaps like between [4, 6], [5, 8] and we want to sorten the first
+    interval so it ends at the second's start --> [4, 5], [5, 8]
+
+    There's also the case where you have multiple starting values:
+
+    [10, 12], [10, 12], [10, 14]
+
+    You wanna set it to the lowest and highest value, in this case, [10, 14]
+    """
+    def shorten_overlaps_keep_start_value(self, intervals: list) -> list:
+
+        # Join multiple same start value intervals into the maximum one
+
+        # Sort list by first item of lists
+        intervals = sorted(intervals, key = lambda k: k[0])
+
+        # Groups of value : values for every value
+        groups = {}
+
+        for item in intervals:
+
+            # Add item[1] to each group item[0]
+            if not item[0] in groups:
+                groups[item[0]] = []
+
+            # Add the value of this interval until value to groups
+            groups[item[0]].append(item[1])
+
+        # Reset L to this index : max(group[this index])
+        # In case we have [10, 12] [10, 13] [10, 18] [10, 16],
+        # it'll be {10: [12, 13, 18, 16]} and we set to [10, 18] because that's the max length
+        intervals = [ [k, max(groups[k])] for k in groups.keys() ]
+        
+        # Check for actual overlaps 
+
+        # List of index : new internal at that index
+        patches = []
+
+        # As we'll check every N with N+1, loop until N-1 so we don't get IndexError
+        for n in range(len(intervals) - 1):
+
+            # .. [4, 6] [5, 8] .. As you can see, the first list's second value
+            # is greater than next list's first value, this is the next conditional
+            if intervals[n][1] > intervals[n+1][0]:
+
+                # The new interval we insert at that point will be starting at 
+                # first list's start and ends on second's list start
+                new_interval = [intervals[n][0], intervals[n+1][0]]
+
+                # Add that patch
+                patches.append([n, new_interval])
+        
+        # For not scrambling the indexes, we have to patch in reverse
+        for n in reversed(patches):
+            # Substitute the interval
+            intervals[n[0]] = n[1]
+
+        return intervals
     
     # Creates nbars of "bins" from a dictionary data
     def equal_bars_average(self, data, nbars, mode):
