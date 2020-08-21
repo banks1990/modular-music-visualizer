@@ -48,10 +48,10 @@ class RangeNotes:
 
 # Wrapper and utilities for mido interface, processing MIDI files.
 class MidiFile:
-    def load(self, path):
+    def load(self, path, bpm=130):
         self.midi = mido.MidiFile(path, clip=True)
         self.time = 0
-        self.tempo = 500000
+        self.tempo = mido.bpm2tempo(bpm)
         self.range_notes = RangeNotes()
         self.datautils = DataUtils()
     
@@ -100,14 +100,6 @@ class MidiFile:
                         self.timestamps[note] = {"time": []}
                     
                     self.timestamps[note]["time"].append( [ongoing[note]["start"], self.time] )
-
-                    #     "type": "note",
-                    #     "start": ,
-                    #     "end": self.time,
-                    #     "velocity": velocity,
-                    #     "note": note,
-                    #     "name": self.note_to_name(note),
-                    # }))
 
                     del ongoing[note]
                 else:

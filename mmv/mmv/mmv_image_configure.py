@@ -275,6 +275,8 @@ class MMVImageConfigure:
 
     def add_module_piano_roll(self, 
             piano_type: str,
+            seconds_offset: float,
+            bpm: float,
         ) -> None:
 
         self.add_module({
@@ -283,6 +285,8 @@ class MMVImageConfigure:
                     self.object.context,
                     {
                         "type": piano_type,
+                        "seconds-offset": seconds_offset,
+                        "bpm": bpm,
                     },
                     self.skia,
                     "piano-roll",
@@ -293,10 +297,14 @@ class MMVImageConfigure:
     # Add a visualizer module
     def simple_add_piano_roll(self,
             piano_type: str="top-down",
+            seconds_offset: float=0,
+            bpm: float=120,
         ) -> None:
 
         self.add_module_piano_roll(
             piano_type = piano_type,
+            seconds_offset = seconds_offset,
+            bpm = bpm,
         )
 
     # # # # # [ VIGNETTING ] # # # # #

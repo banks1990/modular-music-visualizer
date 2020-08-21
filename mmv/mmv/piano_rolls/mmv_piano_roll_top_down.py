@@ -121,7 +121,7 @@ class MMVPianoRollTopDown:
         self.keys_centers = {}
     
     # Bleed is extra keys you put at the lower most and upper most ranged keys
-    def generate_piano(self, min_note, max_note, bleed=2):
+    def generate_piano(self, min_note, max_note, bleed=3):
 
         # NOTE: EDIT HERE STATIC VARIABLES  TODO: set them on config
         self.piano_height = (3.5/19) * self.vectorial.context.height
@@ -229,12 +229,14 @@ class MMVPianoRollTopDown:
             width = self.tone_width*0.6
             color = skia.Color4f(0, 0, 1, 1)
 
-
         # Make the skia Paint and
         paint = skia.Paint(
             AntiAlias = True,
             Color = color,
             Style = skia.Paint.kFill_Style,
+            # Shader=skia.GradientShader.MakeLinear(
+            #     points=[(0.0, 0.0), (self.vectorial.context.width, self.vectorial.context.height)],
+            #     colors=[skia.Color4f(0, 0, 1, 1), skia.Color4f(0, 1, 0, 1)]),
             StrokeWidth = 2,
         )
 
@@ -243,6 +245,7 @@ class MMVPianoRollTopDown:
             Color = skia.Color4f(0, 0, 40/255, 1),
             Style = skia.Paint.kStroke_Style,
             # ImageFilter=skia.ImageFilters.DropShadow(3, 3, 5, 5, skia.ColorBLUE),
+            # MaskFilter=skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 2.0),
             StrokeWidth = 3,
         )
         
@@ -273,16 +276,14 @@ class MMVPianoRollTopDown:
         # Draw the border
         self.skia.canvas.drawRect(rect, paint)
         self.skia.canvas.drawRect(rect, border)
-        
+
 
     # Build, draw the bar
     def build(self, fftinfo, this_step, config, effects):
 
         c = 22/255
         self.skia.canvas.clear(skia.Color4f(c, c, c, 1))
-
-        #
-        SECS_OFFSET = 1.75
+        SECS_OFFSET = config["seconds-offset"]
 
         # Get "needed" variables
         current_time = self.vectorial.context.current_time + SECS_OFFSET

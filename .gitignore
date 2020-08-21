@@ -2,6 +2,7 @@
 mmv/wavefun
 mmv/a.py
 mmv/processing
+mmv/midis
 mmv/trivia*
 *.mp3
 *.flac

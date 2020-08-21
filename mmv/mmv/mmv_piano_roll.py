@@ -39,7 +39,7 @@ class MMVPianoRoll:
         self.offset = [0, 0]
 
         self.midi = MidiFile()
-        self.midi.load(self.context.input_midi)
+        self.midi.load(self.context.input_midi, bpm=self.config["bpm"])
         self.midi.get_timestamps()
 
         # We have different files with different classes of PianoRolls

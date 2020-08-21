@@ -53,13 +53,16 @@ processing.assets_dir("assets/free_assets")
 
 # I/O options, input a audio, output a video
 processing.audio_processing.preset_dummy()
-processing.input_audio("russia.mp3")
+processing.input_audio("assets/piano_roll/contingency-times.ogg")
+processing.input_midi("assets/piano_roll/contingency-times.mid")
 processing.output_video("mmv-output.mkv")
-processing.input_midi("russia.mid")
 
 piano_roll = processing.image_object()
 piano_roll.configure.init_animation_layer()
-piano_roll.configure.simple_add_piano_roll()
+piano_roll.configure.simple_add_piano_roll(
+    seconds_offset = 0,
+    bpm = 130
+)
 
 processing.add(piano_roll, layer=1)
 
