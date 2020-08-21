@@ -1,8 +1,10 @@
 # Modular Music Visualizer
 
-An attempt to make a free (as in freedom) and open source music visualization After Effects-like tool for the music production community. 
+An attempt to make a free (as in freedom) and open source music visualization (After Effects and Synthesia)-like tool for the music production community.
 
 #### Audio + MMV configuration script = Final video
+
+#### Audio + MIDI file = Piano Roll video tutorial
 
 I gently ask you to read about the [Free Software Definition / Philosophy](https://www.gnu.org/philosophy/free-sw.html) and join us!! :)
 
@@ -11,6 +13,8 @@ This project wasn't extensively tested on Windows, feedback appreciated.
 ## Small showcase
 
 ![Demo image of MMV](repo/demo.jpg)
+
+![Demo image of MMV Piano Roll](repo/demo-piano-roll.jpg)
 
 This screenshot is from a track of mine I released using MMV!!
 
