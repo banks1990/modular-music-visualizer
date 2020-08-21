@@ -41,21 +41,21 @@ processing = mmv.mmv(
 
 # Set the video quality
 processing.quality(
-    width=1920,
-    height=1080,
+    width=1280,
+    height=720,
     fps=60
 )
 
-# processing.offset_audio_steps(-10)
+processing.offset_audio_steps(0)
 
 # If you want to create some assets, set the assets dir first !!
 processing.assets_dir("assets/free_assets")
 
 # I/O options, input a audio, output a video
 processing.audio_processing.preset_dummy()
-processing.input_audio("the_entertainer.mp3")
+processing.input_audio("russia.mp3")
 processing.output_video("mmv-output.mkv")
-processing.input_midi("entertainer.mid")
+processing.input_midi("russia.mid")
 
 piano_roll = processing.image_object()
 piano_roll.configure.init_animation_layer()

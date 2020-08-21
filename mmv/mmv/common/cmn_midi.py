@@ -20,6 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from mmv.common.cmn_types import InlineDict
+from mmv.common.cmn_utils import DataUtils
 import mido
 
 
@@ -50,8 +51,9 @@ class MidiFile:
     def load(self, path):
         self.midi = mido.MidiFile(path, clip=True)
         self.time = 0
-        self.tempo = 120
+        self.tempo = 500000
         self.range_notes = RangeNotes()
+        self.datautils = DataUtils()
     
     # Midi note index (number) to name -> "C3", "A#4", F5, etc
     def note_to_name(self, n):
@@ -62,17 +64,12 @@ class MidiFile:
         letter = letters[(n + 60) % 12]
         return letter + octave
 
-    # Create empty list on timestamp with current time
-    def create_empty_timestamp_list(self):
-        if not self.time in self.timestamps:
-            self.timestamps[self.time] = []
-
     # Basically, MIDI information -> timestamps dictionary
     # Really finicky because how MIDI works on the ticks and channels and whatnot
     def get_timestamps(self):
 
         # Timestamps dictionary and "ongoing" midi notes, not finished        
-        self.timestamps = {}
+        self.timestamps = {"tempo": []}
         ongoing = {}
 
         # Iterate through each message on ALL midi tracks together...
@@ -89,47 +86,47 @@ class MidiFile:
             # Add to current time the delta based on tempo
             self.time += delta
 
-            print("\n\n", self.time)
-
             # Message is a note we play or release (or weirdly play at zero velocity for releasing)
             if msg.type in ["note_on", "note_off"]:
                 
-                self.create_empty_timestamp_list()
                 velocity = msg.velocity
                 note = msg.note
 
                 self.range_notes.update(note)
 
                 if note in ongoing.keys():
-                    self.timestamps[self.time].append(InlineDict({
-                        "type": "note",
-                        "start": ongoing[note].start,
-                        "end": self.time,
-                        "velocity": velocity,
-                        "note": note,
-                        "name": self.note_to_name(note),
-                    }))
-                    print(ongoing[note].start, self.time)
+
+                    if not note in self.timestamps.keys():
+                        self.timestamps[note] = {"time": []}
+                    
+                    self.timestamps[note]["time"].append( [ongoing[note]["start"], self.time] )
+
+                    #     "type": "note",
+                    #     "start": ,
+                    #     "end": self.time,
+                    #     "velocity": velocity,
+                    #     "note": note,
+                    #     "name": self.note_to_name(note),
+                    # }))
 
                     del ongoing[note]
                 else:
-                    ongoing[note] = InlineDict({
+                    ongoing[note] = {
                         "start": self.time,
-                        "velocity": velocity,
-                        "note": note,
-                    })
+                    }
                 
-                print(ongoing)
+                # print(ongoing)
 
             if msg.type == 'set_tempo':
-                self.create_empty_timestamp_list()
                 self.tempo = msg.tempo
-
-                self.timestamps[self.time].append(InlineDict({
-                    "type": "tempo",
-                    "value": self.tempo,
-                }))
-
+                self.timestamps["tempo"].append([
+                    self.time, self.tempo
+                ])
+        
+        for key in self.timestamps.keys():
+            if isinstance(key, int):
+                self.timestamps[key]["time"] = self.datautils.shorten_overlaps_keep_start_value(self.timestamps[key]["time"])
        
         # print(self.timestamps)
         print("Range:", self.range_notes.min, self.range_notes.max)
+        print(self.timestamps)

@@ -49,6 +49,7 @@ class PianoKey:
         self.note = key_index
         self.name = self.midi.note_to_name(self.note)
         self.configure_color()
+        print("by key index", key_index, self.name)
     
     # Configure pressed, idle colors based on key name
     def configure_color(self):
@@ -120,7 +121,7 @@ class MMVPianoRollTopDown:
         self.keys_centers = {}
     
     # Bleed is extra keys you put at the lower most and upper most ranged keys
-    def generate_piano(self, min_note, max_note, bleed=16):
+    def generate_piano(self, min_note, max_note, bleed=2):
 
         # NOTE: EDIT HERE STATIC VARIABLES  TODO: set them on config
         self.piano_height = (3.5/19) * self.vectorial.context.height
@@ -133,6 +134,8 @@ class MMVPianoRollTopDown:
             next_key = PianoKey(self.midi, self.skia)
             next_key.by_key_index(key_index)
             self.piano_keys[key_index] = next_key
+
+        print(len(self.piano_keys.keys()))
         
         # We get the center of keys based on the "distance walked" in between intervals
         # As black keys are in between two white keys, we walk half white key width on those
@@ -140,18 +143,40 @@ class MMVPianoRollTopDown:
 
         divisions = 0
 
-        for key_index in self.piano_keys.keys():
+        for index, key_index in enumerate(self.piano_keys.keys()):
+
             key = self.piano_keys[key_index]
-            if "#" in key.name:
-                divisions += 0.5
-            else:
-                divisions += 1
+            
+            # First index of key can't compare to previous key, starts at current_center
+            if not index == 0:
+
+                prevkey = self.piano_keys[key_index - 1]
+
+                # Distance is a tone
+                if (prevkey.is_white) and (key.is_white):
+                    divisions += 2
+
+                # Distance is a semitone
+                else:
+                    divisions += 1
+
+
+        # for key_index in self.piano_keys.keys():
+        #     if "#" in self.piano_keys[key_index].name:
+        #         divisions += 1
+        #     else:
+        #         divisions += 2
             
         # Now we have the divisions, we can calculate the real key width based on the resolution
+
+        # print("width", self.vectorial.context.width)
 
         # The keys intervals for walking
         self.semitone_width = self.vectorial.context.width / divisions
         self.tone_width = self.semitone_width * 2
+
+        # print(self.semitone_width, self.tone_width, divisions)
+        # exit()
 
         # Current center we're at
         current_center = 0
@@ -215,27 +240,32 @@ class MMVPianoRollTopDown:
 
         border = skia.Paint(
             AntiAlias = True,
-            Color = skia.Color4f(0, 0, 0, 1),
+            Color = skia.Color4f(0, 0, 40/255, 1),
             Style = skia.Paint.kStroke_Style,
-            StrokeWidth = 2,
+            # ImageFilter=skia.ImageFilters.DropShadow(3, 3, 5, 5, skia.ColorBLUE),
+            StrokeWidth = 3,
         )
         
         x = self.keys_centers[note]
 
-        # y = 
-        y = self.functions.proportion(self.seconds_of_midi_content, self.viewport_height, self.vectorial.context.current_time - start)
-        height = self.functions.proportion(self.seconds_of_midi_content, self.viewport_height, end - start) 
+        y = self.functions.proportion(
+            self.seconds_of_midi_content,
+            self.viewport_height, #*2,
+            self.vectorial.context.current_time - start
+        )
 
-        # print(height, start, end ,end - start)
+        height = self.functions.proportion(
+            self.seconds_of_midi_content,
+            self.viewport_height,
+            end - start
+        ) 
 
         coords = [
             x - (width / 2),
-            y + height + self.viewport_height,
+            y + (self.viewport_height) - height,
             x + (width / 2),
-            y + self.viewport_height,
+            y + (self.viewport_height),
         ]
-
-        # print(coords)
 
         # Rectangle border
         rect = skia.Rect(*coords)
@@ -251,30 +281,46 @@ class MMVPianoRollTopDown:
         c = 22/255
         self.skia.canvas.clear(skia.Color4f(c, c, c, 1))
 
+        #
+        SECS_OFFSET = 1.75
+
         # Get "needed" variables
-        current_time = self.vectorial.context.current_time
+        current_time = self.vectorial.context.current_time + SECS_OFFSET
         resolution_ratio_multiplier = self.vectorial.context.resolution_ratio_multiplier
 
-        contents = self.datautils.dictionary_items_in_between(
-            self.midi.timestamps,
-            current_time - 2,
-            current_time + self.seconds_of_midi_content * 2
-        )
+        # contents = self.datautils.dictionary_items_in_between(
+        #     self.midi.timestamps,
+        #     current_time - 2,
+        #     current_time + self.seconds_of_midi_content * 2
+        # )
+
+        accept_minimum_time = current_time - self.seconds_of_midi_content
+        accept_maximum_time = current_time + self.seconds_of_midi_content
 
         self.notes_playing = []
 
-        for timestamp in contents.keys():
-            for instruction in contents[timestamp]:
-                if instruction.type == "note":
-                    self.draw_note(
-                        velocity = instruction.velocity,
-                        start = instruction.start,
-                        note = instruction.note,
-                        name = instruction.name,
-                        end = instruction.end,
-                    )
-                    offset = 0.2
-                    if instruction.start < current_time + offset and current_time + offset < instruction.end:
-                        self.notes_playing.append(instruction.note)
+        for key in self.midi.timestamps.keys():
+            if isinstance(key, int):
+
+                note = key
+                times = self.midi.timestamps[note]["time"]
+
+                for interval in times:
+
+                    current_time_in_interval = (interval[0] < current_time < interval[1])
+                    accepted_render = (accept_minimum_time < current_time < accept_maximum_time)
+
+                    if current_time_in_interval:
+                        self.notes_playing.append(note)
+
+                    if current_time_in_interval or accepted_render:
+                        self.draw_note(
+                            velocity = 128,
+                            start = interval[0] - SECS_OFFSET,
+                            note = note,
+                            name = self.midi.note_to_name(note),
+                            end = interval[1] - SECS_OFFSET,
+                        )
+
 
         self.draw_piano()

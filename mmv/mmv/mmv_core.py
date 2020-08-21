@@ -104,7 +104,7 @@ class Core:
             # If we offset to the opposite way, the starting point can be negative hence the max function.
             current_time = max( (1/self.context.fps) * this_step, 0 )
 
-            self.context.current_time = current_time
+            self.context.current_time = (1/self.context.fps) * this_step
 
             # The current time in sample count to slice the audio
             this_time_in_samples = int(current_time * self.audio.sample_rate)
