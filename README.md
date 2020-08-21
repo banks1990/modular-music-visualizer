@@ -20,7 +20,7 @@ _The DAW is Ardour 6.0_
 
 [Link on YouTube](https://www.youtube.com/watch?v=KRI9cKPsK1Q)
 
-![Demo image of MMV Piano Roll](repo/demo-piano-roll.jpg)
+![Demo image of MMV Piano Roll](repo/demo-piano-roll-2.jpg)
 
 You can generate this piano roll by running `example_piano_roll.py` :)
 
