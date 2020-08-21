@@ -305,8 +305,17 @@ class MMVPianoRollTopDown:
 
                 note = key
                 times = self.midi.timestamps[note]["time"]
+                delete = []
 
-                for interval in times:
+                for index, interval in enumerate(times):
+
+                    # Out of bounds
+                    if interval[1] < accept_minimum_time:
+                        delete.append(index)
+                        continue
+                    
+                    if interval[0] > accept_maximum_time:
+                        break
 
                     current_time_in_interval = (interval[0] < current_time < interval[1])
                     accepted_render = (accept_minimum_time < current_time < accept_maximum_time)
@@ -322,6 +331,9 @@ class MMVPianoRollTopDown:
                             name = self.midi.note_to_name(note),
                             end = interval[1] - SECS_OFFSET,
                         )
+                
+                for index in reversed(delete):
+                    del self.midi.timestamps[note]["time"][index]
 
 
         self.draw_piano()
