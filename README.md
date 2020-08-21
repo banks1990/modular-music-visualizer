@@ -14,13 +14,15 @@ This project wasn't extensively tested on Windows, feedback appreciated.
 
 ![Demo image of MMV](repo/demo.jpg)
 
-![Demo image of MMV Piano Roll](repo/demo-piano-roll.jpg)
-
 This screenshot is from a track of mine I released using MMV!!
+
+_The DAW is Ardour 6.0_
 
 [Link on YouTube](https://www.youtube.com/watch?v=KRI9cKPsK1Q)
 
-_The DAW is Ardour 6.0_
+![Demo image of MMV Piano Roll](repo/demo-piano-roll.jpg)
+
+You can generate this piano roll by running `example_piano_roll.py` :)
 
 *Bonus!!*
 
