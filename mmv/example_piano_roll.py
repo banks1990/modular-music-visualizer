@@ -43,7 +43,7 @@ processing = mmv.mmv(
 processing.quality(
     width=1920,
     height=1080,
-    fps=60
+    fps=60,
 )
 
 processing.offset_audio_steps(0)
@@ -53,6 +53,8 @@ processing.assets_dir("assets/free_assets")
 
 # I/O options, input a audio, output a video
 processing.audio_processing.preset_dummy()
+# processing.audio_processing.preset_musical_notes()
+
 processing.input_audio("assets/piano_roll/contingency-times.ogg")
 processing.input_midi("assets/piano_roll/contingency-times.mid")
 processing.output_video("mmv-output.mkv")
@@ -61,10 +63,36 @@ piano_roll = processing.image_object()
 piano_roll.configure.init_animation_layer()
 piano_roll.configure.simple_add_piano_roll(
     seconds_offset = 0,
-    bpm = 130
+    seconds_of_midi_content = 3,
+    bpm = 130,
 )
 
 processing.add(piano_roll, layer=1)
+
+
+
+# Add basic progression bar
+prog_bar = processing.image_object()
+prog_bar.configure.init_animation_layer()
+prog_bar.configure.simple_add_progression_bar(
+    bar_type = "rectangle",
+    bar_mode = "simple",
+    position = "top",
+)
+
+processing.add(prog_bar, layer=4)
+
+
+
+processing.post_processing.simple_add_vignetting(start_value = processing.width*0.9, intensity="medium")
+
+generator = processing.generator_object()
+generator.particle_generator()
+generator.generator.configure.preset_bottom_mid_top()
+# generator.generator.configure.preset_middle_out()
+
+processing.add(generator)
+
 
 # Run and generate the final video
 processing.run()
