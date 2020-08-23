@@ -244,6 +244,7 @@ class MMVImageConfigure:
     def add_module_progression_bar(self, 
             bar_type: str,
             bar_mode: str,
+            position: str,
         ) -> None:
 
         self.add_module({
@@ -253,6 +254,7 @@ class MMVImageConfigure:
                     {
                         "type": bar_type,
                         "mode": bar_mode,
+                        "position": position,
                     },
                     self.skia,
                     "progression-bar",
@@ -264,11 +266,13 @@ class MMVImageConfigure:
     def simple_add_progression_bar(self,
             bar_type: str="rectangle",
             bar_mode: str="simple",
+            position: str="bottom",
         ) -> None:
 
         self.add_module_progression_bar(
             bar_type = bar_type,
             bar_mode = bar_mode,
+            position = position,
         )
 
     # Piano roll

@@ -39,7 +39,11 @@ class MMVProgressionBarRectangle:
         bleed_x = self.vectorial.context.width * (1/19)
 
         # Where Y starts and ends, ie. what horizontal line to draw the progression bar on
-        start_end_y = (19/20) * self.vectorial.context.height
+        if self.config["position"] == "bottom":
+            start_end_y = (19/20) * self.vectorial.context.height
+            
+        elif self.config["position"] == "top":
+            start_end_y = (1/20) * self.vectorial.context.height
 
         # End X we have to count the bleed
         self.start_x = bleed_x
@@ -64,6 +68,9 @@ class MMVProgressionBarRectangle:
 
             # We push the bar downwards according to the avg amplitude for a nice shaky-blur effect
             offset_by_amplitude = average_value * 14 * resolution_ratio_multiplier
+
+            if self.config["position"] == "top":
+                offset_by_amplitude *= (-1)
 
             # White full opacity color
             colors = [1, 1, 1, 1]
