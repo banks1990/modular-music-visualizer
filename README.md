@@ -77,7 +77,7 @@ I will be referring to where the source code folder of MVM is located at using t
 
 Note: on Windows you might need to replace `python` with `python.exe` if using PowerShell (recommended) or CMD (I'm not completely sure btw) 
 
-Another point is that directories on Windows uses `\` instead of (what everything else uses) `/`, Python should convert those automatically but maybe not within the shell, like: `.\path\to\executable.exe` instead of `./path/to/executable.exe`, the second one might not run.
+Another point is that directories on Windows uses `\` instead of (what everything else uses) `/`, Python should convert those automatically but maybe not within the shell, like: `.\path\to\executable.exe` instead of `./path/to/executable.exe`, the second one might not run. This does not apply on the Python scripts as it'll auto convert `/` to `\\`.
 
 ### Install Python 64 bits (REQUIRED) and FFmpeg
 
@@ -91,19 +91,9 @@ Another point is that directories on Windows uses `\` instead of (what everythin
 
 Head over to [Python Releases for Windows](https://www.python.org/downloads/windows/), download a _"Windows x86-64 executable installer"_ (I currently use Python 3.8), install it (be sure to check _"ADD PYTHON TO PATH"_ option on the installer)
 
-Download a compiled FFmpeg [build](https://ffmpeg.zeranoe.com/builds/), the binary must be available within PATH environment for `ffmpeg-python` package to use, extract it to somewhere then go to:
+Download a compiled FFmpeg [build](https://ffmpeg.zeranoe.com/builds/), the binary must be available within PATH environment for `ffmpeg-python` package to use.
 
-- Control Panel
-
-- System
-
-- Advanced system settings
-
-- Advanced tab, "Environment Variables.."
-
-- Click on PATH variable name, edit it
-
-- Add a new entry pointing to a folder where `ffmpeg.exe` is
+Either add to PATH environment var a folder with `ffmpeg.exe` binary if you know or drop FFmpeg's binary into the same directory as the `example_*.py`.
 
 ### Installing Pillow-SIMD for faster performance
 
