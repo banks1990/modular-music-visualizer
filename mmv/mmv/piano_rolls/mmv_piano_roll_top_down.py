@@ -290,15 +290,53 @@ class MMVPianoRollTopDown:
         for key_index in self.piano_keys.keys():
             self.piano_keys[key_index].draw_marker()
 
-    def draw_note(self, velocity, start, note, name, end):
+    def draw_note(self, velocity, start, end, channel, note, name):
+
+        color_channels = {
+            0: {
+                "sharp": ImageColor.getcolor("#ff9d00", "RGB"),
+                "plain": ImageColor.getcolor("#ffcc00", "RGB"),
+            },
+            1: {
+                "sharp": ImageColor.getcolor("#00a608", "RGB"),
+                "plain": ImageColor.getcolor("#00ff0d", "RGB")
+            },
+            2: {
+                "sharp": ImageColor.getcolor("#6600ff", "RGB"),
+                "plain": ImageColor.getcolor("#39008f", "RGB")
+            },
+            3: {
+                "sharp": ImageColor.getcolor("#ff0000", "RGB"),
+                "plain": ImageColor.getcolor("#990000", "RGB")
+            },
+            4: {
+                "sharp": ImageColor.getcolor("#00fffb", "RGB"),
+                "plain": ImageColor.getcolor("#00b5b2", "RGB")
+            },
+            5: {
+                "sharp": ImageColor.getcolor("#ff006f", "RGB"),
+                "plain": ImageColor.getcolor("#a10046", "RGB")
+            },
+            6: {
+                "sharp": ImageColor.getcolor("#aaff00", "RGB"),
+                "plain": ImageColor.getcolor("#75b000", "RGB")
+            },
+            "default": {
+                "sharp": ImageColor.getcolor("#ffffff", "RGB"),
+                "sharp": ImageColor.getcolor("#dddddd", "RGB"),
+            },
+        }
+
+        note_colors = color_channels.get(channel, color_channels["default"])
         
         if "#" in name:
-            c = ImageColor.getcolor("#ff9d00", "RGB")
             width = self.semitone_width*0.9
+            c = note_colors["sharp"]
             color = skia.Color4f(c[0]/255, c[1]/255, c[2]/255, 1)
+
         else:
-            c = ImageColor.getcolor("#ffcc00", "RGB")
             width = self.tone_width*0.6
+            c = note_colors["plain"]
             color = skia.Color4f(c[0]/255, c[1]/255, c[2]/255, 1)
 
         # Make the skia Paint and
@@ -377,40 +415,42 @@ class MMVPianoRollTopDown:
 
         self.notes_playing = []
 
-        for key in self.midi.timestamps.keys():
-            if isinstance(key, int):
+        for channel in self.midi.timestamps.keys():
+            for key in self.midi.timestamps[channel]:
+                if isinstance(key, int):
 
-                note = key
-                times = self.midi.timestamps[note]["time"]
-                delete = []
+                    note = key
+                    times = self.midi.timestamps[channel][note]["time"]
+                    delete = []
 
-                for index, interval in enumerate(times):
+                    for index, interval in enumerate(times):
 
-                    # Out of bounds
-                    if interval[1] < accept_minimum_time:
-                        delete.append(index)
-                        continue
+                        # Out of bounds
+                        if interval[1] < accept_minimum_time:
+                            delete.append(index)
+                            continue
+                        
+                        if interval[0] > accept_maximum_time:
+                            break
+
+                        current_time_in_interval = (interval[0] < current_time < interval[1])
+                        accepted_render = (accept_minimum_time < current_time < accept_maximum_time)
+
+                        if current_time_in_interval:
+                            self.notes_playing.append(note)
+
+                        if current_time_in_interval or accepted_render:
+                            self.draw_note(
+                                velocity = 128,
+                                start = interval[0] - SECS_OFFSET,
+                                end = interval[1] - SECS_OFFSET,
+                                channel = channel,
+                                note = note,
+                                name = self.midi.note_to_name(note),
+                            )
                     
-                    if interval[0] > accept_maximum_time:
-                        break
-
-                    current_time_in_interval = (interval[0] < current_time < interval[1])
-                    accepted_render = (accept_minimum_time < current_time < accept_maximum_time)
-
-                    if current_time_in_interval:
-                        self.notes_playing.append(note)
-
-                    if current_time_in_interval or accepted_render:
-                        self.draw_note(
-                            velocity = 128,
-                            start = interval[0] - SECS_OFFSET,
-                            note = note,
-                            name = self.midi.note_to_name(note),
-                            end = interval[1] - SECS_OFFSET,
-                        )
-                
-                for index in reversed(delete):
-                    del self.midi.timestamps[note]["time"][index]
+                    for index in reversed(delete):
+                        del self.midi.timestamps[channel][note]["time"][index]
 
 
         self.draw_piano()

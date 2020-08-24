@@ -22,6 +22,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 from mmv.common.cmn_types import InlineDict
 from mmv.common.cmn_utils import DataUtils
 import mido
+import copy
 
 
 # Store the range of notes for a (possible) piano roll visualization if user
@@ -50,7 +51,6 @@ class RangeNotes:
 class MidiFile:
     def load(self, path, bpm=130):
         self.midi = mido.MidiFile(path, clip=True)
-        self.time = 0
         self.tempo = mido.bpm2tempo(bpm)
         self.range_notes = RangeNotes()
         self.datautils = DataUtils()
@@ -68,9 +68,20 @@ class MidiFile:
     # Really finicky because how MIDI works on the ticks and channels and whatnot
     def get_timestamps(self):
 
+        self.time = 0
+
+        # Empty channels dictionary list
+        channels = { channel: {} for channel in range(0, 16) }
+
         # Timestamps dictionary and "ongoing" midi notes, not finished        
-        self.timestamps = {"tempo": []}
-        ongoing = {}
+        self.timestamps = {
+            **{"tempo": []},
+            **channels,
+        }
+
+        ongoing = copy.deepcopy(channels)
+
+        self.used_channels = []
 
         # Iterate through each message on ALL midi tracks together...
         # Use synchronous mode if possible TODO: right loop for every mode
@@ -90,35 +101,46 @@ class MidiFile:
             if msg.type in ["note_on", "note_off"]:
                 
                 velocity = msg.velocity
+                channel = msg.channel
                 note = msg.note
+
+                if not channel in self.used_channels:
+                    self.used_channels.append(channel)
 
                 self.range_notes.update(note)
 
-                if note in ongoing.keys():
+                if note in ongoing[channel].keys():
 
-                    if not note in self.timestamps.keys():
-                        self.timestamps[note] = {"time": []}
-                    
-                    self.timestamps[note]["time"].append( [ongoing[note]["start"], self.time] )
+                    if not note in self.timestamps[channel].keys():
+                        self.timestamps[channel][note] = {"time": []}
 
-                    del ongoing[note]
+                    # Append start, end and info values as a list
+                    self.timestamps[channel][note]["time"].append([
+                        ongoing[channel][note]["start"],
+                        self.time,
+                        {
+                            "velocity": velocity
+                        }
+                    ])
+
+                    del ongoing[channel][note]
                 else:
-                    ongoing[note] = {
+                    ongoing[channel][note] = {
                         "start": self.time,
                     }
                 
-                # print(ongoing)
-
             if msg.type == 'set_tempo':
                 self.tempo = msg.tempo
                 self.timestamps["tempo"].append([
                     self.time, self.tempo
                 ])
-        
-        for key in self.timestamps.keys():
-            if isinstance(key, int):
-                self.timestamps[key]["time"] = self.datautils.shorten_overlaps_keep_start_value(self.timestamps[key]["time"])
+        print("Channels on midi file:", self.used_channels)
+
+        # TODO: Need to adapt function to accept {} as third argument   
+        # for key in self.timestamps.keys():
+        #     if isinstance(key, int):
+        #         self.timestamps[key]["time"] = self.datautils.shorten_overlaps_keep_start_value(self.timestamps[key]["time"])
        
         # print(self.timestamps)
-        print("Range:", self.range_notes.min, self.range_notes.max)
-        print(self.timestamps)
+        # print("Range:", self.range_notes.min, self.range_notes.max)
+        # print(self.timestamps)

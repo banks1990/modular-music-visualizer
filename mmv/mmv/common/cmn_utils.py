@@ -194,6 +194,13 @@ class DataUtils:
     def equal_slices(self, array, n):
         size = len(array)
         return [ array[i: min(i+n, size) ] for i in range(0, size, n) ]
+    
+    # Wrapper on a .get function for a list like we have in dicts: d.get(key, default)
+    def list_get(self, l, index, default):
+        try:
+            return l[index]
+        except IndexError:
+            return default
         
     """
     Given a list of 2D, line intervals:
