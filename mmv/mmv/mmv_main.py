@@ -19,8 +19,9 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.common.cmn_functions import Functions
+from mmv.common.cmn_interpolation import Interpolation
 from mmv.common.cmn_audio import AudioProcessing
+from mmv.common.cmn_functions import Functions
 from mmv.common.cmn_video import FFmpegWrapper
 from mmv.common.cmn_skia import SkiaWrapper
 from mmv.mmv_animation import MMVAnimation
@@ -86,6 +87,9 @@ class MMVMain:
 
         print(debug_prefix, "Creating Functions()")
         self.functions = Functions()
+
+        print(debug_prefix, "Creating Interpolation()")
+        self.interpolation = Interpolation()
 
         print(debug_prefix, "Creating Canvas()")
         self.canvas = MMVImage(self)

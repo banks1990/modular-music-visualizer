@@ -21,7 +21,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 # modifier activators
 from mmv.modifier_activators.ma_fade import *
 
-from mmv.common.cmn_interpolation import Interpolation
 from mmv.mmv_interpolation import MMVInterpolation
 from mmv.mmv_music_bar import MMVMusicBars
 from mmv.common.cmn_utils import Utils
@@ -45,12 +44,10 @@ class MMVParticleGeneratorConfigure:
 
 
 
-class MMVParticleGenerator():
-    def __init__(self, context, skia_object):
-        self.context = context
-        self.skia = skia_object
-        self.utils = Utils()
-        self.interpolation = Interpolation()
+class MMVParticleGenerator:
+    def __init__(self, mmv):
+        self.mmv = mmv
+
         self.configure = MMVParticleGeneratorConfigure(self)
         self.type = "mmvgenerator"
         self.generate_function = False
@@ -73,22 +70,22 @@ class MMVParticleGenerator():
     
     def preset_bottom_mid_top(self):
 
-        resolution_ratio_multiplier = self.context.resolution_ratio_multiplier
+        resolution_ratio_multiplier = self.mmv.context.resolution_ratio_multiplier
 
-        particle = MMVImage(self.context, self.skia)
+        particle = MMVImage(self.mmv)
 
         particle.image.load_from_path(
-            self.utils.random_file_from_dir (
-                self.context.assets + os.path.sep + "particles"
+            self.mmv.utils.random_file_from_dir (
+                self.mmv.context.assets + os.path.sep + "particles"
             )
         )
         
         horizontal_randomness = int(50 * resolution_ratio_multiplier)
-        vertical_randomness_min = self.context.height//1.7
-        vertical_randomness_max = self.context.height//2.3
+        vertical_randomness_min = self.mmv.context.height//1.7
+        vertical_randomness_max = self.mmv.context.height//2.3
 
-        x1 = random.randint(0, self.context.width)
-        y1 = self.context.height
+        x1 = random.randint(0, self.mmv.context.width)
+        y1 = self.mmv.context.height
         x2 = x1 + random.randint(-horizontal_randomness, horizontal_randomness)
         y2 = y1 + random.randint(-vertical_randomness_min, -vertical_randomness_max)
         x3 = x2 + random.randint(-horizontal_randomness, horizontal_randomness)
@@ -197,20 +194,20 @@ class MMVParticleGenerator():
 
     def preset_middle_out(self):
 
-        particle = MMVImage(self.context, self.skia)
+        particle = MMVImage(self.mmv.context, self.mmv.skia)
 
         particle.image.load_from_path(
-            self.utils.random_file_from_dir (
-                self.context.assets + os.path.sep + "particles"
+            self.mmv.utils.random_file_from_dir (
+                self.mmv.context.assets + os.path.sep + "particles"
             )
         )
         
         horizontal_randomness = int(50 * resolution_ratio_multiplier)
-        vertical_randomness_min = self.context.height//1.7
-        vertical_randomness_max = self.context.height//2.3
+        vertical_randomness_min = self.mmv.context.height//1.7
+        vertical_randomness_max = self.mmv.context.height//2.3
 
-        half_screen_x = self.context.width // 2
-        half_screen_y = self.context.height // 2
+        half_screen_x = self.mmv.context.width // 2
+        half_screen_y = self.mmv.context.height // 2
 
         x1 = half_screen_x
         y1 = half_screen_y
