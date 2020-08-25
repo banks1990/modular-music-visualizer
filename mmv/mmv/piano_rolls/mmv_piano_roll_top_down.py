@@ -294,36 +294,78 @@ class MMVPianoRollTopDown:
 
         color_channels = {
             0: {
-                "sharp": ImageColor.getcolor("#ff9d00", "RGB"),
                 "plain": ImageColor.getcolor("#ffcc00", "RGB"),
+                "sharp": ImageColor.getcolor("#ff9d00", "RGB"),
             },
             1: {
+                "plain": ImageColor.getcolor("#00ff0d", "RGB"),
                 "sharp": ImageColor.getcolor("#00a608", "RGB"),
-                "plain": ImageColor.getcolor("#00ff0d", "RGB")
             },
             2: {
-                "sharp": ImageColor.getcolor("#6600ff", "RGB"),
-                "plain": ImageColor.getcolor("#39008f", "RGB")
+                "plain": ImageColor.getcolor("#6600ff", "RGB"),
+                "sharp": ImageColor.getcolor("#39008f", "RGB"),
             },
             3: {
-                "sharp": ImageColor.getcolor("#ff0000", "RGB"),
-                "plain": ImageColor.getcolor("#990000", "RGB")
+                "plain": ImageColor.getcolor("#ff0000", "RGB"),
+                "sharp": ImageColor.getcolor("#990000", "RGB"),
             },
             4: {
-                "sharp": ImageColor.getcolor("#00fffb", "RGB"),
-                "plain": ImageColor.getcolor("#00b5b2", "RGB")
+                "plain": ImageColor.getcolor("#00fffb", "RGB"),
+                "sharp": ImageColor.getcolor("#00b5b2", "RGB"),
             },
             5: {
-                "sharp": ImageColor.getcolor("#ff006f", "RGB"),
-                "plain": ImageColor.getcolor("#a10046", "RGB")
+                "plain": ImageColor.getcolor("#ff006f", "RGB"),
+                "sharp": ImageColor.getcolor("#a10046", "RGB"),
             },
             6: {
-                "sharp": ImageColor.getcolor("#aaff00", "RGB"),
-                "plain": ImageColor.getcolor("#75b000", "RGB")
+                "plain": ImageColor.getcolor("#aaff00", "RGB"),
+                "sharp": ImageColor.getcolor("#75b000", "RGB"),
             },
+
+            7: {
+                "plain": ImageColor.getcolor("#e1ff00", "RGB"),
+                "sharp": ImageColor.getcolor("#a9bf00", "RGB"),
+            },
+            8: {
+                "plain": ImageColor.getcolor("#ff3300", "RGB"),
+                "sharp": ImageColor.getcolor("#a82200", "RGB"),
+            },
+            9: {
+                "plain": ImageColor.getcolor("#00ff91", "RGB"),
+                "sharp": ImageColor.getcolor("#00b567", "RGB"),
+            },
+            10: {
+                "plain": ImageColor.getcolor("#ff00aa", "RGB"),
+                "sharp": ImageColor.getcolor("#c40083", "RGB"),
+            },
+            11: {
+                "plain": ImageColor.getcolor("#c800ff", "RGB"),
+                "sharp": ImageColor.getcolor("#8e00b5", "RGB"),
+            },
+            12: {
+                "plain": ImageColor.getcolor("#00ff4c", "RGB"),
+                "sharp": ImageColor.getcolor("#00c93c", "RGB"),
+            },
+            13: {
+                "plain": ImageColor.getcolor("#ff8a8a", "RGB"),
+                "sharp": ImageColor.getcolor("#bf6767", "RGB"),
+            },
+            14: {
+                "plain": ImageColor.getcolor("#ffde7d", "RGB"),
+                "sharp": ImageColor.getcolor("#c4aa5e", "RGB"),
+            },
+            15: {
+                "plain": ImageColor.getcolor("#85ebff", "RGB"),
+                "sharp": ImageColor.getcolor("#5ca7b5", "RGB"),
+            },
+            16: {
+                "plain": ImageColor.getcolor("#ff7aa4", "RGB"),
+                "sharp": ImageColor.getcolor("#bd5978", "RGB"),
+            },
+
             "default": {
+                "plain": ImageColor.getcolor("#dddddd", "RGB"),
                 "sharp": ImageColor.getcolor("#ffffff", "RGB"),
-                "sharp": ImageColor.getcolor("#dddddd", "RGB"),
             },
         }
 
