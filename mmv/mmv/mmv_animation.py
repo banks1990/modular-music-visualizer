@@ -19,10 +19,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.common.cmn_skia import SkiaWrapper
-from mmv.common.cmn_audio import AudioFile
-from mmv.mmv_context import Context
-from mmv.mmv_image import MMVImage
 from mmv.common.cmn_types import *
 from mmv.mmv_generator import *
 from mmv.mmv_modifiers import *
@@ -36,18 +32,8 @@ import os
 class MMVAnimation:
     
     # Initialize a MMVAnimation class with required arguments
-    def __init__(self, 
-            context: Context,
-            audio: AudioFile,
-            canvas: MMVImage,
-            skia: SkiaWrapper,
-        ) -> None:
-        
-        # Get the classes
-        self.context = context
-        self.audio = audio
-        self.canvas = canvas
-        self.skia = skia
+    def __init__(self, mmv) -> None:
+        self.mmv = mmv
 
         # Content are the MMV objects stored that gets rendered on the screen
         # generators are MMVGenerators that we get new objects from
@@ -98,7 +84,7 @@ class MMVAnimation:
                 # Generate next step of animation
                 item.next(fftinfo, this_step)
 
-                item.blit(self.skia)
+                item.blit(self.mmv.skia)
 
         # For each layer index we have items to delete
         for layer_index in items_to_delete.keys():
@@ -108,4 +94,4 @@ class MMVAnimation:
                 del self.content[ layer_index ][ items ]
 
         # Post process this final frame as we added all the items
-        self.canvas.next(fftinfo, this_step, self.skia)
+        self.mmv.canvas.next(fftinfo, this_step, self.mmv.skia)

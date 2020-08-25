@@ -20,12 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from mmv.mmv_image_configure import MMVImageConfigure
-from mmv.mmv_interpolation import MMVInterpolation
-from mmv.common.cmn_functions import Functions
-from mmv.mmv_music_bar import MMVMusicBars
 from mmv.common.cmn_frame import Frame
-from mmv.common.cmn_utils import Utils
-from mmv.mmv_context import Context
 from mmv.common.cmn_types import *
 from mmv.mmv_modifiers import *
 import math
@@ -37,21 +32,14 @@ import os
 
 # Basically everything on MMV as we have to render images
 class MMVImage:
-
-    def __init__(self, context: Context, skia_object) -> None:
+    def __init__(self, mmv) -> None:
+        self.mmv = mmv
         
-        debug_prefix = "[MMVImage.__init__]"
-        
-        self.context = context
-        self.skia = skia_object
-
         # The "animation" and path this object will follow
         self.animation = {}
 
         # Create classes
-        self.configure = MMVImageConfigure(self, self.context, self.skia)
-        self.functions = Functions()
-        self.utils = Utils()
+        self.configure = MMVImageConfigure(self, self.mmv)
         self.image = Frame()
 
         self.x = 0
@@ -93,7 +81,7 @@ class MMVImage:
     # Create empty zeros canvas IMAGE, not CONTENTS.
     # If we ever wanna mirror the contents and apply post processing
     def reset_canvas(self) -> None:
-        self.image.new(self.context.width, self.context.height)
+        self.image.new(self.mmv.context.width, self.mmv.context.height)
 
     # Don't pickle cv2 video  
     def __getstate__(self):
@@ -161,11 +149,11 @@ class MMVImage:
                 shake = 0
 
                 for modifier in position:
-                    if self.utils.is_matching_type([modifier], [MMVModifierShake]):
+                    if self.mmv.utils.is_matching_type([modifier], [MMVModifierShake]):
                         shake = modifier.distance
 
-                width = self.context.width + (4*shake)
-                height = self.context.height + (4*shake)
+                width = self.mmv.context.width + (4*shake)
+                height = self.mmv.context.height + (4*shake)
                 
                 self.image.load_from_array(frame)
                 self.image.resize_to_resolution(
@@ -265,19 +253,19 @@ class MMVImage:
             argument = [self.x, self.y] + self.offset
 
             # Move according to a Point (be stationary)
-            if self.utils.is_matching_type([modifier], [MMVModifierPoint]):
+            if self.mmv.utils.is_matching_type([modifier], [MMVModifierPoint]):
                 # Atribute (x, y) to Point's x and y
                 [self.x, self.y], self.offset = modifier.next(*argument)
 
             # Move according to a Line (interpolate current steps)
-            if self.utils.is_matching_type([modifier], [MMVModifierLine]):
+            if self.mmv.utils.is_matching_type([modifier], [MMVModifierLine]):
                 # Interpolate and unpack next coordinate
                 [self.x, self.y], self.offset = modifier.next(*argument)
 
             # # Offset modules
 
             # Get next shake offset value
-            if self.utils.is_matching_type([modifier], [MMVModifierShake]):
+            if self.mmv.utils.is_matching_type([modifier], [MMVModifierShake]):
                 [self.x, self.y], self.offset = modifier.next(*argument)
 
     # Blit this item on the canvas

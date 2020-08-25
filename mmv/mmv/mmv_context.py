@@ -19,21 +19,19 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.common.cmn_utils import Utils
 import os
 
 
 class Context:
-    def __init__(self, args: dict) -> None:
+    def __init__(self, mmv) -> None:
 
-        self.args = args
+        self.mmv = mmv
 
         # Utils class and ROOT dir
-        self.utils = Utils()
-        self.ROOT = self.utils.ROOT
+        self.ROOT = self.mmv.utils.ROOT
 
         # The operating system we're workingon
-        self.os = self.utils.get_os()
+        self.os = self.mmv.utils.get_os()
         
         # Directories
         self.data = self.ROOT + os.path.sep + "data"

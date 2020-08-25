@@ -21,8 +21,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from mmv.mmv_interpolation import MMVInterpolation
-from mmv.common.cmn_utils import Utils
-from mmv.common.cmn_frame import Frame
 from mmv.common.cmn_types import *
 from enum import Enum
 import random
@@ -82,7 +80,6 @@ class MMVModifierLine:
             interpolation_x: MMVInterpolation,
             interpolation_y: MMVInterpolation,
             mode = ModifierMode.OVERRIDE_VALUE_KEEP_OFFSET_VALUE,
-
         ) -> None:
 
         self.start = start

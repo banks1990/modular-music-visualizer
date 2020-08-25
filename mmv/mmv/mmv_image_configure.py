@@ -44,10 +44,9 @@ This will be documented properly in the future (I hope so)
 class MMVImageConfigure:
 
     # Get MMVImage object and set image index to zero
-    def __init__(self, mmvimage_object, context, skia_object) -> None:
+    def __init__(self, mmvimage_object, mmv) -> None:
         self.object = mmvimage_object
-        self.context = context
-        self.skia = skia_object
+        self.mmv = mmv
         self.animation_index = 0
     
     # Macros for initialializing this animation layer
@@ -76,8 +75,8 @@ class MMVImageConfigure:
     
     def resize_to_video_resolution(self, over_resize_x: int=0, over_resize_y: int=0) -> None:
         self.resize_to_resolution(
-            width=self.object.context.width + over_resize_x,
-            height=self.object.context.height + over_resize_y,
+            width=self.object.mmv.context.width + over_resize_x,
+            height=self.object.mmv.context.height + over_resize_y,
             override=True
         )
 
@@ -192,8 +191,9 @@ class MMVImageConfigure:
         self.add_module({
             "vectorial": {
                 "object": MMVVectorial(
-                    self.object.context,
+                    self.object.mmv,
                     {
+                        "type_class": "visualizer",
                         "type": vis_type,
                         "mode": vis_mode,
                         "width": width,
@@ -208,8 +208,7 @@ class MMVImageConfigure:
                             }
                         }
                     },
-                    self.skia,
-                    "visualizer",
+                    
                 )
             }
         })
@@ -250,14 +249,14 @@ class MMVImageConfigure:
         self.add_module({
             "vectorial": {
                 "object": MMVVectorial(
-                    self.object.context,
+                    self.object.mmv,
                     {
+                        "type_class": "progression-bar",
                         "type": bar_type,
                         "mode": bar_mode,
                         "position": position,
                     },
-                    self.skia,
-                    "progression-bar",
+                    
                 )
             }
         })
@@ -287,15 +286,14 @@ class MMVImageConfigure:
         self.add_module({
             "vectorial": {
                 "object": MMVVectorial(
-                    self.object.context,
+                    self.object.mmv,
                     {
+                        "type_class": "piano-roll",
                         "type": piano_type,
                         "seconds-offset": seconds_offset,
                         "bpm": bpm,
                         "seconds-of-midi-content": seconds_of_midi_content,
                     },
-                    self.skia,
-                    "piano-roll",
                 )
             }
         })
@@ -330,7 +328,7 @@ class MMVImageConfigure:
         self.add_module({
             "vignetting": {
                 "object": MMVModifierVignetting(
-                    context = self.context,
+                    context = self.mmv.context,
                     minimum = minimum,
                     center_function_x = center_function_x,
                     center_function_y = center_function_y,

@@ -19,12 +19,14 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
+from mmv.common.cmn_functions import Functions
 from mmv.common.cmn_audio import AudioProcessing
 from mmv.common.cmn_video import FFmpegWrapper
 from mmv.common.cmn_skia import SkiaWrapper
 from mmv.mmv_animation import MMVAnimation
 from mmv.common.cmn_audio import AudioFile
 from mmv.common.cmn_fourier import Fourier
+from mmv.common.cmn_utils import Utils
 from mmv.mmv_context import Context
 from mmv.mmv_image import MMVImage
 from mmv.mmv_core import Core
@@ -70,24 +72,29 @@ class MMVMain:
             Miscellaneous()
     
     # Creates classes and send to Core
-    def setup(self, args: dict={}, cli: bool=False) -> None:
+    def setup(self, cli: bool=False) -> None:
 
         debug_prefix = "[MMVMain.__init__]"
 
+        self.utils = Utils()
+
         print(debug_prefix, "Creating Context()")
-        self.context = Context(args)
+        self.context = Context(self)
 
         print(debug_prefix, "Creating SkiaWrapper()")
-        self.skia = SkiaWrapper(self.context)
+        self.skia = SkiaWrapper(self)
+
+        print(debug_prefix, "Creating Functions()")
+        self.functions = Functions()
 
         print(debug_prefix, "Creating Canvas()")
-        self.canvas = MMVImage(self.context, self.skia)
+        self.canvas = MMVImage(self)
 
         print(debug_prefix, "Creating Fourier()")
         self.fourier = Fourier()
 
         print(debug_prefix, "Creating FFmpegWrapper()")
-        self.ffmpeg = FFmpegWrapper(self.context)
+        self.ffmpeg = FFmpegWrapper(self)
 
         print(debug_prefix, "Creating AudioFile()")
         self.audio = AudioFile()
@@ -96,19 +103,10 @@ class MMVMain:
         self.audio_processing = AudioProcessing()
 
         print(debug_prefix, "Creating MMVAnimation()")
-        self.mmvanimation = MMVAnimation(self.context, self.audio, self.canvas, self.skia)
+        self.mmv_animation = MMVAnimation(self)
     
         print(debug_prefix, "Creating Core()")
-        self.core = Core(
-            self.context,
-            self.canvas,
-            self.skia,
-            self.fourier,
-            self.ffmpeg,
-            self.audio,
-            self.mmvanimation,
-            self.audio_processing,
-        )
+        self.core = Core(self)
 
     # Execute the program
     def run(self) -> None:
