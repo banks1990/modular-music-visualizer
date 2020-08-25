@@ -28,7 +28,7 @@ You can generate this piano roll by running `example_piano_roll.py` :)
 
 [Unlisted video of old version of MMV](https://youtu.be/BhpLwaR1Oj8)
 
-# Huge reorganization of core code is being worked on and image rendering backend, expect instability
+# Reorganization of MMV's core core structure on develop branch!!
 
 # Idea
 
