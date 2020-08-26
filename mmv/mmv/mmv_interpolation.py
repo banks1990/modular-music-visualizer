@@ -55,7 +55,6 @@ class MMVInterpolation:
             self.aggressive = self.config["aggressive"]
             self.aggressive_randomness = self.config.get("aggressive_randomness", 0)
         
-
         # Get options for a linear interpolation
         elif interpolation_function_name == "linear":
             # Set the function
@@ -63,7 +62,6 @@ class MMVInterpolation:
 
             # Options of the interpolation function
             self.total_steps = self.config.get("total_steps")
-        
         
         # Get options for a sigmoid interpolation
         elif interpolation_function_name == "sigmoid":

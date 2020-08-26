@@ -130,7 +130,7 @@ class mmv:
     
     # Get a blank MMVGenerator object
     def generator_object(self):
-        return MMVGenerator(self.mmv.context, self.mmv.skia)
+        return MMVGenerator(self.mmv)
 
     # # [ Utilities ] # #
 
@@ -182,12 +182,12 @@ class AudioProcessingPresets:
     
     # Custom preset, sends directly those dictionaries
     def preset_custom(self, config: dict) -> None:
-        self.mmv.main.audio_processing.config = config
+        self.mmv.mmv.audio_processing.config = config
 
     # A balanced preset between the bass, mid and high frequencies
     # Good for general type of music
     def preset_balanced(self) -> None:
-        self.mmv.main.audio_processing.config = {
+        self.mmv.mmv.audio_processing.config = {
             0: {
                 "sample_rate": 440,
                 "get_frequencies": "range",
@@ -226,7 +226,7 @@ class AudioProcessingPresets:
         #     },
         # }
 
-        self.mmv.main.audio_processing.config = {
+        self.mmv.mmv.audio_processing.config = {
             0: {
                 "sample_rate": 1000,
                 "get_frequencies": "range",
@@ -245,7 +245,7 @@ class AudioProcessingPresets:
         }
     
     def preset_musical_notes(self) -> None:
-        self.mmv.main.audio_processing.config = {
+        self.mmv.mmv.audio_processing.config = {
             # 0: {
             #     "sample_rate": 40000,
             #     "get_frequencies": "musical",

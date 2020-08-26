@@ -30,7 +30,7 @@ class Context:
         # Utils class and ROOT dir
         self.ROOT = self.mmv.utils.ROOT
 
-        # The operating system we're workingon
+        # The operating system we're working on
         self.os = self.mmv.utils.get_os()
         
         # Directories
@@ -48,12 +48,15 @@ class Context:
         self.height = 720
         self.fps = 60
 
-        # # Overhaul "resolution" of the FFT, 512 lowpoly, 2048 balanced, 4096 + accurate
+        # # Overhaul "resolution" of the FFT, 512 low poly, 2048 balanced, 4096 + accurate
         # # Performance decreases with higher values
-        self.batch_size = 2048 #(48000 // self.fps) # 512
+        self.batch_size = 2048  # (48000 // self.fps) # 512
 
         # Offset the audio slice by this much of steps
         self.offset_audio_before_in_many_steps = (60/self.fps) // 8
+
+        # Default attribution to resolution ratio
+        self.resolution_ratio_multiplier = (1 / 720) * self.height
 
         # Current processing time
         self.current_time = 0
@@ -65,7 +68,7 @@ class Context:
 
         # This is a scalar value that says what percentage of a 720p resolution
         # this video will be rendered with, for fixing incorrect sizing and
-        # "adapting" the coordiantes acording to the resolution.
+        # "adapting" the coordinates according to the resolution.
         # 
         # For a 720p ->  (1/720) * 720 = 1
         # For a 1080p ->  (1/720) * 1080 = 1.5

@@ -194,7 +194,7 @@ class MMVParticleGenerator:
 
     def preset_middle_out(self):
 
-        particle = MMVImage(self.mmv.context, self.mmv.skia)
+        particle = MMVImage(self.mmv)
 
         particle.image.load_from_path(
             self.mmv.utils.random_file_from_dir (

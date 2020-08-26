@@ -23,11 +23,8 @@ from mmv.mmv_image_configure import MMVImageConfigure
 from mmv.common.cmn_frame import Frame
 from mmv.common.cmn_types import *
 from mmv.mmv_modifiers import *
-import math
-import copy
 import skia
 import cv2
-import os
 
 
 # Basically everything on MMV as we have to render images
@@ -96,7 +93,7 @@ class MMVImage:
         self.current_step += 1
 
         # Animation has ended, this current_animation isn't present on path.keys
-        if not self.current_animation in list(self.animation.keys()):
+        if self.current_animation not in list(self.animation.keys()):
             self.is_deletable = True
             return
 
@@ -116,7 +113,7 @@ class MMVImage:
         self.offset = [0, 0]
         self.image.pending = {}
 
-        self.image._reset_to_original_image()
+        self.image.reset_to_original_image()
         self._reset_effects_variables()
 
         position = this_animation["position"]
@@ -134,7 +131,7 @@ class MMVImage:
                 this_module = modules["video"]
 
                 # We haven't set a video capture or it has ended
-                if self.video == None:
+                if self.video is None:
                     self.video = cv2.VideoCapture(this_module["path"])
 
                 # Can we read next frame? if not, go back to frame 0 for a loop
@@ -241,9 +238,8 @@ class MMVImage:
                     "image_filters": self.image_filters,
                 }
 
-                # Visualizer blits itself into the canvas automatically
+                # Visualizer blit itself into the canvas automatically
                 vectorial.next(fftinfo, this_step, effects)
-
 
         # Iterate through every position module
         for modifier in path:
@@ -254,7 +250,7 @@ class MMVImage:
 
             # Move according to a Point (be stationary)
             if self.mmv.utils.is_matching_type([modifier], [MMVModifierPoint]):
-                # Atribute (x, y) to Point's x and y
+                # Attribute (x, y) to Point's x and y
                 [self.x, self.y], self.offset = modifier.next(*argument)
 
             # Move according to a Line (interpolate current steps)
@@ -280,7 +276,7 @@ class MMVImage:
         x = int(self.y + self.offset[0])
 
         if self.mask_filters:
-            self.paint_dict["MaskFilter"] =  self.mask_filters
+            self.paint_dict["MaskFilter"] = self.mask_filters
     
         if self.image_filters:
             self.paint_dict["ImageFilter"] = skia.ImageFilters.Merge(self.image_filters)
@@ -291,5 +287,5 @@ class MMVImage:
         # Blit this image
         blit_to_skia.canvas.drawImage(
             self.image.image, x, y,
-            paint = paint,
+            paint=paint,
         )

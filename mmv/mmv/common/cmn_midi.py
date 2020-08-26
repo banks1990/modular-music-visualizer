@@ -134,6 +134,8 @@ class MidiFile:
                 self.timestamps["tempo"].append([
                     self.time, self.tempo
                 ])
+        self.used_channels.sort()
+
         print("Channels on midi file:", self.used_channels)
 
         # TODO: Need to adapt function to accept {} as third argument   

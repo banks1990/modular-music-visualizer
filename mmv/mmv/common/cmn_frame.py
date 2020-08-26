@@ -38,7 +38,6 @@ original_image -> if we wanna "undo" all processing
 image -> current processed image
 """
 class Frame:
-
     def __init__(self) -> None:
         self.size = 1
     
@@ -55,20 +54,20 @@ class Frame:
         self.height = self.image.height()
         self.width = self.image.width()
 
-    # self.image = self.original_image
-    def _reset_to_original_image(self) -> None:
-        # self.image = skia.Image.fromarray(self.original_image.toarray())
-        if hasattr(self, "original_image"):
-            self.image = self.original_image
-            self._update_resolution()
-    
     # Get the image we're process the effects on
     def _get_processing_image(self, from_current_frame: bool=False):
         if from_current_frame:
             return self.image
         else:
             return self.original_image
-        
+
+    # self.image = self.original_image
+    def reset_to_original_image(self) -> None:
+        # self.image = skia.Image.fromarray(self.original_image.toarray())
+        if hasattr(self, "original_image"):
+            self.image = self.original_image
+            self._update_resolution()
+
     # # User functions
 
     # Create new numpy array as a "frame", attribute width, height and resolution

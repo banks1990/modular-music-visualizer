@@ -68,12 +68,12 @@ class Miscellaneous:
 
 
 class MMVMain:
-    def __init__(self, quiet: bool=False) -> None:
+    def __init__(self, quiet: bool = False) -> None:
         if not quiet:
             Miscellaneous()
     
     # Creates classes and send to Core
-    def setup(self, cli: bool=False) -> None:
+    def setup(self) -> None:
 
         debug_prefix = "[MMVMain.__init__]"
 

@@ -30,7 +30,7 @@ import os
 
 # Store and sorta "organize" the many MMV objects we can have on a given scene
 class MMVAnimation:
-    
+
     # Initialize a MMVAnimation class with required arguments
     def __init__(self, mmv) -> None:
         self.mmv = mmv
@@ -43,9 +43,9 @@ class MMVAnimation:
     # Make layers until a given N value
     def mklayers_until(self, n: int) -> None:
         for layer_index in range(n + 1):  # n + 1 because range() is exclusive at the end ( range(2) = [0, 1] )
-            if not layer_index in list(self.content.keys()):
+            if layer_index not in list(self.content.keys()):
                 self.content[layer_index] = []
-    
+
     # Call every next step of the content animations
     def next(self, fftinfo: dict, this_step: int) -> None:
 
@@ -55,11 +55,11 @@ class MMVAnimation:
             # Get what the generator has to offer
             new = item.next(fftinfo, this_step)
 
-            # The response object (if any [None]) and layer to instert on this self.content
+            # The response object (if any [None]) and layer to insert on this self.content
             new_object = new["object"]
 
             # Object is not null, add it to the said layer
-            if not new_object == None:
+            if new_object is not None:
                 layer = new["layer"]
                 self.mklayers_until(layer)
                 self.content[layer].append(new_object)
@@ -72,7 +72,7 @@ class MMVAnimation:
 
                 # We can delete the item as it has decided life wasn't worth anymore
                 if item.is_deletable:
-                    
+
                     # Create empty list if key doesn't exist
                     if layer_index not in items_to_delete:
                         items_to_delete[layer_index] = []

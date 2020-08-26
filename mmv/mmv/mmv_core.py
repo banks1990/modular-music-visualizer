@@ -30,6 +30,7 @@ import os
 class Core:
     def __init__(self, mmv) -> None:
         self.mmv = mmv
+        self.pipe_writer_loop_thread = None
 
     # Execute MMV, core loop
     def run(self) -> None:
@@ -43,19 +44,18 @@ class Core:
         ).start()
         
         # How many steps is the audio duration times the frames per second
-        self.total_steps = int(self.mmv.audio.duration * self.mmv.context.fps)
-        self.mmv.context.total_steps = self.total_steps
+        self.mmv.context.total_steps = int(self.mmv.audio.duration * self.mmv.context.fps)
 
-        print(debug_prefix, "Total steps:", self.total_steps)
+        print(debug_prefix, "Total steps:", self.mmv.context.total_steps)
 
-        # Init skia
+        # Init Skia
         self.mmv.skia.init()
 
         # Update info that might have been changed by the user
         self.mmv.context.update_biases()
 
         # Next animation
-        for this_step in range(0, self.total_steps):
+        for this_step in range(0, self.mmv.context.total_steps):
 
             # The "raw" frame index we're at
             global_frame_index = this_step
@@ -66,12 +66,12 @@ class Core:
             this_step += self.mmv.context.offset_audio_before_in_many_steps
 
             # If this step is out of bounds because the offset, set it to its max value
-            if this_step >= self.total_steps - 1:
-                this_step = self.total_steps - 1
+            if this_step >= self.mmv.context.total_steps - 1:
+                this_step = self.mmv.context.total_steps - 1
             
-            # The current time in seconds we're going to slice the audio based on its samplerate
+            # The current time in seconds we're going to slice the audio based on its sample rate
             # If we offset to the opposite way, the starting point can be negative hence the max function.
-            current_time = max( (1/self.mmv.context.fps) * this_step, 0 )
+            current_time = max((1/self.mmv.context.fps) * this_step, 0)
 
             self.mmv.context.current_time = (1/self.mmv.context.fps) * this_step
 
