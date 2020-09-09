@@ -28,8 +28,6 @@ You can generate this piano roll by running `example_piano_roll.py` :)
 
 [Unlisted video of old version of MMV](https://youtu.be/BhpLwaR1Oj8)
 
-# Reorganization of MMV's core core structure on develop branch!!
-
 # Idea
 
 So I am a Free and Open Source music producer hobbyist that also happens to be a code hobbyist and at some point it's inevitable I'd be releasing my tracks to the internet and create some project to make the world a better place.
@@ -125,9 +123,9 @@ Open a shell on desired dir to clone the repo (GIT shell on Windows)
 
 `git clone https://github.com/Tremeschin/modular-music-visualizer`
 
-#### GitHub repository main page
+#### GitHub / GitLab repository main page
 
-You might be already here, head to the top page and there is a green button _"⬇️ Code"_ and download as a ZIP.
+You might be already here, head to the top page and there is a (green for GitHub, blue for GitLab) button _"⬇️ Code"_ and download as a ZIP.
 
 Use a archive manager (something like 7-zip or rar) to extract the contents into a folder you'll be running MMV.
 
@@ -194,5 +192,11 @@ I might attempt to rewrite this project in the future as things currently are be
 - [ ] Rain images on pygradienter and rain particle generator?
 
 # Contributing
+
+This repository here on GitHub is a mirror from the main development repository under [GitLab](https://gitlab.com/Tremeschin/modular-music-visualizer)
+
+I didn't set up bidirectional mirroring as that can cause troubles, GitLab automatically pushed every change I make there.
+
+Feel free to create issues on any of both platforms, PRs / Merge Requests I ask you to do under GitLab.
 
 Please read [CONTRIBUTING.md](docs/CONTRIBUTING.md) file :)
