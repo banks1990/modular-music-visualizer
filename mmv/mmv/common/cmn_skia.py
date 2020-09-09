@@ -20,6 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import contextlib
+import threading
 import uuid
 import skia
 import glfw
@@ -27,30 +28,43 @@ import time
 
 
 class SkiaWrapper:
-    def __init__(self, context) -> None:
-        self.context = context
+    def __init__(self, mmv) -> None:
+        self.mmv = mmv
+        self.REALTIME = False
 
     @contextlib.contextmanager
     def glfw_context(self) -> None:
         if not glfw.init():
             raise RuntimeError('glfw.init() failed')
-        glfw.window_hint(glfw.VISIBLE, glfw.FALSE)
+        rt = glfw.TRUE if self.REALTIME else glfw.FALSE
+        glfw.window_hint(glfw.VISIBLE, rt)
         glfw.window_hint(glfw.STENCIL_BITS, 8)
-        self.window = glfw.create_window(self.context.width, self.context.height, str(uuid.uuid4()), None, None)
+        self.window = glfw.create_window(self.mmv.context.width, self.mmv.context.height, str(uuid.uuid4()), None, None)
         glfw.make_context_current(self.window)
     
     def init(self) -> None:
         self.glfw_context()
         self.gl_context = skia.GrContext.MakeGL()
-        self.info = skia.ImageInfo.MakeN32Premul(self.context.width, self.context.height)
+        self.info = skia.ImageInfo.MakeN32Premul(self.mmv.context.width, self.mmv.context.height)
         self.surface = skia.Surface.MakeRenderTarget(self.gl_context, skia.Budgeted.kNo, self.info)
         assert self.surface is not None
 
         # Use CPU for rasterizing, faster transportation of images but slow rendering
-        # self.surface = skia.Surface.MakeRasterN32Premul(self.context.width, self.context.height)
+        # self.surface = skia.Surface.MakeRasterN32Premul(self.mmv.context.width, self.mmv.context.height)
 
         with self.surface as canvas:
             self.canvas = canvas
+        
+        if self.REALTIME:
+            threading.Thread(target=self.keep_updating).start()
+
+    def keep_updating(self):
+        while not glfw.window_should_close(self.window):
+            # Swap front and back buffers
+            glfw.swap_buffers(self.window)
+
+            # Poll for and process events
+            glfw.poll_events()
 
     def terminate_glfw(self) -> None:
         glfw.terminate()

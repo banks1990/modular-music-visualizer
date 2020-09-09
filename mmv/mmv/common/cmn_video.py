@@ -19,7 +19,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.common.cmn_functions import Functions
 from mmv.common.cmn_types import *
 from PIL import Image
 import numpy as np
@@ -31,10 +30,9 @@ import sys
 import cv2
 
 
-class FFmpegWrapper():
-    def __init__(self, context):
-        self.context = context
-        self.functions = Functions()
+class FFmpegWrapper:
+    def __init__(self, mmv):
+        self.mmv = mmv
 
     # Create a FFmpeg writable pipe for generating a video
     def pipe_one_time(self, output):
@@ -43,9 +41,9 @@ class FFmpegWrapper():
 
         self.pipe_subprocess = (
             ffmpeg
-            .input('pipe:', format='rawvideo', pix_fmt='rgba', r=self.context.fps, s='{}x{}'.format(self.context.width, self.context.height))
-            .output(output, pix_fmt='yuv420p', vcodec='libx264', r=self.context.fps, crf=18, loglevel="quiet")
-            .global_args('-i', self.context.input_file, "-c:a", "copy")
+            .input('pipe:', format='rawvideo', pix_fmt='rgba', r=self.mmv.context.fps, s='{}x{}'.format(self.mmv.context.width, self.mmv.context.height))
+            .output(output, pix_fmt='yuv420p', vcodec='libx264', r=self.mmv.context.fps, crf=18, loglevel="quiet")
+            .global_args('-i', self.mmv.context.input_file, "-c:a", "copy")
             .overwrite_output()
             .run_async(pipe_stdin=True)
         )
@@ -84,7 +82,7 @@ class FFmpegWrapper():
                 image = self.images_to_pipe.pop(self.count)
 
                 # If user set to watch the realtime video, convert RGB numpy array to BGR cv2 image
-                if self.context.watch_processing_video_realtime and self.count > 0:
+                if self.mmv.context.watch_processing_video_realtime and self.count > 0:
                     cvimage = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
                     cv2.imshow("Current piped frame", cvimage)
                     cv2.waitKey(1)
@@ -96,18 +94,18 @@ class FFmpegWrapper():
                 self.lock_writing = False
 
                 # Are we finished on the expected total number of images?
-                if self.count == self.context.total_steps - 1:
+                if self.count == self.mmv.context.total_steps - 1:
                     self.close_pipe()
                 
                 self.count += 1
 
                 # Stats
-                current_time = round((1/self.context.fps) * self.count, 2)  # Current second we're processing
+                current_time = round((1/self.mmv.context.fps) * self.count, 2)  # Current second we're processing
                 duration = round(duration_seconds, 2)  # Total duration in seconds
                 remaining = duration - current_time  # How much seconds left to produce
                 now = time.time()
                 took = now - start  # Total time took in this runtime
-                eta = round(self.functions.proportion(current_time, took, remaining) / 60, 2)
+                eta = round(self.mmv.functions.proportion(current_time, took, remaining) / 60, 2)
                 
                 print("Frame count=[%s] proc=[%.2f sec / %.2f sec] took=[%.2f min] eta=[%.2f min] sum=[%.2f min]" % (self.count, current_time, duration, round(took/60, 2), eta, round((took/60 + eta), 2) ))
             else:

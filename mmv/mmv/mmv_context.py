@@ -19,21 +19,19 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.common.cmn_utils import Utils
 import os
 
 
 class Context:
-    def __init__(self, args: dict) -> None:
+    def __init__(self, mmv) -> None:
 
-        self.args = args
+        self.mmv = mmv
 
         # Utils class and ROOT dir
-        self.utils = Utils()
-        self.ROOT = self.utils.ROOT
+        self.ROOT = self.mmv.utils.ROOT
 
-        # The operating system we're workingon
-        self.os = self.utils.get_os()
+        # The operating system we're working on
+        self.os = self.mmv.utils.get_os()
         
         # Directories
         self.data = self.ROOT + os.path.sep + "data"
@@ -50,12 +48,15 @@ class Context:
         self.height = 720
         self.fps = 60
 
-        # # Overhaul "resolution" of the FFT, 512 lowpoly, 2048 balanced, 4096 + accurate
+        # # Overhaul "resolution" of the FFT, 512 low poly, 2048 balanced, 4096 + accurate
         # # Performance decreases with higher values
-        self.batch_size = 2048 #(48000 // self.fps) # 512
+        self.batch_size = 2048  # (48000 // self.fps) # 512
 
         # Offset the audio slice by this much of steps
         self.offset_audio_before_in_many_steps = (60/self.fps) // 8
+
+        # Default attribution to resolution ratio
+        self.resolution_ratio_multiplier = (1 / 720) * self.height
 
         # Current processing time
         self.current_time = 0
@@ -67,7 +68,7 @@ class Context:
 
         # This is a scalar value that says what percentage of a 720p resolution
         # this video will be rendered with, for fixing incorrect sizing and
-        # "adapting" the coordiantes acording to the resolution.
+        # "adapting" the coordinates according to the resolution.
         # 
         # For a 720p ->  (1/720) * 720 = 1
         # For a 1080p ->  (1/720) * 1080 = 1.5

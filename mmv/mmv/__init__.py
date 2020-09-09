@@ -39,13 +39,13 @@ class mmv:
     def __init__(self, watch_processing_video_realtime: bool=False) -> None:
 
         # Main class of MMV
-        self.main = MMVMain()
+        self.mmv = MMVMain()
 
         # Utilities
         self.utils = Utils()
 
         # Start MMV classes that main connects them, do not run
-        self.main.setup(cli=False)
+        self.mmv.setup(cli=False)
 
         # Default options of performance and quality, 720p60
         self.quality()
@@ -53,25 +53,25 @@ class mmv:
         # Configuring options
         self.quality_preset = QualityPreset(self)
         self.audio_processing = AudioProcessingPresets(self)
-        self.post_processing = self.main.canvas.configure
+        self.post_processing = self.mmv.canvas.configure
 
         # Has the user chosen to watch the processing video realtime?
-        self.main.context.watch_processing_video_realtime = watch_processing_video_realtime
+        self.mmv.context.watch_processing_video_realtime = watch_processing_video_realtime
 
     # Execute MMV with the configurations we've done
     def run(self) -> None:
-        self.main.run()
+        self.mmv.run()
 
     # Define output video width, height and frames per second
     def quality(self, width: int=1280, height: int=720, fps: int=60, batch_size=2048) -> None:
-        self.main.context.width = width
-        self.main.context.height = height
-        self.main.context.fps = fps
-        self.main.context.batch_size = batch_size
+        self.mmv.context.width = width
+        self.mmv.context.height = height
+        self.mmv.context.fps = fps
+        self.mmv.context.batch_size = batch_size
         self.width = width
         self.height = height
         self.resolution = [width, height]
-        self.main.canvas.create_canvas()
+        self.mmv.canvas.create_canvas()
     
     def set_path(self, path, message="path"):
         path = self.utils.get_abspath(path)
@@ -81,19 +81,19 @@ class mmv:
 
     # Set the input audio file, raise exception if it does not exist
     def input_audio(self, path: str) -> None:
-        self.main.context.input_file = self.set_path(path)
+        self.mmv.context.input_file = self.set_path(path)
     
     # Set the input audio file, raise exception if it does not exist
     def input_midi(self, path: str) -> None:
-        self.main.context.input_midi = self.set_path(path)
+        self.mmv.context.input_midi = self.set_path(path)
     
     # Output path where we'll be saving the final video
     def output_video(self, path: str) -> None:
         path = self.utils.get_abspath(path)
-        self.main.context.output_video = path
+        self.mmv.context.output_video = path
     
     def offset_audio_steps(self, steps=0):
-        self.main.context.offset_audio_before_in_many_steps = steps
+        self.mmv.context.offset_audio_before_in_many_steps = steps
 
     # Set the assets dir
     def assets_dir(self, path: str) -> None:
@@ -103,7 +103,7 @@ class mmv:
         path = self.utils.get_abspath(path)
         self.utils.mkdir_dne(path)
         self.assets_dir = path
-        self.main.context.assets = path
+        self.mmv.context.assets = path
     
     # # [ MMV Objects ] # #
     
@@ -111,18 +111,18 @@ class mmv:
     def add(self, item, layer: int=0) -> None:
 
         # Make layers until this given layer if they don't exist
-        self.main.core.mmvanimation.mklayers_until(layer)
+        self.mmv.mmv_animation.mklayers_until(layer)
 
         # Check the type and add accordingly
         if self.utils.is_matching_type([item], [MMVImage]):
-            self.main.core.mmvanimation.content[layer].append(item)
+            self.mmv.mmv_animation.content[layer].append(item)
             
         if self.utils.is_matching_type([item], [MMVGenerator]):
-            self.main.core.mmvanimation.generators.append(item)
+            self.mmv.mmv_animation.generators.append(item)
 
     # Get a blank MMVImage object
     def image_object(self) -> None:
-        return MMVImage(self.main.context, self.main.skia)
+        return MMVImage(self.mmv)
     
     # Get a pygradienter object with many workers for rendering
     def pygradienter(self, workers=4):
@@ -130,7 +130,7 @@ class mmv:
     
     # Get a blank MMVGenerator object
     def generator_object(self):
-        return MMVGenerator(self.main.context, self.main.skia)
+        return MMVGenerator(self.mmv)
 
     # # [ Utilities ] # #
 
@@ -182,12 +182,12 @@ class AudioProcessingPresets:
     
     # Custom preset, sends directly those dictionaries
     def preset_custom(self, config: dict) -> None:
-        self.mmv.main.audio_processing.config = config
+        self.mmv.mmv.audio_processing.config = config
 
     # A balanced preset between the bass, mid and high frequencies
     # Good for general type of music
     def preset_balanced(self) -> None:
-        self.mmv.main.audio_processing.config = {
+        self.mmv.mmv.audio_processing.config = {
             0: {
                 "sample_rate": 440,
                 "get_frequencies": "range",
@@ -226,7 +226,7 @@ class AudioProcessingPresets:
         #     },
         # }
 
-        self.mmv.main.audio_processing.config = {
+        self.mmv.mmv.audio_processing.config = {
             0: {
                 "sample_rate": 1000,
                 "get_frequencies": "range",
@@ -245,7 +245,7 @@ class AudioProcessingPresets:
         }
     
     def preset_musical_notes(self) -> None:
-        self.mmv.main.audio_processing.config = {
+        self.mmv.mmv.audio_processing.config = {
             # 0: {
             #     "sample_rate": 40000,
             #     "get_frequencies": "musical",
@@ -268,4 +268,4 @@ class AudioProcessingPresets:
         }
 
     def preset_dummy(self) -> None:
-        self.mmv.main.audio_processing.config = {}
+        self.mmv.mmv.audio_processing.config = {}

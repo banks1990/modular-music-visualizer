@@ -19,10 +19,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.common.cmn_skia import SkiaWrapper
-from mmv.common.cmn_audio import AudioFile
-from mmv.mmv_context import Context
-from mmv.mmv_image import MMVImage
 from mmv.common.cmn_types import *
 from mmv.mmv_generator import *
 from mmv.mmv_modifiers import *
@@ -34,20 +30,10 @@ import os
 
 # Store and sorta "organize" the many MMV objects we can have on a given scene
 class MMVAnimation:
-    
+
     # Initialize a MMVAnimation class with required arguments
-    def __init__(self, 
-            context: Context,
-            audio: AudioFile,
-            canvas: MMVImage,
-            skia: SkiaWrapper,
-        ) -> None:
-        
-        # Get the classes
-        self.context = context
-        self.audio = audio
-        self.canvas = canvas
-        self.skia = skia
+    def __init__(self, mmv) -> None:
+        self.mmv = mmv
 
         # Content are the MMV objects stored that gets rendered on the screen
         # generators are MMVGenerators that we get new objects from
@@ -57,9 +43,9 @@ class MMVAnimation:
     # Make layers until a given N value
     def mklayers_until(self, n: int) -> None:
         for layer_index in range(n + 1):  # n + 1 because range() is exclusive at the end ( range(2) = [0, 1] )
-            if not layer_index in list(self.content.keys()):
+            if layer_index not in list(self.content.keys()):
                 self.content[layer_index] = []
-    
+
     # Call every next step of the content animations
     def next(self, fftinfo: dict, this_step: int) -> None:
 
@@ -69,11 +55,11 @@ class MMVAnimation:
             # Get what the generator has to offer
             new = item.next(fftinfo, this_step)
 
-            # The response object (if any [None]) and layer to instert on this self.content
+            # The response object (if any [None]) and layer to insert on this self.content
             new_object = new["object"]
 
             # Object is not null, add it to the said layer
-            if not new_object == None:
+            if new_object is not None:
                 layer = new["layer"]
                 self.mklayers_until(layer)
                 self.content[layer].append(new_object)
@@ -86,7 +72,7 @@ class MMVAnimation:
 
                 # We can delete the item as it has decided life wasn't worth anymore
                 if item.is_deletable:
-                    
+
                     # Create empty list if key doesn't exist
                     if layer_index not in items_to_delete:
                         items_to_delete[layer_index] = []
@@ -98,7 +84,7 @@ class MMVAnimation:
                 # Generate next step of animation
                 item.next(fftinfo, this_step)
 
-                item.blit(self.skia)
+                item.blit(self.mmv.skia)
 
         # For each layer index we have items to delete
         for layer_index in items_to_delete.keys():
@@ -108,4 +94,4 @@ class MMVAnimation:
                 del self.content[ layer_index ][ items ]
 
         # Post process this final frame as we added all the items
-        self.canvas.next(fftinfo, this_step, self.skia)
+        self.mmv.canvas.next(fftinfo, this_step, self.mmv.skia)
