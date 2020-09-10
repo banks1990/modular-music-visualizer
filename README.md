@@ -159,9 +159,9 @@ There's also the example of calling pygradienter from a MMV script and a WIP Pia
 
 #### High priority / now
 
-I might attempt to rewrite this project in the future as things currently are becoming a bit convolutet, though not spaghetti code yet.
+I might attempt to rewrite this project in the future as things currently are becoming a bit convoluted, though not spaghetti code yet.
 
-- [ ] Implement MIDI visualization (that'd be fun)
+- [x] Implement MIDI visualization (that'd be fun)
 
 - [x] *CAN BE EXPANDED* (30%) Progression bar (square, circle, pie graph?)
 

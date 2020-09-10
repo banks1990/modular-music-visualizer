@@ -45,7 +45,7 @@ class mmv:
         self.utils = Utils()
 
         # Start MMV classes that main connects them, do not run
-        self.mmv.setup(cli=False)
+        self.mmv.setup()
 
         # Default options of performance and quality, 720p60
         self.quality()
