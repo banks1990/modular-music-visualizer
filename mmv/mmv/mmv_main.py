@@ -19,11 +19,11 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
+from mmv.pyskt.skia_no_window_backend import SkiaNoWindowBackend
 from mmv.common.cmn_interpolation import Interpolation
 from mmv.common.cmn_audio import AudioProcessing
 from mmv.common.cmn_functions import Functions
 from mmv.common.cmn_video import FFmpegWrapper
-from mmv.common.cmn_skia import SkiaWrapper
 from mmv.mmv_animation import MMVAnimation
 from mmv.common.cmn_audio import AudioFile
 from mmv.common.cmn_fourier import Fourier
@@ -82,8 +82,8 @@ class MMVMain:
         print(debug_prefix, "Creating Context()")
         self.context = Context(self)
 
-        print(debug_prefix, "Creating SkiaWrapper()")
-        self.skia = SkiaWrapper(self)
+        print(debug_prefix, "Creating SkiaNoWindowBackend()")
+        self.skia = SkiaNoWindowBackend(self)
 
         print(debug_prefix, "Creating Functions()")
         self.functions = Functions()

@@ -1,7 +1,7 @@
 """
 ===============================================================================
 
-Purpose: Wrapper for creating a Skia GL context
+Purpose: Wrapper for creating a Skia GL context don't draw on screen
 
 ===============================================================================
 
@@ -27,7 +27,7 @@ import glfw
 import time
 
 
-class SkiaWrapper:
+class SkiaNoWindowBackend:
     def __init__(self, mmv) -> None:
         self.mmv = mmv
         self.REALTIME = False
@@ -74,3 +74,4 @@ class SkiaWrapper:
 
     def canvas_array(self) -> None:
         return self.surface.toarray()
+

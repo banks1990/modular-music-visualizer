@@ -24,7 +24,6 @@ from mmv.common.cmn_coordinates import PolarCoordinates
 from mmv.common.cmn_interpolation import Interpolation
 from mmv.common.cmn_functions import Functions
 from mmv.common.cmn_functions import FitIndex
-from mmv.common.cmn_skia import SkiaWrapper
 from mmv.common.cmn_frame import Frame
 from mmv.common.cmn_utils import Utils
 from mmv.mmv_modifiers import *

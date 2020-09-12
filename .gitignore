@@ -18,7 +18,7 @@ mmv/mmv/common/midis
 mmv/assets/tremx_assets
 mmv/assets/user_assets
 !mmv/assets/free_assets/*
-tremx.py
+tremx*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
