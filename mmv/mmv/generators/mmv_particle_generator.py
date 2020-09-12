@@ -184,7 +184,7 @@ class MMVParticleGenerator:
         }
 
         particle.image.resize_by_ratio(
-            random.uniform(0.1 * resolution_ratio_multiplier, 0.3 * resolution_ratio_multiplier),
+            random.uniform(0.05 * resolution_ratio_multiplier, 0.15 * resolution_ratio_multiplier),
             override=True
         )
 
