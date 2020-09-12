@@ -19,13 +19,38 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-
+import skia
 
 class SkiaDrawUtils:
-    pass
+    """
+    kwargs:
+
+    {
+        "font": skia.Font(skia.Typeface('Arial'), 24),
+        "paint": skia.Paint(AntiAlias=True, Color=skia.ColorWHITE)
+    }
+
+    Anchor is where the coordinate (x, y) is located on the text, ranges from 0 to 1
+    Anchor of (0.5, 0.5) is centerd (half way through width and height), (1, 1) is bottom right
+    """
+    def anchored_text(self, canvas, text, x, y, anchor_x: float, anchor_y: float, **kwargs):
+        # Get paint, font
+        paint = kwargs.get("paint", skia.Paint(AntiAlias=True, Color=skia.ColorWHITE))
+        font = kwargs.get("font", skia.Font(skia.Typeface('Arial'), 24))
+
+        # Width and height of text
+        text_size = font.measureText(text)
+        height_size = font.getSpacing()
+
+        # Where we'll plot the top left text according to the anchor and whatnot
+        real_x = x - (text_size * anchor_x)
+        real_y = y - (height_size * anchor_y) + height_size
+
+        canvas.drawString(text, real_x, real_y, font, paint)
+
 
 """ 
-paint = skia.Paint(AntiAlias=True, Color=skia.ColorRED)
+
             
 # bold_typeface = skia.Typeface('Arial', skia.FontStyle.Bold())
 # italic_typeface = skia.Typeface('Arial', skia.FontStyle.Italic())
@@ -35,21 +60,9 @@ paint = skia.Paint(AntiAlias=True, Color=skia.ColorRED)
 # font = skia.Font(skia.Typeface('Times New Roman'), 24)
 # print(font)
 
-font = skia.Font(skia.Typeface('Arial'), 24)
 
 center_x = width/2
 center_y = height/2
-
-text = "A Really long and hopefully centered text"
-
-t_size = font.measureText(text)
-l_size = font.getSpacing()
-
-real_center_x = center_x - (t_size/2)
-real_center_y = center_y - (l_size/2)
-
-canvas.drawString(text, real_center_x, real_center_y, font, paint)
-
 
 c = skia.Color4f(1, 0, 1, 0.3)
 

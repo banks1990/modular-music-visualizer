@@ -25,8 +25,10 @@ processing = mmv.mmv()
 
 sk = processing.pyskt_test(
     **{
-        "width": 200,
-        "height": 200,
+        "context_width": 1280,
+        "context_height": 720,
+        "context_show_fps": True,
+        "context_wait_events": False,
     }
 )
 

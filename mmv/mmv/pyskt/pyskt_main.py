@@ -32,12 +32,12 @@ import time
 # https://github.com/kyamagu/skia-python/issues/105
 
 """
-Init kwargs: dictionary
+kwargs:
 
 {
-    "context_window_name": window name
-    "context_show_fps": log fps to console
-    "context_wait_events": don't draw window at each update, only if mouse moved or key pressed
+    "context_window_name": "PySKT Window", window name
+    "context_show_fps": False, log fps to console
+    "context_wait_events": True, don't draw window at each update, only if mouse moved or key pressed
 }
 """
 class PysktMain:
@@ -45,7 +45,7 @@ class PysktMain:
         print(kwargs)
         self.main = main
         self.pyskt_context = PysktContext(*args, **kwargs)
-        self.draw_utils = SkiaDrawUtils(*args, **kwargs)
+        self.draw_utils = SkiaDrawUtils()
         
         # # # Make main window
 
@@ -57,19 +57,19 @@ class PysktMain:
         self.window = glfw.create_window(
             self.pyskt_context.width,
             self.pyskt_context.height,
-            kwargs.get("context_window_name", "Pyskt Window"),
+            kwargs.get("context_window_name", "PySKT Window"),
             None, None,
         )
-
-        # GLFW config
-        glfw.window_hint(glfw.STENCIL_BITS, 0)
-        glfw.window_hint(glfw.DEPTH_BITS, 0)
-        glfw.window_hint(glfw.DECORATED, False)
 
         # Make context, init surface
         glfw.make_context_current(self.window)
         glfw.swap_interval(1)
         context = skia.GrContext.MakeGL()
+
+        # GLFW config
+        glfw.window_hint(glfw.STENCIL_BITS, 0)
+        glfw.window_hint(glfw.DEPTH_BITS, 0)
+        glfw.window_hint(glfw.DECORATED, False)
 
         # Set render to a display compatible
         backend_render_target = skia.GrBackendRenderTarget(
@@ -97,8 +97,9 @@ class PysktMain:
 
         # Calculate fps?
         if self.pyskt_context.show_fps:
-            start = time.time()
-            frames = 1
+            frame_times = [0]*120
+            frame = 0
+            last_time_completed = time.time()
 
         # Loop until the user closes the window
         while not glfw.window_should_close(self.window):
@@ -112,8 +113,35 @@ class PysktMain:
             
             # We have now to recursively search through the components dictionary
 
+            self.draw_utils.anchored_text(
+                canvas = self.canvas,
+                text = "A Really long and centered text",
+                x = self.pyskt_context.width // 2,
+                y = self.pyskt_context.height // 2,
+                anchor_x = 0.5,
+                anchor_y = 0.5,
+            )
 
             # # #
+
+            # Show fps
+            if self.pyskt_context.show_fps:
+                frame_times[frame % 120] = time.time() - last_time_completed
+                absolute_frame_times = [x for x in frame_times if not x == 0]
+                fps = 1/(sum(absolute_frame_times)/len(absolute_frame_times))
+
+                last_time_completed = time.time()
+                frame += 1
+
+                self.draw_utils.anchored_text(
+                    canvas = self.canvas,
+                    text = f"FPS: [{fps:.1f}]",
+                    x = 0, y = 0,
+                    anchor_x = 0,
+                    anchor_y = 0,
+                    # kwargs
+                    font = skia.Font(skia.Typeface('Arial'), 12),
+                )
 
             # Flush buffer
             self.surface.flushAndSubmit()
@@ -123,11 +151,6 @@ class PysktMain:
 
             # Poll for and process events
             glfw.poll_events()
-
-            # Show fps
-            if self.pyskt_context.show_fps:
-                frames += 1
-                print("fps: ", frames / (time.time() - start) )
 
         # End glfw
         glfw.terminate()
