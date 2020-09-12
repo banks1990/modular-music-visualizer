@@ -57,7 +57,7 @@ processing.audio_processing.preset_dummy()
 
 processing.input_audio("assets/piano_roll/contingency-times.ogg")
 processing.input_midi("assets/piano_roll/contingency-times.mid")
-processing.output_video("mmv-output.mkv")
+processing.output_video("example_piano_roll.mkv")
 
 piano_roll = processing.image_object()
 piano_roll.configure.init_animation_layer()

@@ -69,7 +69,7 @@ processing.assets_dir("assets/free_assets")
 
 # I/O options, input a audio, output a video
 processing.input_audio("assets/tremx_assets/video/rlc.mp3")
-processing.output_video("mmv-output.mkv")
+processing.output_video("example_video.mkv")
 
 # # # Background
 
