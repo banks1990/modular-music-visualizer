@@ -46,11 +46,6 @@ class PysktMain:
         
         # # # Make main window
 
-        # GLFW config
-        glfw.window_hint(glfw.STENCIL_BITS, 0)
-        glfw.window_hint(glfw.DEPTH_BITS, 0)
-        glfw.window_hint(glfw.DECORATED, False)
-
         # Init GLFW        
         if not glfw.init():
             raise RuntimeError('glfw.init() failed')
@@ -63,6 +58,11 @@ class PysktMain:
             None,
             None,
         )
+
+        # GLFW config
+        glfw.window_hint(glfw.STENCIL_BITS, 0)
+        glfw.window_hint(glfw.DEPTH_BITS, 0)
+        glfw.window_hint(glfw.DECORATED, False)
 
         # Make context, init surface
         glfw.make_context_current(self.window)
