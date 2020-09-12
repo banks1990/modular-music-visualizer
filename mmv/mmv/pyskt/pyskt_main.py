@@ -37,7 +37,7 @@ kwargs:
 
 {
     "context_window_name": "PySKT Window", window name
-    "context_show_fps": False, log fps to console
+    "context_show_debug": False, log fps to console
     "context_wait_events": True, don't draw window at each update, only if mouse moved or key pressed
 }
 """
@@ -91,13 +91,13 @@ class PysktMain:
 
         # Where stuff is rendered from and activated
 
-        self.components = {}
+        self.components = []
 
     # Run main loop of pyskt window
     def run(self):
 
         # Calculate fps?
-        if self.pyskt_context.show_fps:
+        if self.pyskt_context.show_debug:
             frame_times = [0]*120
             frame = 0
             last_time_completed = time.time()
@@ -108,6 +108,9 @@ class PysktMain:
             # Wait events if said to
             if self.pyskt_context.wait_events:
                 glfw.wait_events()
+            
+            # Get mouse position
+            self.mouse_pos = glfw.get_cursor_pos(self.window)
 
             # Clear canvas
             self.canvas.clear(self.colors.background)
@@ -126,7 +129,7 @@ class PysktMain:
             # # #
 
             # Show fps
-            if self.pyskt_context.show_fps:
+            if self.pyskt_context.show_debug:
                 frame_times[frame % 120] = time.time() - last_time_completed
                 absolute_frame_times = [x for x in frame_times if not x == 0]
                 fps = 1/(sum(absolute_frame_times)/len(absolute_frame_times))
@@ -136,13 +139,15 @@ class PysktMain:
 
                 self.draw_utils.anchored_text(
                     canvas = self.canvas,
-                    text = f"FPS: [{fps:.1f}]",
+                    text = [f"{fps=:.1f}", f"mouse_pos={self.mouse_pos}"],
                     x = 0, y = 0,
                     anchor_x = 0,
                     anchor_y = 0,
                     # kwargs
                     font = skia.Font(skia.Typeface('Arial'), 12),
                 )
+
+
 
             # Flush buffer
             self.surface.flushAndSubmit()

@@ -27,5 +27,5 @@ class PysktContext:
         self.width = kwargs.get("context_width", 1280)
         self.height = kwargs.get("context_height", 720)
 
-        self.show_fps = kwargs.get("context_show_fps", False)
+        self.show_debug = kwargs.get("context_show_debug", False)
         self.wait_events = kwargs.get("context_wait_events", True)

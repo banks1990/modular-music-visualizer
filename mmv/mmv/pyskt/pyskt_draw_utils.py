@@ -24,8 +24,10 @@ import skia
 class SkiaDrawUtils:
     def __init__(self, pyskt_main):
         self.pyskt_main = pyskt_main
-        
+
     """
+    Draws every text on list one below another at a certain (x, y) and anchor point
+
     kwargs:
 
     {
@@ -37,19 +39,26 @@ class SkiaDrawUtils:
     Anchor of (0.5, 0.5) is centerd (half way through width and height), (1, 1) is bottom right
     """
     def anchored_text(self, canvas, text, x, y, anchor_x: float, anchor_y: float, **kwargs):
+        
+        if not isinstance(text, list):
+            text = [text]
+        
         # Get paint, font
         paint = kwargs.get("paint", skia.Paint(AntiAlias=True, Color=skia.ColorWHITE))
         font = kwargs.get("font", skia.Font(skia.Typeface('Arial'), 24))
-
+        
         # Width and height of text
-        text_size = font.measureText(text)
         height_size = font.getSpacing()
 
-        # Where we'll plot the top left text according to the anchor and whatnot
-        real_x = x - (text_size * anchor_x)
-        real_y = y - (height_size * anchor_y) + height_size
+        for line_number, text_string in enumerate(text):
 
-        canvas.drawString(text, real_x, real_y, font, paint)
+            text_size = font.measureText(text_string)
+
+            # Where we'll plot the top left text according to the anchor and whatnot
+            real_x = x - (text_size * anchor_x)
+            real_y = y - (height_size * anchor_y) + height_size + (line_number * height_size)
+
+            canvas.drawString(text_string, real_x, real_y, font, paint)
 
 
 """ 

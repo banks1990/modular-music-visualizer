@@ -27,8 +27,8 @@ sk = processing.pyskt_test(
     **{
         "context_width": 1280,
         "context_height": 720,
-        "context_show_fps": True,
-        "context_wait_events": False,
+        "context_show_debug": True,
+        "context_wait_events": True,
     }
 )
 
