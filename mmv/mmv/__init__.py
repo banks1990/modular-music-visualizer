@@ -22,6 +22,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 from mmv.mmv_generator import MMVParticleGenerator
 from mmv.mmv_music_bar import MMVMusicBars
 from mmv.mmv_generator import MMVGenerator
+from mmv.pyskt.pyskt_main import PysktMain
 from mmv.pygradienter import pygradienter
 from mmv.common.cmn_utils import Utils
 from mmv.mmv_image import MMVImage
@@ -96,7 +97,7 @@ class mmv:
         self.mmv.context.offset_audio_before_in_many_steps = steps
 
     # Set the assets dir
-    def assets_dir(self, path: str) -> None:
+    def set_assets_dir(self, path: str) -> None:
         # Remove the last "/"", pathing intuition under MMV scripts gets easier
         if path.endswith("/"):
             path = path[:-1]
@@ -139,6 +140,10 @@ class mmv:
         
     def get_unique_id(self):
         return self.utils.get_hash(str(uuid.uuid4()))
+
+    # # [ APPS ] # #
+    def pyskt_test(self, *args, **kwargs):
+        return PysktMain(*args, **kwargs)
 
 
 # Presets on width and height

@@ -23,3 +23,8 @@ import mmv
 
 processing = mmv.mmv()
 
+sk = processing.pyskt_test(
+    {
+        
+    }
+)

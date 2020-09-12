@@ -19,12 +19,12 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
-from mmv.mmv.pyskt.pyskt_context import PysktContext
+from mmv.pyskt.pyskt_context import PysktContext
 from OpenGL import GL
+import random
 import skia
 import glfw
 import time
-import random
 
 
 # The main code here I got from
@@ -40,7 +40,7 @@ Init kwargs: dictionary
 }
 """
 class PysktMain:
-    def __init__(self, main, **kwargs):
+    def __init__(self, main, *args, **kwargs):
         self.main = main
         self.pyskt_context = PysktContext(kwargs)
         

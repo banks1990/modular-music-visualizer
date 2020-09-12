@@ -56,7 +56,7 @@ processing.audio_processing.preset_musical_notes()
 # # #
  
 # If you want to create some assets, set the assets dir first !!
-processing.assets_dir("assets/free_assets")
+processing.set_assets_dir("assets/free_assets")
 
 # Pygradienter assets only works on Linux at the moment :(
 # processing.create_pygradienter_asset(
