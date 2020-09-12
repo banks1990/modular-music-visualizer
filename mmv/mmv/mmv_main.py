@@ -43,7 +43,7 @@ import os
 
 class Miscellaneous:
     def __init__(self) -> None:
-        self.version = "2.1-dev"
+        self.version = "2.2-dev"
         self.greeter_message()
 
     def greeter_message(self) -> None:

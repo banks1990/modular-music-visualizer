@@ -22,5 +22,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 import skia
 
 class PysktColors:
-    def __init__(self, *args, **kwargs):
+    def __init__(self, pyskt_main, *args, **kwargs):
+        self.pyskt_main = pyskt_main
         self.background = skia.Color4f(*[100/255]*4)
+    

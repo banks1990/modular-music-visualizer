@@ -20,7 +20,9 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 class PysktContext:
-    def __init__(self, *args, **kwargs):
+    def __init__(self, pyskt_main, *args, **kwargs):
+
+        self.pyskt_main = pyskt_main
 
         self.width = kwargs.get("context_width", 1280)
         self.height = kwargs.get("context_height", 720)

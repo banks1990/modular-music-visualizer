@@ -42,12 +42,11 @@ kwargs:
 }
 """
 class PysktMain:
-    def __init__(self, main, *args, **kwargs):
-        print(kwargs)
-        self.main = main
-        self.pyskt_context = PysktContext(*args, **kwargs)
-        self.draw_utils = SkiaDrawUtils()
-        self.colors = PysktColors()
+    def __init__(self, mmv_main, *args, **kwargs):
+        self.mmv_main = mmv_main
+        self.pyskt_context = PysktContext(self, *args, **kwargs)
+        self.draw_utils = SkiaDrawUtils(self)
+        self.colors = PysktColors(self)
         
         # # # Make main window
 

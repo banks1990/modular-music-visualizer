@@ -22,6 +22,9 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 import skia
 
 class SkiaDrawUtils:
+    def __init__(self, pyskt_main):
+        self.pyskt_main = pyskt_main
+        
     """
     kwargs:
 
