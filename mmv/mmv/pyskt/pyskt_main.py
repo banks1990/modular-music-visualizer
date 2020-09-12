@@ -21,6 +21,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 from mmv.pyskt.pyskt_draw_utils import SkiaDrawUtils
 from mmv.pyskt.pyskt_context import PysktContext
+from mmv.pyskt.pyskt_colors import PysktColors
 from OpenGL import GL
 import random
 import skia
@@ -46,6 +47,7 @@ class PysktMain:
         self.main = main
         self.pyskt_context = PysktContext(*args, **kwargs)
         self.draw_utils = SkiaDrawUtils()
+        self.colors = PysktColors()
         
         # # # Make main window
 
@@ -109,7 +111,7 @@ class PysktMain:
                 glfw.wait_events()
 
             # Clear canvas
-            self.canvas.clear(skia.ColorBLACK)
+            self.canvas.clear(self.colors.background)
             
             # We have now to recursively search through the components dictionary
 
