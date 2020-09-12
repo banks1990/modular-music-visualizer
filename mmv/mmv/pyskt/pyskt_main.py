@@ -41,8 +41,9 @@ Init kwargs: dictionary
 """
 class PysktMain:
     def __init__(self, main, *args, **kwargs):
+        print(kwargs)
         self.main = main
-        self.pyskt_context = PysktContext(kwargs)
+        self.pyskt_context = PysktContext(*args, **kwargs)
         
         # # # Make main window
 

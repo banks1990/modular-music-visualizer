@@ -143,7 +143,8 @@ class mmv:
 
     # # [ APPS ] # #
     def pyskt_test(self, *args, **kwargs):
-        return PysktMain(*args, **kwargs)
+        print(args, kwargs)
+        return PysktMain(self.mmv, *args, **kwargs)
 
 
 # Presets on width and height

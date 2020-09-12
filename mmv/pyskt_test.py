@@ -24,7 +24,8 @@ import mmv
 processing = mmv.mmv()
 
 sk = processing.pyskt_test(
-    {
-        
+    **{
+        "width": 200,
+        "height": 200,
     }
 )
