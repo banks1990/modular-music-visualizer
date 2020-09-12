@@ -21,8 +21,9 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 class PysktContext:
     def __init__(self, *args, **kwargs):
-        self.width = kwargs.get("width", 1280)
-        self.height = kwargs.get("height", 720)
+        
+        self.width = kwargs.get("context_width", 1280)
+        self.height = kwargs.get("context_height", 720)
 
-        self.show_fps = kwargs.get("show_fps", False)
-        self.wait_events = kwargs.get("wait_events", True)
+        self.show_fps = kwargs.get("context_show_fps", False)
+        self.wait_events = kwargs.get("context_wait_events", True)

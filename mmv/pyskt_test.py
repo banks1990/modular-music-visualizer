@@ -29,3 +29,6 @@ sk = processing.pyskt_test(
         "height": 200,
     }
 )
+
+
+sk.run()

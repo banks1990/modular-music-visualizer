@@ -142,6 +142,7 @@ class mmv:
         return self.utils.get_hash(str(uuid.uuid4()))
 
     # # [ APPS ] # #
+    
     def pyskt_test(self, *args, **kwargs):
         print(args, kwargs)
         return PysktMain(self.mmv, *args, **kwargs)

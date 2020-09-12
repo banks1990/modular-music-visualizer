@@ -21,6 +21,9 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 
+class SkiaDrawUtils:
+    pass
+
 """ 
 paint = skia.Paint(AntiAlias=True, Color=skia.ColorRED)
             

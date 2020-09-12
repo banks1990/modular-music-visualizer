@@ -19,6 +19,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
+from mmv.pyskt.pyskt_draw_utils import SkiaDrawUtils
 from mmv.pyskt.pyskt_context import PysktContext
 from OpenGL import GL
 import random
@@ -34,9 +35,9 @@ import time
 Init kwargs: dictionary
 
 {
-    "name": window name
-    "show_fps": log fps to console
-    "wait_events": don't draw window at each update, only if mouse moved or key pressed
+    "context_window_name": window name
+    "context_show_fps": log fps to console
+    "context_wait_events": don't draw window at each update, only if mouse moved or key pressed
 }
 """
 class PysktMain:
@@ -44,6 +45,7 @@ class PysktMain:
         print(kwargs)
         self.main = main
         self.pyskt_context = PysktContext(*args, **kwargs)
+        self.draw_utils = SkiaDrawUtils(*args, **kwargs)
         
         # # # Make main window
 
@@ -55,9 +57,8 @@ class PysktMain:
         self.window = glfw.create_window(
             self.pyskt_context.width,
             self.pyskt_context.height,
-            kwargs.get("name", "Pyskt Window"),
-            None,
-            None,
+            kwargs.get("context_window_name", "Pyskt Window"),
+            None, None,
         )
 
         # GLFW config
@@ -90,7 +91,6 @@ class PysktMain:
         # Where stuff is rendered from and activated
 
         self.components = {}
-        self.run()
 
     # Run main loop of pyskt window
     def run(self):
@@ -109,7 +109,6 @@ class PysktMain:
 
             # Clear canvas
             self.canvas.clear(skia.ColorBLACK)
-
             
             # We have now to recursively search through the components dictionary
 
