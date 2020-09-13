@@ -57,6 +57,12 @@ class PysktMain:
         if not glfw.init():
             raise RuntimeError('glfw.init() failed')
 
+        # GLFW config
+        glfw.window_hint(glfw.STENCIL_BITS, 0)
+        glfw.window_hint(glfw.DEPTH_BITS, 0)
+        # glfw.window_hint(glfw.DECORATED, False)
+        glfw.window_hint(glfw.DOUBLEBUFFER, False)
+
         # Create window
         self.window = glfw.create_window(
             self.pyskt_context.width,
@@ -69,11 +75,6 @@ class PysktMain:
         glfw.make_context_current(self.window)
         glfw.swap_interval(1)
         context = skia.GrContext.MakeGL()
-
-        # GLFW config
-        glfw.window_hint(glfw.STENCIL_BITS, 0)
-        glfw.window_hint(glfw.DEPTH_BITS, 0)
-        glfw.window_hint(glfw.DECORATED, False)
 
         # Set render to a display compatible
         backend_render_target = skia.GrBackendRenderTarget(
