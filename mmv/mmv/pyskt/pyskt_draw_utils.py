@@ -38,8 +38,9 @@ class SkiaDrawUtils:
     Anchor is where the coordinate (x, y) is located on the text, ranges from 0 to 1
     Anchor of (0.5, 0.5) is centerd (half way through width and height), (1, 1) is bottom right
     """
-    def anchored_text(self, canvas, text, x, y, anchor_x: float, anchor_y: float, **kwargs):
+    def anchored_text(self, canvas, text, x: int, y: int, anchor_x: float, anchor_y: float, **kwargs):
         
+        # If user sent a single string, it means a 1 item list
         if not isinstance(text, list):
             text = [text]
         
