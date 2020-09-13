@@ -22,6 +22,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 from mmv.pyskt.pyskt_draw_utils import SkiaDrawUtils
 from mmv.pyskt.pyskt_context import PysktContext
 from mmv.pyskt.pyskt_colors import PysktColors
+from mmv.pyskt.pyskt_events import PysktEvents
 from OpenGL import GL
 import random
 import skia
@@ -47,6 +48,7 @@ class PysktMain:
         self.pyskt_context = PysktContext(self, *args, **kwargs)
         self.draw_utils = SkiaDrawUtils(self)
         self.colors = PysktColors(self)
+        self.events = PysktEvents(self)
         
         # # # Make main window
 
@@ -101,6 +103,11 @@ class PysktMain:
             frame_times = [0]*120
             frame = 0
             last_time_completed = time.time()
+
+        # Link events to parsers
+        glfw.set_mouse_button_callback(self.window, self.events.mouse_callback)
+        glfw.set_scroll_callback(self.window, self.events.mouse_callback)
+
 
         # Loop until the user closes the window
         while not glfw.window_should_close(self.window):
