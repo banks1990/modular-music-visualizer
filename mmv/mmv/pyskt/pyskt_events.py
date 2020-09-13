@@ -33,7 +33,10 @@ class PysktEvents:
         self.side_front = False
         self.side_back = False
 
-        self.scroll = ""
+        self.scroll = 0
+
+    def reset_non_ending_states(self):
+        self.scroll = 0
         
     def mouse_callback(self, *events):
         # Mouse click
@@ -64,8 +67,8 @@ class PysktEvents:
             if events[2] == 1:
                 direction = "up"
             elif events[2] == -1:
-            
                 direction = "down"
+
             print(f"Mouse scroll {direction}")
 
-            self.scroll = direction
+            self.scroll = events[2]

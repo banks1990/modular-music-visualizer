@@ -24,6 +24,7 @@ from mmv.pyskt.pyskt_context import PysktContext
 from mmv.pyskt.pyskt_colors import PysktColors
 from mmv.pyskt.pyskt_events import PysktEvents
 from OpenGL import GL
+import threading
 import random
 import skia
 import glfw
@@ -95,6 +96,9 @@ class PysktMain:
 
         self.components = []
 
+    def events_loop(self):
+        glfw.wait_events()
+
     # Run main loop of pyskt window
     def run(self):
 
@@ -108,27 +112,39 @@ class PysktMain:
         glfw.set_mouse_button_callback(self.window, self.events.mouse_callback)
         glfw.set_scroll_callback(self.window, self.events.mouse_callback)
 
+        scroll_text_x = self.pyskt_context.width // 2
+        scroll_text_y = self.pyskt_context.height // 2
+        wants_to_go = [scroll_text_x, scroll_text_y]
 
+        threading.Thread(target=self.events_loop).start()
+        
         # Loop until the user closes the window
         while not glfw.window_should_close(self.window):
 
             # Wait events if said to
-            if self.pyskt_context.wait_events:
-                glfw.wait_events()
+            # if self.pyskt_context.wait_events:
             
+            # Clear canvas
+            self.canvas.clear(self.colors.background)
+
             # Get mouse position
             self.mouse_pos = glfw.get_cursor_pos(self.window)
 
-            # Clear canvas
-            self.canvas.clear(self.colors.background)
+            if self.events.left_click:
+                wants_to_go[0] -= self.events.scroll * 50
+            else:
+                wants_to_go[1] -= self.events.scroll * 50
             
             # We have now to recursively search through the components dictionary
+
+            scroll_text_x = scroll_text_x + (wants_to_go[0] - scroll_text_x) * 0.1
+            scroll_text_y = scroll_text_y + (wants_to_go[1] - scroll_text_y) * 0.1
 
             self.draw_utils.anchored_text(
                 canvas = self.canvas,
                 text = "A Really long and centered text",
-                x = self.pyskt_context.width // 2,
-                y = self.pyskt_context.height // 2,
+                x = scroll_text_x,
+                y = scroll_text_y,
                 anchor_x = 0.5,
                 anchor_y = 0.5,
             )
@@ -154,7 +170,8 @@ class PysktMain:
                     font = skia.Font(skia.Typeface('Arial'), 12),
                 )
 
-
+            # If any event doesn't return to "None" state
+            self.events.reset_non_ending_states()
 
             # Flush buffer
             self.surface.flushAndSubmit()
