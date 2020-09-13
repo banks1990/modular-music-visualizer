@@ -161,13 +161,15 @@ There's also the example of calling pygradienter from a MMV script and a WIP Pia
 
 I might attempt to rewrite this project in the future as things currently are becoming a bit convoluted, though not spaghetti code yet.
 
+- [ ] ~~Implement text support~~
+
+- [ ] ~~..lyrics also?~~
+
+- [ ] For lyrics I want a lyric editor, for a lyric editor I need a GUI Toolkit, so I'm writing PySKT - Python Skia Toolkit, don't want to use GTK, Qt etc, and making my own will be fun for the future of MMV
+ 
 - [x] Implement MIDI visualization (that'd be fun)
 
 - [x] *CAN BE EXPANDED* (30%) Progression bar (square, circle, pie graph?)
-
-- [ ] Implement text support
-
-- [ ] ..lyrics also?
 
 - [ ] Comment new code after this huge R&D, simplifications
 

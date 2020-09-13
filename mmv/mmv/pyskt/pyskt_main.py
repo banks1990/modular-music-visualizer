@@ -51,6 +51,10 @@ class PysktMain:
         self.colors = PysktColors(self)
         self.events = PysktEvents(self)
         
+        # Where stuff is rendered from and activated
+
+        self.components = []
+
         # # # Make main window
 
         # Init GLFW        
@@ -92,13 +96,13 @@ class PysktMain:
         )
         assert self.surface, 'Failed to create a surface'
         self.canvas = self.surface.getCanvas()
+        
 
-        # Where stuff is rendered from and activated
-
-        self.components = []
-
+    # For animations, thread wait events
     def events_loop(self):
         glfw.wait_events()
+    
+
 
     # Run main loop of pyskt window
     def run(self):
@@ -110,8 +114,12 @@ class PysktMain:
             last_time_completed = time.time()
 
         # Link events to parsers
+        glfw.set_window_size_callback(self.window, self.events.on_window_resize)
         glfw.set_mouse_button_callback(self.window, self.events.mouse_callback)
         glfw.set_scroll_callback(self.window, self.events.mouse_callback)
+        glfw.set_key_callback(self.window, self.events.keyboard_callback)
+
+        glfw.set_drop_callback(self.window, self.events.on_file_drop)
 
         scroll_text_x = self.pyskt_context.width // 2
         scroll_text_y = self.pyskt_context.height // 2
@@ -138,8 +146,8 @@ class PysktMain:
             
             # We have now to recursively search through the components dictionary
 
-            scroll_text_x = scroll_text_x + (wants_to_go[0] - scroll_text_x) * 0.1
-            scroll_text_y = scroll_text_y + (wants_to_go[1] - scroll_text_y) * 0.1
+            scroll_text_x = scroll_text_x + (wants_to_go[0] - scroll_text_x) * 0.3
+            scroll_text_y = scroll_text_y + (wants_to_go[1] - scroll_text_y) * 0.3
 
             self.draw_utils.anchored_text(
                 canvas = self.canvas,
@@ -162,7 +170,7 @@ class PysktMain:
                 frame += 1
 
                 self.draw_utils.anchored_text(
-                    canvas = self.canvas,
+                    canvas = self.canvas, 
                     text = [f"{fps=:.1f}", f"mouse_pos={self.mouse_pos}"],
                     x = 0, y = 0,
                     anchor_x = 0,

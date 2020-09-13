@@ -24,5 +24,5 @@ import skia
 class PysktColors:
     def __init__(self, pyskt_main, *args, **kwargs):
         self.pyskt_main = pyskt_main
-        self.background = skia.Color4f(*[100/255]*4)
+        self.background = skia.Color4f(*[26/255]*3 + [1])
     

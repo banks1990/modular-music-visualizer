@@ -25,6 +25,8 @@ class PysktEvents:
     def __init__(self, pyskt_main):
         self.pyskt_main = pyskt_main
 
+        # # Mouse
+
         self.left_click = False
         self.right_click = False
         self.middle_click = False
@@ -33,10 +35,20 @@ class PysktEvents:
         self.side_front = False
         self.side_back = False
 
+        # -1 is down, 1 is up
         self.scroll = 0
+
+        # # Keyboard
+        
+        self.keys_state = {}
+
+        # Paths
+
+        self.drag_n_drop = []
 
     def reset_non_ending_states(self):
         self.scroll = 0
+        self.drag_n_drop = []
         
     def mouse_callback(self, *events):
         # Mouse click
@@ -72,3 +84,20 @@ class PysktEvents:
             print(f"Mouse scroll {direction}")
 
             self.scroll = events[2]
+
+    # Window has been resized, TODO: resize canvas.. how?
+    def on_window_resize(self, window, new_width, new_height):
+        print("Window resize,", new_width, new_height)
+        self.pyskt_main.pyskt_context.width = new_width
+        self.pyskt_main.pyskt_context.width = new_height 
+
+    # If user drops one or multiple files on the window
+    def on_file_drop(self, *events):
+        paths = events[1]
+        self.drag_n_drop = paths
+        print(f"Get drag and dropped paths: {paths=}")
+
+    # (<glfw.LP__GLFWwindow>, 51, 12, 0, 0)
+    def keyboard_callback(self, *events):
+        print(events)
+        print(glfw.get_key_name(events[1], events[4]))
