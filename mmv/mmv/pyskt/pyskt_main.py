@@ -19,6 +19,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 ===============================================================================
 """
 
+from mmv.pyskt.pyskt_processing import PysktProcessing
 from mmv.pyskt.pyskt_draw_utils import SkiaDrawUtils
 from mmv.pyskt.pyskt_context import PysktContext
 from mmv.pyskt.pyskt_colors import PysktColors
@@ -47,6 +48,7 @@ class PysktMain:
     def __init__(self, mmv_main, *args, **kwargs):
         self.mmv_main = mmv_main
         self.pyskt_context = PysktContext(self, *args, **kwargs)
+        self.pyskt_processing = PysktProcessing(self)
         self.draw_utils = SkiaDrawUtils(self)
         self.colors = PysktColors(self)
         self.events = PysktEvents(self)
@@ -101,7 +103,6 @@ class PysktMain:
     # For animations, thread wait events
     def events_loop(self):
         glfw.wait_events()
-    
 
 
     # Run main loop of pyskt window
