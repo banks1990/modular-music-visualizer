@@ -175,10 +175,12 @@ class PysktProcessing:
         print(triangles_areas, polygon_area, is_inside, "smallest:", smallest_triangle)
         print(info)
 
+        return info
+
     # Is a point of coordinate P = (x, y) inside a rectangle R = (x, y, w, h)?
     # https://math.stackexchange.com/a/190117
     # This was a pretty fun insight :)
-    def is_point_inside_rectangle(self, P, R, method="dot_product"):
+    def point_against_rectangle(self, P, R, method="dot_product"):
         """
         R1 - - - - - - R2
          |     P       |
@@ -204,7 +206,7 @@ class PysktProcessing:
         R3 = np.array([x, y - h])
         R4 = np.array([x + w, y - h])
 
-        return self.information_point_polygon(R1, R2, R4, R3)
+        return self.information_point_polygon(P, R1, R2, R4, R3)
 
 if __name__ == "__main__":
     
@@ -215,7 +217,7 @@ if __name__ == "__main__":
     p.information_point_polygon((1, 0.1), (0, 0), (1, 0), (0, 1))
     # print( p.three_points_triangle_area([0, 0], [0, 3], [4, 0]) ) 
 
-    # print(p.is_point_inside_rectangle(
+    # print(p.point_against_rectangle(
     #     [1, 0],
     #     [0, 0, 10, 10]
     # ))
