@@ -98,13 +98,14 @@ class PysktProcessing:
         }
 
         The minimum distance line is something like, you give this function
-        (P=(x, y), (0, 0), (10, 5), (3, 5)) =>
-        (P, A, B, C)
+        (P=(x, y), (0, 0), (10, 5), (3, 5))  =>  (P, A, B, C)
 
         If point nearest line is AB, minimum_distance_line returns 0.
 
         AB - 0   CB - 1   CA - 2
         """
+
+        print(polygon_points)
 
         # Get 
         polygon_area = self.irregular_polygon_area(*polygon_points)
@@ -125,8 +126,6 @@ class PysktProcessing:
         # Calculate 
         for key in triangles.keys():
             triangles[key]["area"] = self.three_points_triangle_area(*triangles[key]["points"])
-
-        print(triangles)
 
         # Sum the triangle areas
         triangles_areas = [triangles[key]["area"] for key in triangles.keys()]
@@ -150,7 +149,7 @@ class PysktProcessing:
             self.col2num(smallest_triangle[0]),
             self.col2num(smallest_triangle[1]),
         ]
-        print(point_indexes, smallest_triangle)
+        # print(point_indexes, smallest_triangle)
         minimum_distance_line = min(point_indexes) - 1
         
         # Now we have a triangle in the form XX-YY-P, we'll find the height of the triangle, the minimum distance from P to 
@@ -172,8 +171,8 @@ class PysktProcessing:
             "minimum_distance_line": minimum_distance_line,
         }
 
-        print(triangles_areas, polygon_area, is_inside, "smallest:", smallest_triangle)
-        print(info)
+        # print(triangles_areas, polygon_area, is_inside, "smallest:", smallest_triangle)
+        # print(info)
 
         return info
 
@@ -196,10 +195,7 @@ class PysktProcessing:
 
         # Rectangle
 
-        x = R[0]
-        y = R[1]
-        w = R[2]
-        h = R[3]
+        x, y, w, h = [item for item in R]
 
         R1 = np.array([x, y])
         R2 = np.array([x + w, y])
@@ -208,13 +204,22 @@ class PysktProcessing:
 
         return self.information_point_polygon(P, R1, R2, R4, R3)
 
+    def rectangle_x_y_w_h_to_skia_rect(self, x, y, w, h):
+        return [x, y, x + w, y + h]
+    
+    def rectangle_x_y_w_h_to_coordinates(self, x, y, w, h):
+        return [[x, y], [x + w, y], [x + w, y + h], [x, y + h]]
+
 if __name__ == "__main__":
     
     # Testing
 
     p = PysktProcessing({})
 
-    p.information_point_polygon((1, 0.1), (0, 0), (1, 0), (0, 1))
+
+    for _ in range(1000):
+        p.information_point_polygon((1, 0.1), (0, 0), (1, 0), (0, 1))
+
     # print( p.three_points_triangle_area([0, 0], [0, 3], [4, 0]) ) 
 
     # print(p.point_against_rectangle(

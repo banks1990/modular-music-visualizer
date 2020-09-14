@@ -159,6 +159,45 @@ class PysktMain:
                 anchor_y = 0.5,
             )
 
+
+            # Hover testing
+            if True:
+
+                xywh_rect = [300, 300, 200, 150]
+                
+                # Rectangle border
+                rect = self.pyskt_processing.rectangle_x_y_w_h_to_coordinates(*xywh_rect)
+
+                print("RECT COORDS", rect)
+                
+                info = self.pyskt_processing.information_point_polygon(self.mouse_pos, *rect)
+
+                print(info)
+                if info["is_inside"]:
+                    paint = skia.Paint(
+                        AntiAlias = True,
+                        Color = skia.Color4f(1, 0, 1, 1),
+                        Style = skia.Paint.kFill_Style,
+                        StrokeWidth = 2,
+                    )
+                else:
+                    c = 1 - (info["minimum_distance"]/40)
+                    print(c)
+                    paint = skia.Paint(
+                        AntiAlias = True,
+                        Color = skia.Color4f(c, c, c, 1),
+                        Style = skia.Paint.kFill_Style,
+                        StrokeWidth = 2,
+                    )
+
+                print(self.pyskt_processing.rectangle_x_y_w_h_to_skia_rect(*xywh_rect))
+
+                # Draw the border
+                self.canvas.drawRect(
+                    skia.Rect(*self.pyskt_processing.rectangle_x_y_w_h_to_skia_rect(*xywh_rect)),
+                    paint
+                )
+
             # # #
 
             # Show fps
