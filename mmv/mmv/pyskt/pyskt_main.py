@@ -52,6 +52,8 @@ class PysktMain:
         self.draw_utils = SkiaDrawUtils(self)
         self.colors = PysktColors(self)
         self.events = PysktEvents(self)
+        self.previous_mouse_pos = [0, 0]
+        self.mouse_moved = False
         
         # Where stuff is rendered from and activated
 
@@ -99,12 +101,16 @@ class PysktMain:
         assert self.surface, 'Failed to create a surface'
         self.canvas = self.surface.getCanvas()
         
-
     # For animations, thread wait events
     def events_loop(self):
         glfw.wait_events()
-
-
+    
+    def check_mouse_moved(self):
+        if not self.mouse_pos == self.previous_mouse_pos:
+            self.mouse_moved = True
+            self.previous_mouse_pos = self.mouse_pos
+        else:
+            self.mouse_moved = False
     # Run main loop of pyskt window
     def run(self):
 
@@ -139,6 +145,7 @@ class PysktMain:
 
             # Get mouse position
             self.mouse_pos = glfw.get_cursor_pos(self.window)
+            self.check_mouse_moved()
 
             if self.events.left_click:
                 wants_to_go[0] -= self.events.scroll * 50
@@ -161,18 +168,16 @@ class PysktMain:
 
 
             # Hover testing
-            if True:
+            for _ in range(120):
+                random.seed(_)
 
-                xywh_rect = [300, 300, 200, 150]
+                xywh_rect = [random.randint(0, 1000), random.randint(0, 1000), random.randint(0, 400), random.randint(0, 400)]
                 
                 # Rectangle border
                 rect = self.pyskt_processing.rectangle_x_y_w_h_to_coordinates(*xywh_rect)
 
-                print("RECT COORDS", rect)
-                
                 info = self.pyskt_processing.information_point_polygon(self.mouse_pos, *rect)
 
-                print(info)
                 if info["is_inside"]:
                     paint = skia.Paint(
                         AntiAlias = True,
@@ -189,8 +194,6 @@ class PysktMain:
                         Style = skia.Paint.kFill_Style,
                         StrokeWidth = 2,
                     )
-
-                print(self.pyskt_processing.rectangle_x_y_w_h_to_skia_rect(*xywh_rect))
 
                 # Draw the border
                 self.canvas.drawRect(

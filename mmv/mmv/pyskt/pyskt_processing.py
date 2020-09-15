@@ -127,8 +127,6 @@ class PysktProcessing:
         AB - 0   CB - 1   CA - 2
         """
 
-        print(polygon_points)
-
         # Get 
         polygon_area = self.irregular_polygon_area(*polygon_points)
 
@@ -171,7 +169,6 @@ class PysktProcessing:
             self.col2num(smallest_triangle[0]),
             self.col2num(smallest_triangle[1]),
         ]
-        # print(point_indexes, smallest_triangle)
         closest_point_index = min(point_indexes) - 1
         
         # # Find the minimum distance
@@ -216,9 +213,6 @@ class PysktProcessing:
             "distance": lowest_distance,
             "closest_point_index": closest_point_index,
         }
-
-        # print(triangles_areas, polygon_area, is_inside, "smallest:", smallest_triangle)
-        # print(info)
 
         return info
 
