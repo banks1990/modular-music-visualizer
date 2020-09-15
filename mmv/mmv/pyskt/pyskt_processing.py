@@ -92,7 +92,7 @@ class PysktProcessing:
         return self.angle_between_two_vectors(P1 - P2, P3 - P2)
 
     # A is proportional to B, C is what?
-    def proportion(a, b, c):
+    def proportion(self, a, b, c):
         # a - b
         # c - x
         # x = b*c/a
@@ -110,6 +110,7 @@ class PysktProcessing:
         return area
 
     # Information of a point relative to a polygon
+    # This function is overkill and 4x slower than checking against a rectangle for a rectangle
     def information_point_polygon(self, P, *polygon_points):
         """
         Given a point P and a polygon of N points, returns:
@@ -127,7 +128,7 @@ class PysktProcessing:
         AB - 0   CB - 1   CA - 2
         """
 
-        # Get 
+        # Get the area of the polygon
         polygon_area = self.irregular_polygon_area(*polygon_points)
 
         P = np.array(P)
@@ -219,7 +220,7 @@ class PysktProcessing:
     # Is a point of coordinate P = (x, y) inside a rectangle R = (x, y, w, h)?
     # https://math.stackexchange.com/a/190117
     # This was a pretty fun insight :)
-    def point_against_rectangle(self, P, R):
+    def point_against_rectangle(self, P, rect):
         """
         R1 - - - - - - R2
          |     P       |
@@ -231,18 +232,38 @@ class PysktProcessing:
 
         # Convert the point to a top left center Y grows downward
         # (negative all Y values so we flip the space on the X axis)
-        P = [P[0], -P[1]]
+        P = [P[0], P[1]]
 
         # Rectangle
 
-        x, y, w, h = [item for item in R]
+        x, y, w, h = [np.array(item) for item in rect]
 
         R1 = np.array([x, y])
         R2 = np.array([x + w, y])
-        R3 = np.array([x, y - h])
-        R4 = np.array([x + w, y - h])
+        R3 = np.array([x, y + h])
+        R4 = np.array([x + w, y + h])
 
-        return self.information_point_polygon(P, R1, R2, R4, R3)
+        R1R2 = R2 - R1
+        R1R3 = R3 - R1
+        R1P  = P  - R1
+
+        inside_height = (0 < np.dot(R1P, R1R3) < np.dot(R1R3, R1R3))
+        inside_width  = (0 < np.dot(R1P, R1R2) < np.dot(R1R2, R1R2))
+
+        is_inside = inside_height and inside_width
+
+        # Get lowest distance to the rectangle
+        dx = max(abs(P[0] - x) - w / 2, 0)
+        dy = max(abs(P[1] - y) - h / 2, 0)
+        lowest_distance = (dx * dx + dy * dy)**0.5
+
+        info = {
+            "is_inside": is_inside,
+            "distance": lowest_distance,
+            "closest_point_index": None,
+        }
+
+        return info
 
     # Skia uses raw X and Y for drawing --> (X1, Y1, X2, Y2)
     def rectangle_x_y_w_h_to_skia_rect(self, x, y, w, h):

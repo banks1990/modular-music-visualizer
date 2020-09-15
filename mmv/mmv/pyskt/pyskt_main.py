@@ -168,15 +168,15 @@ class PysktMain:
 
 
             # Hover testing
-            for _ in range(120):
+            for _ in range(20):
                 random.seed(_)
 
                 xywh_rect = [random.randint(0, 1000), random.randint(0, 1000), random.randint(0, 400), random.randint(0, 400)]
                 
                 # Rectangle border
-                rect = self.pyskt_processing.rectangle_x_y_w_h_to_coordinates(*xywh_rect)
+                # rect = self.pyskt_processing.rectangle_x_y_w_h_to_coordinates(*xywh_rect)
 
-                info = self.pyskt_processing.information_point_polygon(self.mouse_pos, *rect)
+                info = self.pyskt_processing.point_against_rectangle(self.mouse_pos, xywh_rect)
 
                 if info["is_inside"]:
                     paint = skia.Paint(
@@ -187,7 +187,6 @@ class PysktMain:
                     )
                 else:
                     c = 1 - (info["distance"]/1080)
-                    print(c)
                     paint = skia.Paint(
                         AntiAlias = True,
                         Color = skia.Color4f(c, c, c, 1),
