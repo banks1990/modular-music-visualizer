@@ -181,7 +181,7 @@ class PysktMain:
                         StrokeWidth = 2,
                     )
                 else:
-                    c = 1 - (info["minimum_distance"]/40)
+                    c = 1 - (info["minimum_distance"]/1080)
                     print(c)
                     paint = skia.Paint(
                         AntiAlias = True,

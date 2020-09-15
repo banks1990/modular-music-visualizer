@@ -20,6 +20,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import numpy as np
+import math
 import skia
 
 
@@ -60,22 +61,43 @@ class PysktProcessing:
     def three_points_triangle_area(self, P1, P2, P3):
 
         # Transform the points into an array
-        P1 = np.array(P1)
-        P2 = np.array(P2)
-        P3 = np.array(P3)
+        P1, P2, P3 = np.array(P1), np.array(P2), np.array(P3)
 
         # Vector AB is point B - A
 
         # V1 = P2->P1 => V1 = P1 - P2
-        V1 = P1 - P2
-
         # V2 = P2->P3 => V1 = P3 - P2
+        V1 = P1 - P2
         V2 = P3 - P2
 
         # Magnitude of cross product is the area of the rhombus or rectangle between the two vectors
         # for a triangle we divide that by two
         return self.abs_cross_product(V1, V2) / 2
+    
+    # Get the angle in between two vectors counter clock wise counting
+    def angle_between_two_vectors(self, V1, V2):
+        # A·B = |A||B|cos(theta)
+        # cos(theta) = (A·B)/|A||B|
+        # theta = acos( (A·B) / (|A||B|) )
+        V1, V2 = np.array(V1), np.array(V2)
+        return np.arccos(
+            np.dot(V1, V2) / (np.linalg.norm(V1) * np.linalg.norm(V2))
+        )
+    
+    # P2 is the center point
+    def angle_between_three_points(self, P1, P2, P3):
+        P1, P2, P3 = np.array(P1), np.array(P2), np.array(P3)
 
+        # P2 P1 = P1 - P2  /  P2 P3 = P3 - P2
+        return self.angle_between_two_vectors(P1 - P2, P3 - P2)
+
+    # A is proportional to B, C is what?
+    def proportion(a, b, c):
+        # a - b
+        # c - x
+        # x = b*c/a
+        return (b*c)/a
+    
     # https://stackoverflow.com/a/24468019/13477696
     def irregular_polygon_area(self, *points):
         n = len(points) # of corners
@@ -138,7 +160,7 @@ class PysktProcessing:
         for key in triangles.keys():
             if triangles[key]["area"] == lowest_area:
                 smallest_triangle = key.split("-")
-                break
+                break # This ignores equal area triangles posterior to this one, so the direction you send the coordinates matter
 
         # To get our minimum_distance_line
         # If the point is AB, we return 0
@@ -152,18 +174,42 @@ class PysktProcessing:
         # print(point_indexes, smallest_triangle)
         minimum_distance_line = min(point_indexes) - 1
         
-        # Now we have a triangle in the form XX-YY-P, we'll find the height of the triangle, the minimum distance from P to 
-        # the line of XX -- YY
+        # # Find the minimum distance
 
-        # The triangle base is the distance between the points (XX) and (YY) so..
-        base = np.linalg.norm(
-            [ op[smallest_triangle[0]], op[smallest_triangle[1]] ]
-        )
-        
-        # We know its area, it's the lowest_area var!!
-        # B*H = A,
-        # H = A/B
-        lowest_distance = lowest_area / base
+        # Points A, B and point P
+        smallest_triangle_points = [op[smallest_triangle[0]], op[smallest_triangle[1]], P]
+
+        # In a special case where the max distance is a distance to a vertice (point is "outside" the line segment)
+        # Triangle ABP, if either ABP or BAP is more than 90°
+        # ABP are vectors BA and BP, BA = A - B and BP = P - B
+        # BAP are vectors AB and AP, AB = B - A and AP = P - A
+        A = smallest_triangle_points[0]
+        B = smallest_triangle_points[1]
+        BP = P - B
+        AP = P - A
+        ABP = abs(self.angle_between_two_vectors(A - B, P - B))
+        BAP = abs(self.angle_between_two_vectors(B - A, P - A))
+
+        if (ABP >= math.pi/2) or (BAP >= math.pi/2):
+            if ABP > BAP:
+                # The distance is between BP
+                lowest_distance = np.linalg.norm(BP)
+            else:
+                # The distance is between AP
+                lowest_distance = np.linalg.norm(AP)
+        else:
+            # Triangle in the form XX-YY-P, we'll find the height of the triangle, the minimum distance from P to 
+            # the line of XX -- YY
+
+            # The triangle base is the distance between the points (XX) and (YY) so..
+            base = np.linalg.norm(
+                [ smallest_triangle_points[0], smallest_triangle_points[1] ]
+            )
+            
+            # We know its area, it's the lowest_area var!!
+            # B*H = A,
+            # H = A/B
+            lowest_distance = lowest_area / base
 
         info = {
             "is_inside": is_inside,
@@ -204,6 +250,7 @@ class PysktProcessing:
 
         return self.information_point_polygon(P, R1, R2, R4, R3)
 
+    # Skia uses raw X and Y for drawing --> (X1, Y1, X2, Y2)
     def rectangle_x_y_w_h_to_skia_rect(self, x, y, w, h):
         return [x, y, x + w, y + h]
     
