@@ -116,13 +116,13 @@ class PysktProcessing:
         {
             "is_inside": bool,
             "minimum_distance": float,
-            "minimum_distance_line": see below
+            "closest_point_index": see below
         }
 
         The minimum distance line is something like, you give this function
         (P=(x, y), (0, 0), (10, 5), (3, 5))  =>  (P, A, B, C)
 
-        If point nearest line is AB, minimum_distance_line returns 0.
+        If point nearest line is AB, closest_point_index returns 0.
 
         AB - 0   CB - 1   CA - 2
         """
@@ -162,7 +162,7 @@ class PysktProcessing:
                 smallest_triangle = key.split("-")
                 break # This ignores equal area triangles posterior to this one, so the direction you send the coordinates matter
 
-        # To get our minimum_distance_line
+        # To get our closest_point_index
         # If the point is AB, we return 0
         # If the point is BC, we return 1
         # If the point is CA, we return 2
@@ -172,7 +172,7 @@ class PysktProcessing:
             self.col2num(smallest_triangle[1]),
         ]
         # print(point_indexes, smallest_triangle)
-        minimum_distance_line = min(point_indexes) - 1
+        closest_point_index = min(point_indexes) - 1
         
         # # Find the minimum distance
 
@@ -213,8 +213,8 @@ class PysktProcessing:
 
         info = {
             "is_inside": is_inside,
-            "minimum_distance": lowest_distance,
-            "minimum_distance_line": minimum_distance_line,
+            "distance": lowest_distance,
+            "closest_point_index": closest_point_index,
         }
 
         # print(triangles_areas, polygon_area, is_inside, "smallest:", smallest_triangle)
@@ -225,7 +225,7 @@ class PysktProcessing:
     # Is a point of coordinate P = (x, y) inside a rectangle R = (x, y, w, h)?
     # https://math.stackexchange.com/a/190117
     # This was a pretty fun insight :)
-    def point_against_rectangle(self, P, R, method="dot_product"):
+    def point_against_rectangle(self, P, R):
         """
         R1 - - - - - - R2
          |     P       |
